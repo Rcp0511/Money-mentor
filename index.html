@@ -6,13 +6,13 @@
 <title>My Learning Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-/* --- Global --- */
 body {
   font-family: 'Roboto', sans-serif;
   margin: 0;
   background: linear-gradient(120deg, #e6f4ea, #c2e0c6);
   color: #1a1a1a;
 }
+
 header {
   background: linear-gradient(90deg, #4aa23f, #2e7d32);
   color: white;
@@ -23,31 +23,33 @@ header {
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-/* --- Container --- */
 .container {
   max-width: 900px;
   margin: 30px auto;
   padding: 0 20px;
 }
 
-/* --- Units --- */
 .unit {
   background: linear-gradient(135deg, #a8e6a3, #6cc24a);
   border-radius: 15px;
-  padding: 20px;
+  padding: 15px 20px;
   margin-bottom: 15px;
   cursor: pointer;
+  position: relative;
   transition: transform 0.2s, box-shadow 0.2s;
 }
+
 .unit:hover {
   transform: scale(1.02);
   box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
+
 .unit-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
+
 .unit-title {
   font-size: 1.2em;
   font-weight: 500;
@@ -55,86 +57,117 @@ header {
   align-items: center;
   gap: 10px;
 }
-.unit-scores {
-  font-size: 0.9em;
-}
+
 .unit-star {
   color: gold;
 }
 
-/* --- Dropdown --- */
+.unit-scores {
+  font-size: 0.9em;
+}
+
 .unit-dropdown {
   display: none; /* start closed */
   margin-top: 15px;
   gap: 10px;
   flex-wrap: wrap;
+  display: flex;
+  flex-direction: column;
 }
+
 .unit-dropdown button {
-  flex: 1;
+  width: 100%;
   padding: 12px;
-  margin-top: 8px;
   border: none;
-  border-radius: 12px;
+  border-radius: 10px;
   font-size: 1em;
   cursor: pointer;
   display: flex;
   align-items: center;
+  gap: 10px;
   justify-content: center;
-  gap: 8px;
   font-weight: 500;
   transition: 0.2s;
 }
-.study-btn {
-  background-color: #28a745;
-  color: white;
-}
-.study-btn:hover {
-  background-color: #218838;
-}
-.test-btn {
-  background-color: #6c757d;
-  color: white;
-}
-.test-btn:hover {
-  background-color: #565e64;
+
+.study-btn { background-color: #28a745; color: white; }
+.study-btn:hover { background-color: #218838; }
+
+.test-btn { background-color: #6c757d; color: white; }
+.test-btn:hover { background-color: #565e64; }
+
+/* Modal for quiz */
+#quizModal {
+  display: none;
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
 }
 
-/* --- Icons --- */
-.unit-dropdown i {
-  font-style: normal;
+#quizContainer {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  width: 500px;
+  max-width: 95%;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
+
+#quizContainer button {
+  margin-top: 10px;
+}
+
 </style>
 </head>
 <body>
-<header>Student Dashboard</header>
-<div class="container" id="unitsContainer">
-  <!-- Units injected here -->
+<header>My Learning Dashboard</header>
+
+<div class="container" id="unitsContainer"></div>
+
+<!-- Quiz Modal -->
+<div id="quizModal">
+  <div id="quizContainer">
+    <h2 id="quizTitle">Investing Vocab – Level 1</h2>
+    <div id="quizContent"></div>
+    <div id="quizControls">
+      <button id="prevQuizBtn">Previous</button>
+      <button id="nextQuizBtn">Next</button>
+    </div>
+    <button id="submitQuizBtn">Submit Quiz</button>
+    <button id="closeQuizBtn">Close</button>
+  </div>
 </div>
 
 <script>
-// --- Variables / Data ---
+// ------------------- UNIT DASHBOARD VARIABLES -------------------
 const UNIT_PLACEHOLDER_SCORE = 'Not taken yet';
+
 const units = [
-  {name:"Unit 1: Investing Vocab", mastered:true, lastScore:UNIT_PLACEHOLDER_SCORE, highScore:UNIT_PLACEHOLDER_SCORE},
-  {name:"Unit 2", mastered:false, lastScore:UNIT_PLACEHOLDER_SCORE, highScore:UNIT_PLACEHOLDER_SCORE},
-  {name:"Unit 3", mastered:false, lastScore:UNIT_PLACEHOLDER_SCORE, highScore:UNIT_PLACEHOLDER_SCORE},
-  {name:"Unit 4", mastered:false, lastScore:UNIT_PLACEHOLDER_SCORE, highScore:UNIT_PLACEHOLDER_SCORE},
-  {name:"Unit 5", mastered:false, lastScore:UNIT_PLACEHOLDER_SCORE, highScore:UNIT_PLACEHOLDER_SCORE},
-  {name:"Unit 6", mastered:false, lastScore:UNIT_PLACEHOLDER_SCORE, highScore:UNIT_PLACEHOLDER_SCORE},
-  {name:"Unit 7", mastered:false, lastScore:UNIT_PLACEHOLDER_SCORE, highScore:UNIT_PLACEHOLDER_SCORE},
-  {name:"Unit 8", mastered:false, lastScore:UNIT_PLACEHOLDER_SCORE, highScore:UNIT_PLACEHOLDER_SCORE},
-  {name:"Unit 9", mastered:false, lastScore:UNIT_PLACEHOLDER_SCORE, highScore:UNIT_PLACEHOLDER_SCORE},
-  {name:"Unit 10", mastered:false, lastScore:UNIT_PLACEHOLDER_SCORE, highScore:UNIT_PLACEHOLDER_SCORE},
+  {name:"Unit 1: Investing Vocab", mastered:true, lastScore: UNIT_PLACEHOLDER_SCORE, highScore: UNIT_PLACEHOLDER_SCORE},
+  {name:"Unit 2", mastered:false, lastScore: UNIT_PLACEHOLDER_SCORE, highScore: UNIT_PLACEHOLDER_SCORE},
+  {name:"Unit 3", mastered:false, lastScore: UNIT_PLACEHOLDER_SCORE, highScore: UNIT_PLACEHOLDER_SCORE},
+  {name:"Unit 4", mastered:false, lastScore: UNIT_PLACEHOLDER_SCORE, highScore: UNIT_PLACEHOLDER_SCORE},
+  {name:"Unit 5", mastered:false, lastScore: UNIT_PLACEHOLDER_SCORE, highScore: UNIT_PLACEHOLDER_SCORE},
+  {name:"Unit 6", mastered:false, lastScore: UNIT_PLACEHOLDER_SCORE, highScore: UNIT_PLACEHOLDER_SCORE},
+  {name:"Unit 7", mastered:false, lastScore: UNIT_PLACEHOLDER_SCORE, highScore: UNIT_PLACEHOLDER_SCORE},
+  {name:"Unit 8", mastered:false, lastScore: UNIT_PLACEHOLDER_SCORE, highScore: UNIT_PLACEHOLDER_SCORE},
+  {name:"Unit 9", mastered:false, lastScore: UNIT_PLACEHOLDER_SCORE, highScore: UNIT_PLACEHOLDER_SCORE},
+  {name:"Unit 10", mastered:false, lastScore: UNIT_PLACEHOLDER_SCORE, highScore: UNIT_PLACEHOLDER_SCORE}
 ];
 
 const container = document.getElementById('unitsContainer');
 
-// --- Render Units ---
-units.forEach(unit => {
+// ------------------- CREATE UNITS -------------------
+units.forEach((unit,index)=>{
   const unitDiv = document.createElement('div');
   unitDiv.className = 'unit';
 
-  // Unit header
+  // Header with title and scores
   const headerDiv = document.createElement('div');
   headerDiv.className = 'unit-header';
 
@@ -156,35 +189,160 @@ units.forEach(unit => {
   headerDiv.appendChild(scoresDiv);
   unitDiv.appendChild(headerDiv);
 
-  // Dropdown
+  // Dropdown buttons
   const dropdown = document.createElement('div');
   dropdown.className = 'unit-dropdown';
-  
+
   const studyBtn = document.createElement('button');
   studyBtn.className = 'study-btn';
   studyBtn.innerHTML = '📚 Study';
-  studyBtn.onclick = (e) => { e.stopPropagation(); alert(`Start studying ${unit.name}`); };
+  studyBtn.onclick = ()=> alert(`Start studying ${unit.name}`);
 
   const testBtn = document.createElement('button');
   testBtn.className = 'test-btn';
   testBtn.innerHTML = '📝 Unit Test';
-  testBtn.onclick = (e) => { e.stopPropagation(); alert(`Start unit test for ${unit.name}`); };
+  testBtn.onclick = ()=> startQuiz(index);
 
   dropdown.appendChild(studyBtn);
   dropdown.appendChild(testBtn);
+
   unitDiv.appendChild(dropdown);
 
-  // Toggle dropdown
-  unitDiv.addEventListener('click', () => {
-    if(dropdown.style.display === 'flex'){
-      dropdown.style.display = 'none';
-    } else {
-      dropdown.style.display = 'flex';
+  // Dropdown toggle
+  unitDiv.addEventListener('click', (e)=>{
+    if(e.target.tagName !== 'BUTTON'){
+      dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
     }
   });
 
   container.appendChild(unitDiv);
 });
+
+// ------------------- QUIZ CODE -------------------
+const quizData = [
+  {q:"What is a 'stock'?", a:["Share of ownership in a company","Loan","Company expense","Bank account"], correct:0, explanation:"A stock represents ownership in a company."},
+  {q:"What is a 'bond'?", a:["Loan to a company or government","Stock","Debt you own","Savings account"], correct:0, explanation:"A bond is a loan you give to a company or government."},
+  {q:"What is an 'asset'?", a:["Something valuable you own","Debt you owe","Company liability","Stock market"], correct:0, explanation:"An asset is something valuable that you own."},
+  {q:"What is a 'liability'?", a:["Debt you owe","Investment gain","Stock","Dividend"], correct:0, explanation:"A liability is money you owe."},
+  {q:"What is a 'dividend'?", a:["Payment to shareholders","Company cost","Loan","Interest"], correct:0, explanation:"Dividends are payments made to shareholders."},
+  {q:"What is 'capital'?", a:["Money used for investment","Company revenue","Stock price","Debt"], correct:0, explanation:"Capital is money used to invest."},
+  {q:"What is a 'portfolio'?", a:["Collection of investments","Bank account","Single stock","Loan"], correct:0, explanation:"A portfolio is all your investments together."},
+  {q:"What is 'risk'?", a:["Chance of losing money","Guaranteed profit","Company stock","Interest rate"], correct:0, explanation:"Risk is the chance that you may lose money."},
+  {q:"What is 'liquidity'?", a:["How easily an asset can be turned into cash","Investment type","Profit","Stock index"], correct:0, explanation:"Liquidity is how quickly you can convert an asset to cash."},
+  {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stocks","Company revenue","Loan type"], correct:0, explanation:"Interest is what you pay for borrowing money."}
+];
+
+let currentQuestion = 0;
+let answers = Array(quizData.length).fill(null);
+
+const quizModal = document.getElementById('quizModal');
+const quizContent = document.getElementById('quizContent');
+const quizTitle = document.getElementById('quizTitle');
+const prevQuizBtn = document.getElementById('prevQuizBtn');
+const nextQuizBtn = document.getElementById('nextQuizBtn');
+const submitQuizBtn = document.getElementById('submitQuizBtn');
+const closeQuizBtn = document.getElementById('closeQuizBtn');
+
+function loadQuizQuestion(){
+  const q = quizData[currentQuestion];
+  quizContent.innerHTML = `<p><strong>Q${currentQuestion+1}:</strong> ${q.q}</p>`;
+  q.a.forEach((opt,i)=>{
+    const btn = document.createElement('button');
+    btn.textContent = opt;
+    btn.style.margin = "5px 0";
+    btn.style.width = "100%";
+    btn.style.padding = "8px";
+    btn.style.cursor = "pointer";
+    btn.onclick = ()=>{
+      answers[currentQuestion] = i;
+      loadQuizQuestion();
+    };
+    if(answers[currentQuestion] === i) btn.style.backgroundColor = "#d4edda";
+    quizContent.appendChild(btn);
+  });
+}
+
+function startQuiz(unitIndex){
+  quizModal.style.display = 'flex';
+  currentQuestion = 0;
+  answers = Array(quizData.length).fill(null);
+  quizTitle.textContent = units[unitIndex].name + ' – Level 1';
+  loadQuizQuestion();
+  submitQuizBtn.onclick = ()=>{
+    let score = answers.filter((ans,i)=>ans===quizData[i].correct).length;
+    // Update unit scores dynamically
+    const unit = units[unitIndex];
+    unit.lastScore = score;
+    if(unit.highScore === UNIT_PLACEHOLDER_SCORE || score > unit.highScore){
+      unit.highScore = score;
+    }
+    refreshDashboard();
+    quizModal.style.display = 'none';
+  };
+}
+
+prevQuizBtn.onclick = ()=>{
+  if(currentQuestion >0){ currentQuestion--; loadQuizQuestion(); }
+};
+nextQuizBtn.onclick = ()=>{
+  if(currentQuestion<quizData.length-1){ currentQuestion++; loadQuizQuestion(); }
+};
+closeQuizBtn.onclick = ()=>{ quizModal.style.display='none'; };
+
+function refreshDashboard(){
+  container.innerHTML = '';
+  units.forEach((unit,index)=>{
+    const unitDiv = document.createElement('div');
+    unitDiv.className = 'unit';
+
+    const headerDiv = document.createElement('div');
+    headerDiv.className = 'unit-header';
+
+    const titleDiv = document.createElement('div');
+    titleDiv.className = 'unit-title';
+    if(unit.mastered){
+      const star = document.createElement('span');
+      star.className = 'unit-star';
+      star.textContent = '★';
+      titleDiv.appendChild(star);
+    }
+    titleDiv.appendChild(document.createTextNode(unit.name));
+
+    const scoresDiv = document.createElement('div');
+    scoresDiv.className = 'unit-scores';
+    scoresDiv.textContent = `Last: ${unit.lastScore} | High: ${unit.highScore}`;
+
+    headerDiv.appendChild(titleDiv);
+    headerDiv.appendChild(scoresDiv);
+    unitDiv.appendChild(headerDiv);
+
+    const dropdown = document.createElement('div');
+    dropdown.className = 'unit-dropdown';
+
+    const studyBtn = document.createElement('button');
+    studyBtn.className = 'study-btn';
+    studyBtn.innerHTML = '📚 Study';
+    studyBtn.onclick = ()=> alert(`Start studying ${unit.name}`);
+
+    const testBtn = document.createElement('button');
+    testBtn.className = 'test-btn';
+    testBtn.innerHTML = '📝 Unit Test';
+    testBtn.onclick = ()=> startQuiz(index);
+
+    dropdown.appendChild(studyBtn);
+    dropdown.appendChild(testBtn);
+    unitDiv.appendChild(dropdown);
+
+    unitDiv.addEventListener('click', (e)=>{
+      if(e.target.tagName !== 'BUTTON'){
+        dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+      }
+    });
+
+    container.appendChild(unitDiv);
+  });
+}
+
 </script>
 </body>
 </html>

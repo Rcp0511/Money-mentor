@@ -93,21 +93,21 @@ header {
 </div>
 
 <script>
-// Variables for default scores
-const DEFAULT_SCORE = "NA";
+// Default score text for units not yet taken
+const defaultScoreText = 'Not taken yet';
 
 // Simulated user data for each unit
 const units = [
-  {name:"Investing Vocab, Unit 1", mastered:false, lastScore:DEFAULT_SCORE, highScore:DEFAULT_SCORE},
-  {name:"Unit 2", mastered:false, lastScore:DEFAULT_SCORE, highScore:DEFAULT_SCORE},
-  {name:"Unit 3", mastered:false, lastScore:DEFAULT_SCORE, highScore:DEFAULT_SCORE},
-  {name:"Unit 4", mastered:false, lastScore:DEFAULT_SCORE, highScore:DEFAULT_SCORE},
-  {name:"Unit 5", mastered:false, lastScore:DEFAULT_SCORE, highScore:DEFAULT_SCORE},
-  {name:"Unit 6", mastered:false, lastScore:DEFAULT_SCORE, highScore:DEFAULT_SCORE},
-  {name:"Unit 7", mastered:false, lastScore:DEFAULT_SCORE, highScore:DEFAULT_SCORE},
-  {name:"Unit 8", mastered:false, lastScore:DEFAULT_SCORE, highScore:DEFAULT_SCORE},
-  {name:"Unit 9", mastered:false, lastScore:DEFAULT_SCORE, highScore:DEFAULT_SCORE},
-  {name:"Unit 10", mastered:false, lastScore:DEFAULT_SCORE, highScore:DEFAULT_SCORE}
+  {name:"Unit 1: Investing Vocab", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 2", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 3", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 4", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 5", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 6", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 7", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 8", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 9", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 10", mastered:false, lastScore:null, highScore:null}
 ];
 
 const container = document.getElementById('unitsContainer');
@@ -131,7 +131,7 @@ units.forEach((unit, index)=>{
   
   const scoresDiv = document.createElement('div');
   scoresDiv.className = 'unit-scores';
-  scoresDiv.textContent = `Last: ${unit.lastScore} | High: ${unit.highScore}`;
+  scoresDiv.textContent = `Last: ${unit.lastScore !== null ? unit.lastScore : defaultScoreText} | High: ${unit.highScore !== null ? unit.highScore : defaultScoreText}`;
   
   headerDiv.appendChild(titleDiv);
   headerDiv.appendChild(scoresDiv);

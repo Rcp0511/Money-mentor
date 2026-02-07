@@ -6,12 +6,14 @@
 <title>Student Dashboard</title>
 <!-- Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
-/* Base Styles */
+/* Base */
 body {
   font-family: 'Inter', sans-serif;
   margin: 0;
-  background: #f0f7f2;
+  background: linear-gradient(135deg, #e6f4ea, #d1f0d3);
   color: #1a1a1a;
 }
 header {
@@ -24,32 +26,25 @@ header {
   position: relative;
   box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
-header::after {
-  content: "";
-  position: absolute;
-  bottom: 0; left: 0; width: 100%; height: 50px;
-  background: url('https://images.unsplash.com/photo-1605902711622-cfb43c44350f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8ZmxvdyUyMGdyYXBoaWN8fDB8fHx8MTY5NzYwMzM0OA&ixlib=rb-4.0.3&q=80&w=1080') no-repeat center/cover;
-  opacity: 0.1;
-}
 .container {
   max-width: 900px;
   margin: 30px auto;
   padding: 0 20px;
 }
 
-/* Unit Card Styles */
+/* Unit Cards */
 .unit {
   background: linear-gradient(135deg, #a8e6a3, #6cc24a);
-  border-radius: 15px;
+  border-radius: 18px;
   padding: 20px;
   margin-bottom: 20px;
   cursor: pointer;
-  position: relative;
   transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 .unit:hover {
   transform: scale(1.02);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.2);
 }
 .unit-header {
   display: flex;
@@ -61,10 +56,10 @@ header::after {
   font-weight: 600;
   display: flex;
   align-items: center;
+  gap: 10px;
 }
 .unit-star {
   color: gold;
-  margin-right: 10px;
   font-size: 1.2em;
 }
 .unit-scores {
@@ -72,7 +67,7 @@ header::after {
   color: #0b2d0b;
 }
 .unit-dropdown {
-  display: none;
+  display: none; /* start closed */
   margin-top: 15px;
   padding-top: 10px;
   border-top: 1px solid rgba(0,0,0,0.1);
@@ -88,14 +83,19 @@ header::after {
   cursor: pointer;
   color: white;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 .unit-dropdown button:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 12px rgba(0,0,0,0.2);
 }
+/* Button Colors */
 .study-btn { background-color: #28a745; }
-.test-btn { background-color: #007bff; }
+.test-btn { background-color: #1b5e20; }
 
 /* Responsive */
 @media (max-width:600px){
@@ -108,9 +108,7 @@ header::after {
 
 <header>Student Dashboard</header>
 
-<div class="container" id="unitsContainer">
-  <!-- Units injected here -->
-</div>
+<div class="container" id="unitsContainer"></div>
 
 <script>
 // ================== VARIABLES ==================
@@ -150,7 +148,7 @@ units.forEach((unit, index)=>{
   if(unit.mastered){
     const star = document.createElement('span');
     star.className = 'unit-star';
-    star.textContent = '★';
+    star.innerHTML = '<i class="fas fa-star"></i>';
     titleDiv.appendChild(star);
   }
   titleDiv.appendChild(document.createTextNode(unit.name));
@@ -172,12 +170,12 @@ units.forEach((unit, index)=>{
   
   const studyBtn = document.createElement('button');
   studyBtn.className = 'study-btn';
-  studyBtn.textContent = 'Study';
+  studyBtn.innerHTML = '<i class="fas fa-book"></i> Study';
   studyBtn.onclick = ()=>alert(`Start studying ${unit.name}`);
   
   const testBtn = document.createElement('button');
   testBtn.className = 'test-btn';
-  testBtn.textContent = 'Unit Test';
+  testBtn.innerHTML = '<i class="fas fa-clipboard-check"></i> Unit Test';
   testBtn.onclick = ()=>alert(`Start unit test for ${unit.name}`);
   
   dropdown.appendChild(studyBtn);
@@ -186,7 +184,7 @@ units.forEach((unit, index)=>{
   
   // Toggle dropdown
   unitDiv.onclick = (e)=>{
-    if(e.target.tagName !== 'BUTTON'){
+    if(e.target.tagName !== 'BUTTON' && !e.target.closest('button')){
       dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
     }
   };

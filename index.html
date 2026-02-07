@@ -3,11 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Dashboard with Quiz</title>
+<title>Student Dashboard</title>
 
-<!-- Fonts and icons -->
+<!-- Modern font -->
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" />
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <style>
 /* -------------------- Global -------------------- */
@@ -17,6 +19,7 @@ body {
   background: linear-gradient(150deg, #e0f5e0, #66bb6a);
   color: #111;
 }
+
 header {
   background: linear-gradient(120deg, #388e3c, #1b5e20);
   color: #fff;
@@ -47,6 +50,8 @@ header {
   transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
+
+/* Unit header */
 .unit-header {
   display: flex;
   justify-content: space-between;
@@ -60,10 +65,16 @@ header {
   font-weight: 600;
   font-size: 1.3em;
 }
-.unit-header .title .star { color: gold; font-size: 1.2em; }
-.unit-header .scores { font-size: 0.95em; color: #0a3d0a; }
+.unit-header .title .star {
+  color: gold;
+  font-size: 1.2em;
+}
+.unit-header .scores {
+  font-size: 0.95em;
+  color: #0a3d0a;
+}
 
-/* Dropdown buttons */
+/* -------------------- Dropdown -------------------- */
 .unit-dropdown {
   display: none;
   margin-top: 15px;
@@ -85,63 +96,45 @@ header {
   gap: 8px;
   transition: all 0.2s ease;
 }
-.study-btn { background: #2e7d32; }
-.test-btn { background: #1b5e20; }
 .unit-dropdown button:hover {
   transform: scale(1.05);
   box-shadow: 0 5px 12px rgba(0,0,0,0.2);
 }
+.study-btn { background: #2e7d32; }
+.test-btn { background: #1b5e20; }
 
-/* Responsive */
-@media(max-width:600px){
-  .unit-header { flex-direction: column; align-items: flex-start; gap: 5px; }
-  .unit-dropdown { flex-direction: column; }
-}
-
-/* -------------------- Quiz Overlay -------------------- */
-#quizOverlay {
+/* -------------------- Quiz -------------------- */
+#quizContainer {
   display: none;
   position: fixed;
-  top: 0; left:0;
-  width: 100%; height: 100%;
+  top:0; left:0; right:0; bottom:0;
   background: rgba(0,0,0,0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+  display:flex; justify-content:center; align-items:center;
+  z-index:100;
 }
-.quiz-container {
-  background: #fff;
-  padding: 25px 30px;
-  border-radius: 20px;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-  width: 480px;
-  max-width: 95%;
-  text-align: center;
-  max-height: 90vh;
-  overflow-y: auto;
+.quiz-box {
+  background:#fff;
+  padding:25px 30px;
+  border-radius:20px;
+  width:480px;
+  max-width:95%;
+  text-align:center;
+  color:#333;
 }
-button { cursor: pointer; }
-.start-btn, .restart-btn {
-  padding: 12px 20px; font-size: 1em; border:none; border-radius:12px; background:#28a745; color:white; transition:0.3s;
-}
-.start-btn:hover, .restart-btn:hover { background:#218838; }
-.options button {
-  display: block; width: 100%; margin: 8px 0; padding: 12px; font-size: 1em;
-  border: 2px solid #ccc; border-radius: 10px; background-color: #fdfdfd; cursor: pointer; transition: 0.2s; text-align: left;
-}
-.options button:hover { border-color: #007bff; background-color: #e0f0ff; transform: scale(1.02); }
-.options button.selected { background-color: #d4edda; border-color: #28a745; }
-.controls { display: flex; justify-content: space-between; margin-top: 15px; }
-.controls button { padding: 10px 15px; font-size: 0.95em; border: none; border-radius: 8px; }
-#prevBtn { background-color: #6c757d; color: white; }
-#prevBtn:hover { background-color: #5a6268; }
-#nextBtn { background-color: #007bff; color: white; }
-#nextBtn:hover { background-color: #0056b3; }
-#flagBtn { background-color: #ffc107; color: white; }
-#flagBtn:hover { background-color: #e0a800; }
-.progress-bar { height: 12px; background: #eee; border-radius: 6px; overflow: hidden; margin-top: 20px; }
-.progress { height: 100%; width: 0%; background: linear-gradient(90deg, #28a745, #85e085); transition: width 0.3s; }
+
+/* Quiz buttons and progress */
+button { cursor:pointer; }
+.options button { display:block; width:100%; margin:8px 0; padding:12px; font-size:1em; border-radius:10px; border:2px solid #ccc; background:#fdfdfd; transition:0.2s; text-align:left;}
+.options button:hover{border-color:#007bff; background:#e0f0ff; transform:scale(1.02);}
+.options button.selected{background:#d4edda; border-color:#28a745;}
+.controls{display:flex; justify-content:space-between; margin-top:15px;}
+.controls button{padding:10px 15px; border:none; border-radius:8px; font-size:0.95em;}
+#prevBtn{background:#6c757d; color:white;}
+#nextBtn{background:#007bff; color:white;}
+#flagBtn{background:#ffc107; color:white;}
+.progress-bar{height:12px; background:#eee; border-radius:6px; margin-top:20px; overflow:hidden;}
+.progress{height:100%; width:0%; background:linear-gradient(90deg,#28a745,#85e085); transition:width 0.3s;}
+.score-screen, .review, #startScreen { display:none; }
 </style>
 </head>
 <body>
@@ -150,13 +143,15 @@ button { cursor: pointer; }
 <div class="container" id="unitContainer"></div>
 
 <!-- Quiz Overlay -->
-<div id="quizOverlay">
-  <div class="quiz-container">
+<div id="quizContainer">
+  <div class="quiz-box">
+    <!-- Start Screen -->
     <div id="startScreen">
       <h1>📈 Investing Vocab – Level 1 📈</h1>
       <button class="start-btn" id="startBtn">Start Quiz</button>
       <p id="scoreInfo"></p>
     </div>
+    <!-- Quiz Screen -->
     <div id="quiz">
       <div class="question-number" id="questionNumber"></div>
       <div class="question" id="question"></div>
@@ -168,60 +163,63 @@ button { cursor: pointer; }
       </div>
       <div class="progress-bar"><div class="progress" id="progress"></div></div>
     </div>
+    <!-- Review Screen -->
+    <div class="review" id="review">
+      <h3>Review Your Questions</h3>
+      <button id="submitBtn" class="restart-btn">Submit Quiz</button>
+    </div>
+    <!-- Score Screen -->
     <div class="score-screen" id="scoreScreen">
       <h3 id="scoreText"></h3>
-      <ul id="missedList"></ul>
       <button id="restartBtn" class="restart-btn">Restart Quiz</button>
-      <p id="highScoreText"></p>
-      <p id="lastScoreText"></p>
     </div>
   </div>
 </div>
 
 <script>
-// ====== Dashboard Units ======
-const defaultScoreText = "Not taken yet";
-const units = [
+// ===================== Units =====================
+const defaultScoreText="Not taken yet";
+const units=[
   {name:"Unit 1: Investing Vocab", mastered:false, lastScore:null, highScore:null},
   {name:"Unit 2", mastered:false, lastScore:null, highScore:null},
   {name:"Unit 3", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 4", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 5", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 6", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 7", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 8", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 9", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 10", mastered:false, lastScore:null, highScore:null},
 ];
 
-const container = document.getElementById('unitContainer');
-
-units.forEach((unit, index)=>{
-  const card = document.createElement('div'); card.className='unit-card';
-  const header = document.createElement('div'); header.className='unit-header';
-  const titleDiv = document.createElement('div'); titleDiv.className='title';
-  if(unit.mastered){
-    const star = document.createElement('span'); star.className='star'; star.innerHTML='<i class="fas fa-star"></i>';
-    titleDiv.appendChild(star);
-  }
+// ===================== Render Units =====================
+const container=document.getElementById('unitContainer');
+units.forEach((unit,index)=>{
+  const card=document.createElement('div'); card.className='unit-card';
+  const header=document.createElement('div'); header.className='unit-header';
+  const titleDiv=document.createElement('div'); titleDiv.className='title';
+  if(unit.mastered){ const star=document.createElement('span'); star.className='star'; star.innerHTML='<i class="fas fa-star"></i>'; titleDiv.appendChild(star); }
   titleDiv.appendChild(document.createTextNode(unit.name));
-  const scoreDiv = document.createElement('div'); scoreDiv.className='scores';
-  const last = unit.lastScore!==null?unit.lastScore:defaultScoreText;
-  const high = unit.highScore!==null?unit.highScore:defaultScoreText;
+  const scoreDiv=document.createElement('div'); scoreDiv.className='scores';
+  const last=unit.lastScore!==null?unit.lastScore:defaultScoreText;
+  const high=unit.highScore!==null?unit.highScore:defaultScoreText;
   scoreDiv.textContent=`Last: ${last} | High: ${high}`;
   header.appendChild(titleDiv); header.appendChild(scoreDiv); card.appendChild(header);
 
-  const dropdown = document.createElement('div'); dropdown.className='unit-dropdown';
-  const studyBtn = document.createElement('button'); studyBtn.className='study-btn'; studyBtn.innerHTML='<i class="fas fa-book"></i> Study';
-  const testBtn = document.createElement('button'); testBtn.className='test-btn'; testBtn.innerHTML='<i class="fas fa-clipboard-check"></i> Unit Test';
-
-  // Open quiz for Unit 1
-  if(index===0){
-    testBtn.onclick=()=>{ document.getElementById('quizOverlay').style.display='flex'; };
-  } else {
-    testBtn.onclick=()=>{ alert(`Start Unit Test for ${unit.name}`); };
-  }
-
+  const dropdown=document.createElement('div'); dropdown.className='unit-dropdown';
+  const studyBtn=document.createElement('button'); studyBtn.className='study-btn';
+  studyBtn.innerHTML='<i class="fas fa-book"></i> Study';
+  studyBtn.onclick=()=>alert(`Study ${unit.name}`);
+  const testBtn=document.createElement('button'); testBtn.className='test-btn';
+  testBtn.innerHTML='<i class="fas fa-clipboard-check"></i> Unit Test';
+  testBtn.onclick=()=>openQuiz(index); // Open quiz
   dropdown.appendChild(studyBtn); dropdown.appendChild(testBtn); card.appendChild(dropdown);
-  header.onclick = ()=>{ dropdown.style.display = dropdown.style.display==='flex'?'none':'flex'; };
+  header.onclick=()=>{ dropdown.style.display=dropdown.style.display==='flex'?'none':'flex'; }
   container.appendChild(card);
 });
 
-// ====== Quiz Logic (Level 1) ======
-const quizData = [
+// ===================== Quiz =====================
+const quizData=[
   {q:"What is a 'stock'?", a:["Share of ownership in a company","Loan","Company expense","Bank account"], correct:0, explanation:"A stock represents ownership in a company."},
   {q:"What is a 'bond'?", a:["Loan to a company or government","Stock","Debt you own","Savings account"], correct:0, explanation:"A bond is a loan you give to a company or government."},
   {q:"What is an 'asset'?", a:["Something valuable you own","Debt you owe","Company liability","Stock market"], correct:0, explanation:"An asset is something valuable that you own."},
@@ -234,11 +232,11 @@ const quizData = [
   {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stocks","Company revenue","Loan type"], correct:0, explanation:"Interest is what you pay for borrowing money."}
 ];
 
-let current=0, answers=Array(quizData.length).fill(null), flags=Array(quizData.length).fill(false);
+let current=0, answers=Array(quizData.length).fill(null), flags=Array(quizData.length).fill(false), currentUnit=0;
 
+const quizContainer=document.getElementById('quizContainer');
 const startScreen=document.getElementById('startScreen');
 const startBtn=document.getElementById('startBtn');
-const scoreInfo=document.getElementById('scoreInfo');
 const quizDiv=document.getElementById('quiz');
 const questionNumberEl=document.getElementById('questionNumber');
 const questionEl=document.getElementById('question');
@@ -247,12 +245,23 @@ const prevBtn=document.getElementById('prevBtn');
 const nextBtn=document.getElementById('nextBtn');
 const flagBtn=document.getElementById('flagBtn');
 const progressEl=document.getElementById('progress');
+const reviewDiv=document.getElementById('review');
+const submitBtn=document.getElementById('submitBtn');
 const scoreScreen=document.getElementById('scoreScreen');
 const scoreText=document.getElementById('scoreText');
-const missedList=document.getElementById('missedList');
 const restartBtn=document.getElementById('restartBtn');
-const highScoreText=document.getElementById('highScoreText');
-const lastScoreText=document.getElementById('lastScoreText');
+
+function openQuiz(unitIndex){
+  currentUnit=unitIndex;
+  quizContainer.style.display='flex';
+  startScreen.style.display='block';
+  quizDiv.style.display='none';
+  reviewDiv.style.display='none';
+  scoreScreen.style.display='none';
+  const lastScoreLS=units[unitIndex].lastScore||0;
+  const highScoreLS=units[unitIndex].highScore||0;
+  document.getElementById('scoreInfo').innerHTML=`Last Score: ${lastScoreLS} / 10<br>Highest Score: ${highScoreLS} / 10`;
+}
 
 function loadQuestion(){
   const q=quizData[current];
@@ -263,62 +272,75 @@ function loadQuestion(){
     const btn=document.createElement('button');
     btn.textContent=opt;
     btn.classList.toggle('selected',answers[current]===i);
-    btn.onclick=()=>{
-      answers[current]=i;
-      Array.from(optionsEl.children).forEach(b=>b.classList.remove('selected'));
-      btn.classList.add('selected');
-    };
+    btn.onclick=()=>{answers[current]=i; Array.from(optionsEl.children).forEach(b=>b.classList.remove('selected')); btn.classList.add('selected');};
     optionsEl.appendChild(btn);
   });
   flagBtn.textContent=flags[current]?'Unflag':'Flag';
   progressEl.style.width=`${((current+1)/quizData.length)*100}%`;
 }
+
 function nextQuestion(){ if(current<quizData.length-1){ current++; loadQuestion(); } else { submitQuiz(); } }
 function prevQuestion(){ if(current>0){ current--; loadQuestion(); } }
 function toggleFlag(){ flags[current]=!flags[current]; flagBtn.textContent=flags[current]?'Unflag':'Flag'; }
 
 function submitQuiz(){
-  quizDiv.style.display='none';
-  scoreScreen.style.display='block';
-  let score=0;
-  missedList.innerHTML='';
-  quizData.forEach((q,i)=>{
-    const li=document.createElement('li');
-    if(answers[i]===q.correct){ score++; li.classList.add('correct'); }
-    else{ li.classList.add('wrong'); }
-    li.innerHTML=`Q${i+1}: Your answer: ${answers[i]!==null?q.a[answers[i]]:'None'}<br>Correct: ${q.a[q.correct]}<br>Explanation: ${q.explanation}`;
-    missedList.appendChild(li);
-  });
+  quizDiv.style.display='none'; reviewDiv.style.display='none'; scoreScreen.style.display='block';
+  let score=0; quizData.forEach((q,i)=>{ if(answers[i]===q.correct) score++; });
   scoreText.textContent=`Your Score: ${score} / ${quizData.length}`;
-  const lastScore = score;
-  const highScore = Math.max(score, localStorage.getItem('investQuizHighScore')||0);
-  localStorage.setItem('investQuizLastScore', lastScore);
-  localStorage.setItem('investQuizHighScore', highScore);
-  lastScoreText.textContent=`Last Score: ${lastScore} / ${quizData.length}`;
-  highScoreText.textContent=`Highest Score: ${highScore} / ${quizData.length}`;
+
+  // Save to the unit
+  units[currentUnit].lastScore=score;
+  units[currentUnit].highScore=Math.max(score, units[currentUnit].highScore||0);
+  renderUnits(); // Update dashboard
 }
 
 function restartQuiz(){
   answers=Array(quizData.length).fill(null);
   flags=Array(quizData.length).fill(false);
   current=0;
+  startScreen.style.display='block';
+  quizDiv.style.display='none';
+  reviewDiv.style.display='none';
   scoreScreen.style.display='none';
-  quizDiv.style.display='block';
-  loadQuestion();
 }
 
 prevBtn.onclick=prevQuestion;
 nextBtn.onclick=nextQuestion;
 flagBtn.onclick=toggleFlag;
+submitBtn.onclick=submitQuiz;
 restartBtn.onclick=restartQuiz;
-
 startBtn.onclick=()=>{
   startScreen.style.display='none';
   quizDiv.style.display='block';
   loadQuestion();
 };
 
-scoreInfo.innerHTML=`Last Score: ${localStorage.getItem('investQuizLastScore')||0} / 10<br>Highest Score: ${localStorage.getItem('investQuizHighScore')||0} / 10`;
+function renderUnits(){ 
+  document.getElementById('unitContainer').innerHTML=''; 
+  units.forEach((unit,index)=>{
+    const card=document.createElement('div'); card.className='unit-card';
+    const header=document.createElement('div'); header.className='unit-header';
+    const titleDiv=document.createElement('div'); titleDiv.className='title';
+    if(unit.mastered){ const star=document.createElement('span'); star.className='star'; star.innerHTML='<i class="fas fa-star"></i>'; titleDiv.appendChild(star); }
+    titleDiv.appendChild(document.createTextNode(unit.name));
+    const scoreDiv=document.createElement('div'); scoreDiv.className='scores';
+    const last=unit.lastScore!==null?unit.lastScore:defaultScoreText;
+    const high=unit.highScore!==null?unit.highScore:defaultScoreText;
+    scoreDiv.textContent=`Last: ${last} | High: ${high}`;
+    header.appendChild(titleDiv); header.appendChild(scoreDiv); card.appendChild(header);
+    const dropdown=document.createElement('div'); dropdown.className='unit-dropdown';
+    const studyBtn=document.createElement('button'); studyBtn.className='study-btn';
+    studyBtn.innerHTML='<i class="fas fa-book"></i> Study'; studyBtn.onclick=()=>alert(`Study ${unit.name}`);
+    const testBtn=document.createElement('button'); testBtn.className='test-btn';
+    testBtn.innerHTML='<i class="fas fa-clipboard-check"></i> Unit Test'; testBtn.onclick=()=>openQuiz(index);
+    dropdown.appendChild(studyBtn); dropdown.appendChild(testBtn); card.appendChild(dropdown);
+    header.onclick=()=>{ dropdown.style.display=dropdown.style.display==='flex'?'none':'flex'; }
+    document.getElementById('unitContainer').appendChild(card);
+  });
+}
+
+// Initial render
+renderUnits();
 </script>
 
 </body>

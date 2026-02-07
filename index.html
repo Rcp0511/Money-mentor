@@ -93,26 +93,26 @@ header {
 </div>
 
 <script>
-// Default text for units not yet taken
+// Default scores
 const defaultScoreText = 'Not taken yet';
 
 // Define units
 const units = [
-  {name:"Unit 1: Investing Vocab", mastered:false, lastScore:null, highScore:null},
-  {name:"Unit 2", mastered:false, lastScore:null, highScore:null},
-  {name:"Unit 3", mastered:false, lastScore:null, highScore:null},
-  {name:"Unit 4", mastered:false, lastScore:null, highScore:null},
-  {name:"Unit 5", mastered:false, lastScore:null, highScore:null},
-  {name:"Unit 6", mastered:false, lastScore:null, highScore:null},
-  {name:"Unit 7", mastered:false, lastScore:null, highScore:null},
-  {name:"Unit 8", mastered:false, lastScore:null, highScore:null},
-  {name:"Unit 9", mastered:false, lastScore:null, highScore:null},
-  {name:"Unit 10", mastered:false, lastScore:null, highScore:null}
+  {name:"Unit 1: Investing Vocab"},
+  {name:"Unit 2"},
+  {name:"Unit 3"},
+  {name:"Unit 4"},
+  {name:"Unit 5"},
+  {name:"Unit 6"},
+  {name:"Unit 7"},
+  {name:"Unit 8"},
+  {name:"Unit 9"},
+  {name:"Unit 10"}
 ];
 
 const container = document.getElementById('unitsContainer');
 
-units.forEach((unit, index)=>{
+units.forEach((unit)=>{
   const unitDiv = document.createElement('div');
   unitDiv.className = 'unit';
   
@@ -120,21 +120,15 @@ units.forEach((unit, index)=>{
   const headerDiv = document.createElement('div');
   headerDiv.className = 'unit-header';
   
-  // Title + Star
+  // Title
   const titleDiv = document.createElement('div');
   titleDiv.className = 'unit-title';
-  if(unit.mastered){
-    const star = document.createElement('span');
-    star.className = 'unit-star';
-    star.textContent = '★';
-    titleDiv.appendChild(star);
-  }
-  titleDiv.appendChild(document.createTextNode(unit.name));
+  titleDiv.textContent = unit.name;
   
-  // Scores
+  // Scores always Not taken yet initially
   const scoresDiv = document.createElement('div');
   scoresDiv.className = 'unit-scores';
-  scoresDiv.textContent = `Last: ${unit.lastScore !== null ? unit.lastScore : defaultScoreText} | High: ${unit.highScore !== null ? unit.highScore : defaultScoreText}`;
+  scoresDiv.textContent = `Last: ${defaultScoreText} | High: ${defaultScoreText}`;
   
   headerDiv.appendChild(titleDiv);
   headerDiv.appendChild(scoresDiv);
@@ -164,7 +158,7 @@ units.forEach((unit, index)=>{
   dropdown.appendChild(testBtn);
   unitDiv.appendChild(dropdown);
   
-  // Toggle dropdown on unit click (excluding button clicks)
+  // Toggle dropdown on unit click
   unitDiv.onclick = (e)=>{
     if(e.target.tagName !== 'BUTTON'){
       dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';

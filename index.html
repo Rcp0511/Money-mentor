@@ -4,115 +4,139 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Student Dashboard</title>
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
+/* Base Styles */
 body {
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Inter', sans-serif;
   margin: 0;
-  background: #e6f4ea;
+  background: #f0f7f2;
   color: #1a1a1a;
 }
-
 header {
-  background: linear-gradient(90deg, #4aa23f, #2e7d32);
+  background: linear-gradient(135deg, #4aa23f, #2e7d32);
   color: white;
-  padding: 20px;
+  padding: 25px;
   text-align: center;
   font-size: 2em;
-  font-weight: bold;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  font-weight: 700;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
-
+header::after {
+  content: "";
+  position: absolute;
+  bottom: 0; left: 0; width: 100%; height: 50px;
+  background: url('https://images.unsplash.com/photo-1605902711622-cfb43c44350f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8ZmxvdyUyMGdyYXBoaWN8fDB8fHx8MTY5NzYwMzM0OA&ixlib=rb-4.0.3&q=80&w=1080') no-repeat center/cover;
+  opacity: 0.1;
+}
 .container {
   max-width: 900px;
   margin: 30px auto;
   padding: 0 20px;
 }
 
+/* Unit Card Styles */
 .unit {
   background: linear-gradient(135deg, #a8e6a3, #6cc24a);
   border-radius: 15px;
-  padding: 15px 20px;
-  margin-bottom: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
   cursor: pointer;
   position: relative;
   transition: transform 0.2s, box-shadow 0.2s;
 }
-
 .unit:hover {
   transform: scale(1.02);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.2);
 }
-
 .unit-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
 }
-
 .unit-title {
-  font-size: 1.2em;
-  font-weight: bold;
+  font-size: 1.3em;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
 }
-
-.unit-scores {
-  font-size: 0.9em;
-}
-
 .unit-star {
   color: gold;
   margin-right: 10px;
+  font-size: 1.2em;
 }
-
+.unit-scores {
+  font-size: 0.95em;
+  color: #0b2d0b;
+}
 .unit-dropdown {
   display: none;
-  margin-top: 10px;
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0,0,0,0.1);
+  display: flex;
+  gap: 10px;
 }
-
 .unit-dropdown button {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
+  flex: 1;
+  padding: 12px 0;
   border: none;
   border-radius: 10px;
   font-size: 1em;
   cursor: pointer;
-  transition: 0.2s;
+  color: white;
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
+.unit-dropdown button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+.study-btn { background-color: #28a745; }
+.test-btn { background-color: #007bff; }
 
-.study-btn { background-color: #28a745; color: white; }
-.study-btn:hover { background-color: #218838; }
-
-.test-btn { background-color: #007bff; color: white; }
-.test-btn:hover { background-color: #0056b3; }
+/* Responsive */
+@media (max-width:600px){
+  .unit-header { flex-direction: column; align-items: flex-start; gap: 5px; }
+  .unit-dropdown { flex-direction: column; }
+}
 </style>
 </head>
 <body>
+
 <header>Student Dashboard</header>
+
 <div class="container" id="unitsContainer">
-  <!-- Units will be injected here -->
+  <!-- Units injected here -->
 </div>
 
 <script>
-// Default scores
-const defaultScoreText = 'Not taken yet';
+// ================== VARIABLES ==================
 
-// Define units
+// Unit data
 const units = [
-  {name:"Unit 1: Investing Vocab"},
-  {name:"Unit 2"},
-  {name:"Unit 3"},
-  {name:"Unit 4"},
-  {name:"Unit 5"},
-  {name:"Unit 6"},
-  {name:"Unit 7"},
-  {name:"Unit 8"},
-  {name:"Unit 9"},
-  {name:"Unit 10"}
+  {name:"Unit 1: Investing Vocab", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 2", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 3", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 4", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 5", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 6", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 7", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 8", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 9", mastered:false, lastScore:null, highScore:null},
+  {name:"Unit 10", mastered:false, lastScore:null, highScore:null}
 ];
 
+// Default text for scores
+const defaultScoreText = "Not taken yet";
+
+// ================== UNIT CREATION ==================
 const container = document.getElementById('unitsContainer');
 
-units.forEach((unit)=>{
+units.forEach((unit, index)=>{
+  // Unit card
   const unitDiv = document.createElement('div');
   unitDiv.className = 'unit';
   
@@ -123,50 +147,53 @@ units.forEach((unit)=>{
   // Title
   const titleDiv = document.createElement('div');
   titleDiv.className = 'unit-title';
-  titleDiv.textContent = unit.name;
+  if(unit.mastered){
+    const star = document.createElement('span');
+    star.className = 'unit-star';
+    star.textContent = '★';
+    titleDiv.appendChild(star);
+  }
+  titleDiv.appendChild(document.createTextNode(unit.name));
   
-  // Scores always Not taken yet initially
+  // Scores
   const scoresDiv = document.createElement('div');
   scoresDiv.className = 'unit-scores';
-  scoresDiv.textContent = `Last: ${defaultScoreText} | High: ${defaultScoreText}`;
+  const last = unit.lastScore !== null ? unit.lastScore : defaultScoreText;
+  const high = unit.highScore !== null ? unit.highScore : defaultScoreText;
+  scoresDiv.textContent = `Last: ${last} | High: ${high}`;
   
   headerDiv.appendChild(titleDiv);
   headerDiv.appendChild(scoresDiv);
   unitDiv.appendChild(headerDiv);
   
-  // Dropdown
+  // Dropdown buttons
   const dropdown = document.createElement('div');
   dropdown.className = 'unit-dropdown';
   
   const studyBtn = document.createElement('button');
   studyBtn.className = 'study-btn';
   studyBtn.textContent = 'Study';
-  studyBtn.onclick = (e)=>{
-    e.stopPropagation();
-    alert(`Start studying ${unit.name}`);
-  };
+  studyBtn.onclick = ()=>alert(`Start studying ${unit.name}`);
   
   const testBtn = document.createElement('button');
   testBtn.className = 'test-btn';
   testBtn.textContent = 'Unit Test';
-  testBtn.onclick = (e)=>{
-    e.stopPropagation();
-    alert(`Start unit test for ${unit.name}`);
-  };
+  testBtn.onclick = ()=>alert(`Start unit test for ${unit.name}`);
   
   dropdown.appendChild(studyBtn);
   dropdown.appendChild(testBtn);
   unitDiv.appendChild(dropdown);
   
-  // Toggle dropdown on unit click
+  // Toggle dropdown
   unitDiv.onclick = (e)=>{
     if(e.target.tagName !== 'BUTTON'){
-      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+      dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
     }
   };
   
   container.appendChild(unitDiv);
 });
 </script>
+
 </body>
 </html>

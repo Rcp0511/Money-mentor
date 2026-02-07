@@ -84,42 +84,6 @@ header {
 
 .test-btn { background-color: #007bff; color: white; }
 .test-btn:hover { background-color: #0056b3; }
-
-/* Quiz Modal Overlay */
-#quizModal {
-  display: none;
-  position: fixed;
-  top: 0; left:0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-#quizContainer {
-  background: #fff;
-  padding: 25px 30px;
-  border-radius: 20px;
-  width: 500px;
-  max-width: 90%;
-  max-height: 90%;
-  overflow-y: auto;
-  text-align: center;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-  position: relative;
-}
-
-#closeQuiz {
-  position: absolute;
-  top: 10px; right: 15px;
-  cursor: pointer;
-  font-size: 1.2em;
-  font-weight: bold;
-  color: #333;
-}
-
-button { cursor: pointer; }
 </style>
 </head>
 <body>
@@ -128,42 +92,27 @@ button { cursor: pointer; }
   <!-- Units will be injected here -->
 </div>
 
-<!-- Quiz Modal -->
-<div id="quizModal">
-  <div id="quizContainer">
-    <span id="closeQuiz">✖</span>
-    <div id="quiz"></div>
-  </div>
-</div>
-
 <script>
-// Units setup
+// Variables for default scores
+const DEFAULT_SCORE = "NA";
+
+// Simulated user data for each unit
 const units = [
-  {name:"Unit 1 – Investing Vocab Level 1", key:"unit1"},
-  {name:"Unit 2 – Investing Vocab Level 2", key:"unit2"},
-  {name:"Unit 3 – Investing Vocab Level 3", key:"unit3"},
-  {name:"Unit 4 – Investing Vocab Level 4", key:"unit4"},
-  {name:"Unit 5 – Investing Vocab Level 5", key:"unit5"},
-  {name:"Unit 6 – Investing Vocab Level 6", key:"unit6"},
-  {name:"Unit 7 – Investing Vocab Level 7", key:"unit7"},
-  {name:"Unit 8 – Investing Vocab Level 8", key:"unit8"},
-  {name:"Unit 9 – Investing Vocab Level 9", key:"unit9"},
-  {name:"Unit 10 – Investing Vocab Level 10", key:"unit10"}
+  {name:"Investing Vocab, Unit 1", mastered:false, lastScore:DEFAULT_SCORE, highScore:DEFAULT_SCORE},
+  {name:"Unit 2", mastered:false, lastScore:DEFAULT_SCORE, highScore:DEFAULT_SCORE},
+  {name:"Unit 3", mastered:false, lastScore:DEFAULT_SCORE, highScore:DEFAULT_SCORE},
+  {name:"Unit 4", mastered:false, lastScore:DEFAULT_SCORE, highScore:DEFAULT_SCORE},
+  {name:"Unit 5", mastered:false, lastScore:DEFAULT_SCORE, highScore:DEFAULT_SCORE},
+  {name:"Unit 6", mastered:false, lastScore:DEFAULT_SCORE, highScore:DEFAULT_SCORE},
+  {name:"Unit 7", mastered:false, lastScore:DEFAULT_SCORE, highScore:DEFAULT_SCORE},
+  {name:"Unit 8", mastered:false, lastScore:DEFAULT_SCORE, highScore:DEFAULT_SCORE},
+  {name:"Unit 9", mastered:false, lastScore:DEFAULT_SCORE, highScore:DEFAULT_SCORE},
+  {name:"Unit 10", mastered:false, lastScore:DEFAULT_SCORE, highScore:DEFAULT_SCORE}
 ];
 
 const container = document.getElementById('unitsContainer');
-const quizModal = document.getElementById('quizModal');
-const quizDiv = document.getElementById('quiz');
-const closeQuiz = document.getElementById('closeQuiz');
 
-function getScores(key){
-  return {
-    last: localStorage.getItem(key+"_last") || "NA",
-    high: localStorage.getItem(key+"_high") || "NA"
-  };
-}
-
-units.forEach((unit)=>{
+units.forEach((unit, index)=>{
   const unitDiv = document.createElement('div');
   unitDiv.className = 'unit';
   
@@ -172,13 +121,17 @@ units.forEach((unit)=>{
   
   const titleDiv = document.createElement('div');
   titleDiv.className = 'unit-title';
-  const scores = getScores(unit.key);
-  titleDiv.textContent = unit.name;
+  if(unit.mastered){
+    const star = document.createElement('span');
+    star.className = 'unit-star';
+    star.textContent = '★';
+    titleDiv.appendChild(star);
+  }
+  titleDiv.appendChild(document.createTextNode(unit.name));
   
   const scoresDiv = document.createElement('div');
   scoresDiv.className = 'unit-scores';
-  scoresDiv.id = unit.key+"_scores";
-  scoresDiv.textContent = `Last: ${scores.last} | High: ${scores.high}`;
+  scoresDiv.textContent = `Last: ${unit.lastScore} | High: ${unit.highScore}`;
   
   headerDiv.appendChild(titleDiv);
   headerDiv.appendChild(scoresDiv);
@@ -197,16 +150,15 @@ units.forEach((unit)=>{
   const testBtn = document.createElement('button');
   testBtn.className = 'test-btn';
   testBtn.textContent = 'Unit Test';
-  testBtn.onclick = (e)=>{
-    e.stopPropagation();
-    openQuiz(unit.key);
-  };
+  testBtn.onclick = ()=>alert(`Start unit test for ${unit.name}`);
   
   dropdown.appendChild(studyBtn);
   dropdown.appendChild(testBtn);
+  
   unitDiv.appendChild(dropdown);
   
   unitDiv.onclick = (e)=>{
+    // Only toggle if the click wasn't on a button inside dropdown
     if(e.target.tagName !== 'BUTTON'){
       dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
     }
@@ -214,76 +166,6 @@ units.forEach((unit)=>{
   
   container.appendChild(unitDiv);
 });
-
-// Quiz Data – same as before
-const quizData = [
-  {q:"What is a 'stock'?", a:["Share of ownership in a company","Loan","Company expense","Bank account"], correct:0, explanation:"A stock represents ownership in a company."},
-  {q:"What is a 'bond'?", a:["Loan to a company or government","Stock","Debt you own","Savings account"], correct:0, explanation:"A bond is a loan you give to a company or government."},
-  {q:"What is an 'asset'?", a:["Something valuable you own","Debt you owe","Company liability","Stock market"], correct:0, explanation:"An asset is something valuable that you own."},
-  {q:"What is a 'liability'?", a:["Debt you owe","Investment gain","Stock","Dividend"], correct:0, explanation:"A liability is money you owe."},
-  {q:"What is a 'dividend'?", a:["Payment to shareholders","Company cost","Loan","Interest"], correct:0, explanation:"Dividends are payments made to shareholders."},
-  {q:"What is 'capital'?", a:["Money used for investment","Company revenue","Stock price","Debt"], correct:0, explanation:"Capital is money used to invest."},
-  {q:"What is a 'portfolio'?", a:["Collection of investments","Bank account","Single stock","Loan"], correct:0, explanation:"A portfolio is all your investments together."},
-  {q:"What is 'risk'?", a:["Chance of losing money","Guaranteed profit","Company stock","Interest rate"], correct:0, explanation:"Risk is the chance that you may lose money."},
-  {q:"What is 'liquidity'?", a:["How easily an asset can be turned into cash","Investment type","Profit","Stock index"], correct:0, explanation:"Liquidity is how quickly you can convert an asset to cash."},
-  {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stocks","Company revenue","Loan type"], correct:0, explanation:"Interest is what you pay for borrowing money."}
-];
-
-let currentUnitKey;
-let current=0;
-let answers=[];
-
-function openQuiz(unitKey){
-  currentUnitKey = unitKey;
-  current=0;
-  answers = Array(quizData.length).fill(null);
-  quizModal.style.display='flex';
-  loadQuestion();
-}
-
-closeQuiz.onclick = ()=>{ quizModal.style.display='none'; };
-
-function loadQuestion(){
-  const q=quizData[current];
-  quizDiv.innerHTML = `
-    <div style="font-size:1.1em;margin-bottom:15px;">Question ${current+1} of ${quizData.length}</div>
-    <div style="margin-bottom:20px;">${q.q}</div>
-    <div id="options"></div>
-    <div style="margin-top:15px;">
-      <button id="prevBtn">Previous</button>
-      <button id="nextBtn">${current===quizData.length-1?'Submit':'Next'}</button>
-    </div>
-  `;
-  const optionsEl = document.getElementById('options');
-  q.a.forEach((opt,i)=>{
-    const btn = document.createElement('button');
-    btn.style.display='block';
-    btn.style.margin='5px 0';
-    btn.style.padding='10px';
-    btn.textContent = opt;
-    btn.classList.toggle('selected', answers[current]===i);
-    btn.onclick=()=>{ answers[current]=i; loadQuestion(); };
-    optionsEl.appendChild(btn);
-  });
-
-  document.getElementById('prevBtn').onclick = ()=>{ if(current>0){ current--; loadQuestion(); } };
-  document.getElementById('nextBtn').onclick = ()=>{ 
-    if(current<quizData.length-1){ current++; loadQuestion(); } 
-    else{ submitQuiz(); } 
-  };
-}
-
-function submitQuiz(){
-  const score = answers.filter((ans,i)=>ans===quizData[i].correct).length;
-  // Update localStorage for this unit
-  localStorage.setItem(currentUnitKey+"_last", score);
-  const high = Math.max(score, parseInt(localStorage.getItem(currentUnitKey+"_high")||0));
-  localStorage.setItem(currentUnitKey+"_high", high);
-  // Update dashboard scores
-  document.getElementById(currentUnitKey+"_scores").textContent = `Last: ${score} | High: ${high}`;
-  alert(`Quiz submitted! Score: ${score} / ${quizData.length}`);
-  quizModal.style.display='none';
-}
 </script>
 </body>
 </html>

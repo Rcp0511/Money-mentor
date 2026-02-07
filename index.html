@@ -3,27 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Dashboard</title>
+<title>My Learning Dashboard</title>
 
-<!-- Modern font -->
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
-<!-- Font Awesome for icons -->
+<!-- Font Awesome Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 <style>
-/* -------------------- Global -------------------- */
+/* -------------------- Global Styles -------------------- */
 body {
   margin: 0;
-  font-family: 'Montserrat', sans-serif;
-  background: linear-gradient(150deg, #e0f5e0, #66bb6a);
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(145deg, #d0f0c0, #4caf50);
   color: #111;
 }
 
+/* -------------------- Header -------------------- */
 header {
   background: linear-gradient(120deg, #388e3c, #1b5e20);
   color: #fff;
-  padding: 25px;
+  padding: 25px 0;
   text-align: center;
   font-size: 2.2em;
   font-weight: 700;
@@ -32,26 +33,26 @@ header {
 
 /* -------------------- Container -------------------- */
 .container {
-  max-width: 900px;
+  max-width: 950px;
   margin: 30px auto;
   padding: 0 20px;
 }
 
 /* -------------------- Unit Card -------------------- */
 .unit-card {
-  background: linear-gradient(135deg, #c8f0c8, #4caf50);
-  border-radius: 18px;
+  background: linear-gradient(135deg, #c8f0c8, #66bb6a);
+  border-radius: 20px;
   margin-bottom: 20px;
   padding: 20px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.15);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .unit-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.2);
 }
 
-/* Unit header */
+/* Unit Header */
 .unit-header {
   display: flex;
   justify-content: space-between;
@@ -62,7 +63,7 @@ header {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 1.3em;
 }
 .unit-header .title .star {
@@ -76,7 +77,7 @@ header {
 
 /* -------------------- Dropdown -------------------- */
 .unit-dropdown {
-  display: none; /* closed by default */
+  display: none; /* start closed */
   margin-top: 15px;
   display: flex;
   gap: 10px;
@@ -100,6 +101,8 @@ header {
   transform: scale(1.05);
   box-shadow: 0 5px 12px rgba(0,0,0,0.2);
 }
+
+/* Buttons Colors */
 .study-btn { background: #2e7d32; }
 .test-btn { background: #1b5e20; }
 
@@ -112,11 +115,13 @@ header {
 </head>
 <body>
 
-<header>Student Dashboard</header>
+<header id="dashboardTitle">Student Dashboard</header>
+
 <div class="container" id="unitContainer"></div>
 
 <script>
 // ===================== Variables =====================
+const dashboardTitle = "Student Dashboard"; // easily change header text
 const defaultScoreText = "Not taken yet";
 
 const units = [
@@ -134,6 +139,8 @@ const units = [
 
 // ===================== Render Units =====================
 const container = document.getElementById('unitContainer');
+const headerEl = document.getElementById('dashboardTitle');
+headerEl.textContent = dashboardTitle;
 
 units.forEach((unit, index)=>{
   const card = document.createElement('div');
@@ -182,7 +189,7 @@ units.forEach((unit, index)=>{
 
   card.appendChild(dropdown);
 
-  // Toggle dropdown
+  // Toggle dropdown on header click
   header.onclick = () => {
     dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
   }

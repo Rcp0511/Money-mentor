@@ -3,187 +3,51 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<title>Unit Test Quiz</title>
 <style>
-/* -------------------- Global -------------------- */
-body {
-  margin: 0;
-  font-family: 'Montserrat', sans-serif;
-  background: linear-gradient(150deg, #e0f5e0, #66bb6a);
-  color: #111;
-}
-header {
-  background: linear-gradient(120deg, #388e3c, #1b5e20);
-  color: #fff;
-  padding: 25px;
-  text-align: center;
-  font-size: 2.2em;
-  font-weight: 700;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
-/* -------------------- Container -------------------- */
-.container {
-  max-width: 900px;
-  margin: 30px auto;
-  padding: 0 20px;
-}
-/* -------------------- Unit Card -------------------- */
-.unit-card {
-  background: linear-gradient(135deg, #c8f0c8, #4caf50);
-  border-radius: 18px;
-  margin-bottom: 20px;
-  padding: 20px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.unit-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-}
-.unit-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-}
-.unit-header .title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 600;
-  font-size: 1.3em;
-}
-.unit-header .title .star {
-  color: gold;
-  font-size: 1.2em;
-}
-.unit-header .scores {
-  font-size: 0.95em;
-  color: #0a3d0a;
-}
-/* -------------------- Dropdown -------------------- */
-.unit-dropdown {
-  display: none;
-  margin-top: 15px;
-  display: flex;
-  gap: 10px;
-}
-.unit-dropdown button {
-  flex: 1;
-  padding: 12px 0;
-  border: none;
-  border-radius: 12px;
-  font-size: 1em;
-  font-weight: 500;
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all 0.2s ease;
-}
-.unit-dropdown button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 5px 12px rgba(0,0,0,0.2);
-}
-.study-btn { background: #2e7d32; }
-.test-btn { background: #1b5e20; }
-/* Responsive */
-@media(max-width:600px){
-  .unit-header { flex-direction: column; align-items: flex-start; gap: 5px; }
-  .unit-dropdown { flex-direction: column; }
-}
+body { font-family: sans-serif; margin:0; background:#e0f5e0; }
+header { background:#388e3c; color:white; text-align:center; padding:20px; font-size:2em; font-weight:bold; }
+.container { max-width:900px; margin:20px auto; }
+.unit-card { background:#66bb6a; padding:15px; border-radius:15px; margin-bottom:15px; cursor:pointer; position:relative; }
+.unit-card .title { font-weight:bold; font-size:1.2em; display:flex; align-items:center; gap:10px; }
+.unit-card .scores { font-size:0.85em; margin-top:5px; }
+.unit-dropdown { display:none; margin-top:10px; display:flex; gap:10px; }
+.unit-dropdown button { flex:1; padding:10px; border:none; border-radius:10px; color:white; cursor:pointer; }
+.study-btn { background:#2e7d32; } .test-btn { background:#1b5e20; }
 
-/* -------------------- Quiz Overlay -------------------- */
-#quizOverlay {
-  display: none;
-  position: fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background: rgba(0,0,0,0.7);
-  z-index:1000;
-  overflow:auto;
-}
-.quiz-container {
-  position: relative;
-  margin:50px auto;
-  background: #fff;
-  padding: 25px 30px;
-  border-radius: 20px;
-  box-shadow:0 15px 40px rgba(0,0,0,0.3);
-  width:480px;
-  max-width:95%;
-  text-align:center;
-}
-#topRestart,#closeOverlay {
-  position:absolute;
-  top:15px;
-  padding:8px 12px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  color:white;
-}
-#topRestart { left:15px; background:#dc3545; }
+/* Overlay */
+#quizOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; overflow:auto; }
+.quiz-container { background:white; max-width:500px; margin:50px auto; padding:25px; border-radius:20px; position:relative; }
+#topRestart,#closeOverlay { position:absolute; top:15px; padding:8px 12px; border:none; border-radius:8px; cursor:pointer; color:white; }
+#topRestart { left:15px; background:#dc3545; display:none; } 
 #closeOverlay { right:15px; background:#888; }
-button { cursor:pointer; }
 
-/* Start Screen */
-#startScreen { display:block; }
-.start-btn {
-  padding: 15px 25px; font-size:1.2em; border:none; border-radius:12px; background:#28a745; color:white; transition:0.3s;
-}
+#startScreen { text-align:center; }
+.start-btn { padding:15px 25px; background:#28a745; color:white; border:none; border-radius:12px; font-size:1.2em; cursor:pointer; }
 .start-btn:hover { background:#218838; }
-#scoreInfo { font-size: 0.9em; margin-top: 10px; }
 
 /* Quiz */
-.question-number { font-size: 0.9em; color: #666; margin-bottom: 5px; }
-.question { font-size: 1.3em; margin-bottom: 20px; }
-.options button {
-  display: block; width: 100%; margin: 8px 0; padding: 12px; font-size: 1em;
-  border: 2px solid #ccc; border-radius: 10px; background-color: #fdfdfd; cursor: pointer; transition:0.2s; text-align:left;
-}
-.options button:hover { border-color: #007bff; background-color: #e0f0ff; transform: scale(1.02); }
-.options button.selected { background-color: #d4edda; border-color: #28a745; }
+#quiz { display:none; }
+.question-number { margin-bottom:5px; font-size:0.9em; color:#555; }
+.question { margin-bottom:15px; font-size:1.2em; }
+.options button { display:block; width:100%; margin:8px 0; padding:12px; text-align:left; border:2px solid #ccc; border-radius:10px; cursor:pointer; background:#fdfdfd; }
+.options button:hover { border-color:#007bff; background:#e0f0ff; }
+.options button.selected { background:#d4edda; border-color:#28a745; }
 .controls { display:flex; justify-content:space-between; margin-top:15px; }
-.controls button { padding:10px 15px; font-size:0.95em; border:none; border-radius:8px; }
-#prevBtn { background-color:#6c757d;color:white; }
-#prevBtn:hover { background-color:#5a6268; }
-#nextBtn { background-color:#007bff;color:white; }
-#nextBtn:hover { background-color:#0056b3; }
-#flagBtn { background-color:#ffc107;color:white; }
-#flagBtn:hover { background-color:#e0a800; }
-.progress-bar { height:12px; background:#eee; border-radius:6px; overflow:hidden; margin-top:20px; }
-.progress { height:100%; width:0%; background:linear-gradient(90deg, #28a745, #85e085); transition:width 0.3s; }
+.controls button { padding:8px 12px; border:none; border-radius:8px; cursor:pointer; color:white; }
+#prevBtn { background:#6c757d; } #nextBtn { background:#007bff; } #flagBtn { background:#ffc107; }
+.progress-bar { height:12px; background:#eee; border-radius:6px; margin-top:15px; }
+.progress { height:100%; width:0%; background:linear-gradient(90deg,#28a745,#85e085); transition:0.3s; }
 
-/* Review & Score */
-.review,.score-screen,#quiz { display:none; text-align:center; }
-.review h3,.score-screen h3 { margin-bottom:10px; }
-.review p.legend { font-size:0.9em; margin-bottom:10px; }
-.review p.legend span { display:inline-block; width:15px; height:15px; border-radius:4px; margin-right:5px; vertical-align:middle; }
-#flaggedCount { font-size:0.85em; color:#555; margin-bottom:10px; }
-.review-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(50px,1fr)); gap:10px; margin-bottom:20px; }
-.review-box { border-radius:10px; padding:10px; font-size:0.85em; cursor:pointer; position:relative; display:flex; justify-content:center; align-items:center; transition:0.2s; }
-.review-box.answered { background-color:#ccc; color:#000; }
-.review-box.notanswered { background-color:#e57373; color:white; }
-.review-box.flagged::after { content:"⚑"; color:red; font-weight:bold; position:absolute; top:5px; right:8px; font-size:1em; }
-.review-box:hover::before {
-  content: attr(data-tooltip);
-  position:absolute;
-  bottom:-25px; left:50%;
-  transform:translateX(-50%);
-  background:#333; color:#fff; padding:3px 6px; border-radius:4px; font-size:0.75em; white-space:nowrap;
-}
-/* Score list */
-.score-screen ul { list-style-type:none; padding:0; text-align:left; max-height:250px; overflow-y:auto; }
-.score-screen li { margin:5px 0; padding:5px; border-left:4px solid #007bff; background:#fdfdfd; border-radius:5px; }
-.score-screen li.correct { border-left:4px solid #28a745; }
-.score-screen li.wrong { border-left:4px solid #dc3545; cursor:pointer; }
-.restart-btn { margin-top:20px; background-color:#28a745; color:white; border:none; padding:12px 20px; font-size:1em; border-radius:10px; cursor:pointer; }
-.restart-btn:hover { background-color:#218838; }
+/* Review and Score */
+.review, #scoreScreen { display:none; text-align:center; }
+.review-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(40px,1fr)); gap:8px; margin:10px 0; }
+.review-box { padding:8px; border-radius:6px; font-size:0.85em; cursor:pointer; position:relative; }
+.review-box.answered { background:#ccc; } .review-box.notanswered { background:#e57373; color:white; }
+.review-box.flagged::after { content:"⚑"; color:red; position:absolute; top:2px; right:2px; font-size:0.9em; }
+#missedList { text-align:left; margin-top:10px; padding-left:20px; }
+.restart-btn { margin-top:15px; padding:10px 18px; border:none; border-radius:10px; background:#28a745; color:white; cursor:pointer; }
+.restart-btn:hover { background:#218838; }
 </style>
 </head>
 <body>
@@ -191,18 +55,17 @@ button { cursor:pointer; }
 <header>Student Dashboard</header>
 <div class="container" id="unitContainer"></div>
 
-<!-- QUIZ OVERLAY -->
 <div id="quizOverlay">
   <div class="quiz-container">
     <button id="topRestart">Restart Quiz</button>
     <button id="closeOverlay">✖</button>
-    <!-- Start Screen -->
+
     <div id="startScreen">
-      <h1>📈 Investing Vocab – Level 1 📈</h1>
+      <h2>Unit Test Quiz</h2>
       <button class="start-btn" id="startBtn">Start Quiz</button>
       <p id="scoreInfo"></p>
     </div>
-    <!-- Quiz Screen -->
+
     <div id="quiz">
       <div class="question-number" id="questionNumber"></div>
       <div class="question" id="question"></div>
@@ -214,71 +77,50 @@ button { cursor:pointer; }
       </div>
       <div class="progress-bar"><div class="progress" id="progress"></div></div>
     </div>
-    <!-- Review Screen -->
+
     <div class="review" id="review">
-      <h3>Review Your Questions</h3>
-      <p class="legend">
-        <span style="background:#ccc;"></span> Answered &nbsp;&nbsp;
-        <span style="background:#e57373;"></span> Not Answered &nbsp;&nbsp;
-        <span style="color:red;font-weight:bold;">⚑</span> Flagged
-      </p>
-      <p id="flaggedCount"></p>
+      <h3>Review Questions</h3>
       <div class="review-grid" id="reviewGrid"></div>
       <button id="submitBtn" class="restart-btn">Submit Quiz</button>
     </div>
-    <!-- Score Screen -->
-    <div class="score-screen" id="scoreScreen">
+
+    <div id="scoreScreen">
       <h3 id="scoreText"></h3>
       <ul id="missedList"></ul>
-      <button id="restartBtn" class="restart-btn">Restart Quiz</button>
-      <p id="highScoreText"></p>
       <p id="lastScoreText"></p>
+      <p id="highScoreText"></p>
+      <button id="restartBtn" class="restart-btn">Restart Quiz</button>
     </div>
   </div>
 </div>
 
 <script>
-// ========== Unit Data ==========
+// ========== Units ==========
 const units = [
   {name:"Unit 1: Investing Vocab", mastered:false, lastScore:null, highScore:null},
   {name:"Unit 2", mastered:false, lastScore:null, highScore:null},
   {name:"Unit 3", mastered:false, lastScore:null, highScore:null},
-  {name:"Unit 4", mastered:false, lastScore:null, highScore:null},
-  {name:"Unit 5", mastered:false, lastScore:null, highScore:null},
-  {name:"Unit 6", mastered:false, lastScore:null, highScore:null},
-  {name:"Unit 7", mastered:false, lastScore:null, highScore:null},
-  {name:"Unit 8", mastered:false, lastScore:null, highScore:null},
-  {name:"Unit 9", mastered:false, lastScore:null, highScore:null},
-  {name:"Unit 10", mastered:false, lastScore:null, highScore:null},
 ];
 
 // ========== Render Units ==========
 const container=document.getElementById('unitContainer');
 units.forEach((unit,index)=>{
   const card=document.createElement('div'); card.className='unit-card';
-  const header=document.createElement('div'); header.className='unit-header';
-  const titleDiv=document.createElement('div'); titleDiv.className='title';
-  if(unit.mastered){
-    const star=document.createElement('span'); star.className='star'; star.innerHTML='<i class="fas fa-star"></i>'; titleDiv.appendChild(star);
-  }
-  titleDiv.appendChild(document.createTextNode(unit.name));
+  const titleDiv=document.createElement('div'); titleDiv.className='title'; titleDiv.textContent=unit.name;
+  if(unit.mastered){ titleDiv.innerHTML='<span style="color:gold;">★</span> '+titleDiv.textContent; }
+  card.appendChild(titleDiv);
   const scoreDiv=document.createElement('div'); scoreDiv.className='scores';
-  const last = unit.lastScore!==null?unit.lastScore:'Not taken yet';
-  const high = unit.highScore!==null?unit.highScore:'Not taken yet';
-  scoreDiv.textContent=`Last Unit Test Score: ${last} | Highest Unit Test Score: ${high}`;
-  header.appendChild(titleDiv); header.appendChild(scoreDiv); card.appendChild(header);
+  scoreDiv.textContent=`Last Unit Test Score: ${unit.lastScore!==null?unit.lastScore:'N/A'} | Highest Unit Test Score: ${unit.highScore!==null?unit.highScore:'N/A'}`;
+  card.appendChild(scoreDiv);
 
-  // Dropdown buttons
   const dropdown=document.createElement('div'); dropdown.className='unit-dropdown';
-  const studyBtn=document.createElement('button'); studyBtn.className='study-btn';
-  studyBtn.innerHTML='<i class="fas fa-book"></i> Study'; studyBtn.onclick=()=>alert(`Study ${unit.name}`);
-  const testBtn=document.createElement('button'); testBtn.className='test-btn';
-  testBtn.innerHTML='<i class="fas fa-clipboard-check"></i> Unit Test'; 
-  testBtn.onclick=()=>{ quizOverlayShow(unit,index); };
+  const studyBtn=document.createElement('button'); studyBtn.className='study-btn'; studyBtn.textContent='Study';
+  studyBtn.onclick=()=>alert('Study '+unit.name);
+  const testBtn=document.createElement('button'); testBtn.className='test-btn'; testBtn.textContent='Unit Test';
+  testBtn.onclick=()=>openQuiz(index);
   dropdown.appendChild(studyBtn); dropdown.appendChild(testBtn);
   card.appendChild(dropdown);
-
-  header.onclick=()=>{ dropdown.style.display = dropdown.style.display==='flex'?'none':'flex'; };
+  card.onclick=()=>{ dropdown.style.display = dropdown.style.display==='flex'?'none':'flex'; };
   container.appendChild(card);
 });
 
@@ -297,59 +139,49 @@ const flagBtn=document.getElementById('flagBtn');
 const progressEl=document.getElementById('progress');
 const reviewDiv=document.getElementById('review');
 const reviewGrid=document.getElementById('reviewGrid');
-const flaggedCount=document.getElementById('flaggedCount');
 const submitBtn=document.getElementById('submitBtn');
 const scoreScreen=document.getElementById('scoreScreen');
 const scoreText=document.getElementById('scoreText');
 const missedList=document.getElementById('missedList');
 const restartBtn=document.getElementById('restartBtn');
-const highScoreText=document.getElementById('highScoreText');
 const lastScoreText=document.getElementById('lastScoreText');
+const highScoreText=document.getElementById('highScoreText');
 const topRestart=document.getElementById('topRestart');
 const closeOverlay=document.getElementById('closeOverlay');
 
-// ========== Quiz Data ==========
+// Sample Quiz Data
 const quizData=[
-  {q:"What is a 'stock'?",a:["Ownership share","Type of loan","Company expense","Bank account"],correct:0,explanation:"A stock represents ownership in a company."},
-  {q:"What is a 'bond'?",a:["Loan to company/government","Stock","Debt you own","Savings account"],correct:0,explanation:"A bond is a loan you give to a company or government."},
-  {q:"What is an 'asset'?",a:["Something valuable you own","Debt you owe","Company liability","Stock market"],correct:0,explanation:"An asset is something valuable that you own."},
-  {q:"What is a 'liability'?",a:["Debt you owe","Investment gain","Stock","Dividend"],correct:0,explanation:"A liability is money you owe."},
-  {q:"What is a 'dividend'?",a:["Payment to shareholders","Company cost","Loan","Interest"],correct:0,explanation:"Dividends are payments made to shareholders."},
-  {q:"What is 'capital'?",a:["Money used for investment","Company revenue","Stock price","Debt"],correct:0,explanation:"Capital is money used to invest."},
-  {q:"What is a 'portfolio'?",a:["Collection of investments","Bank account","Single stock","Loan"],correct:0,explanation:"A portfolio is all your investments together."},
-  {q:"What is 'risk'?",a:["Chance of losing money","Guaranteed profit","Company stock","Interest rate"],correct:0,explanation:"Risk is the chance that you may lose money."},
-  {q:"What is 'liquidity'?",a:["How easily asset becomes cash","Investment type","Profit","Stock index"],correct:0,explanation:"Liquidity is how quickly you can convert an asset to cash."},
-  {q:"What is 'interest'?",a:["Payment for borrowed money","Profit from stocks","Company revenue","Loan type"],correct:0,explanation:"Interest is what you pay for borrowing money."}
+  {q:"What is a 'stock'?",a:["Ownership share","Type of loan","Company expense","Bank account"],correct:0},
+  {q:"What is a 'bond'?",a:["Loan to company/government","Stock","Debt you own","Savings account"],correct:0},
+  {q:"What is an 'asset'?",a:["Something valuable you own","Debt you owe","Company liability","Stock market"],correct:0}
 ];
-let current=0,answers=[],flags=[],questionOrder=[],shuffledChoices=[],currentUnitIndex=0;
 
-// =================== FUNCTIONS ===================
-function shuffleArray(array){for(let i=array.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[array[i],array[j]]=[array[j],array[i]];}}
+let currentUnitIndex=0,questionOrder=[],answers=[],flags=[],shuffledChoices=[],current=0;
 
-// Show overlay
-function quizOverlayShow(unit,index){
+function shuffleArray(arr){for(let i=arr.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}}
+
+// Open quiz overlay
+function openQuiz(index){
   currentUnitIndex=index;
   quizOverlay.style.display='block';
   startScreen.style.display='block';
   quizDiv.style.display='none';
   reviewDiv.style.display='none';
   scoreScreen.style.display='none';
-  scoreInfo.textContent=`Last Unit Test Score: ${unit.lastScore!==null?unit.lastScore:'N/A'} | Highest Unit Test Score: ${unit.highScore!==null?unit.highScore:'N/A'}`;
+  topRestart.style.display='none';
+  scoreInfo.textContent=`Last Unit Test Score: ${units[index].lastScore!==null?units[index].lastScore:'N/A'} | Highest Unit Test Score: ${units[index].highScore!==null?units[index].highScore:'N/A'}`;
 }
 
-// Start quiz
-startBtn.onclick = ()=>{
+// Start Quiz
+startBtn.onclick=()=>{
   startScreen.style.display='none';
   quizDiv.style.display='block';
+  topRestart.style.display='block';
 
-  // Shuffle questions & choices
+  // Shuffle questions
   questionOrder=Array.from(Array(quizData.length).keys());
   shuffleArray(questionOrder);
-  shuffledChoices=quizData.map(q=>{
-    let arr=q.a.map((text,index)=>({text,index}));
-    shuffleArray(arr);
-    return arr;
-  });
+  shuffledChoices=quizData.map(q=>{let arr=q.a.map((text,index)=>({text,index}));shuffleArray(arr);return arr;});
   current=0;
   answers=Array(quizData.length).fill(null);
   flags=Array(quizData.length).fill(false);
@@ -372,49 +204,13 @@ function loadQuestion(){
   progressEl.style.width=`${((current+1)/quizData.length)*100}%`;
 }
 
-// Navigation
-nextBtn.onclick=()=>{if(current<quizData.length-1){current++; loadQuestion();}}
-prevBtn.onclick=()=>{if(current>0){current--; loadQuestion();}}
-flagBtn.onclick=()=>{flags[questionOrder[current]]=!flags[questionOrder[current]]; loadQuestion();}
+nextBtn.onclick=()=>{if(current<quizData.length-1){current++;loadQuestion();}}
+prevBtn.onclick=()=>{if(current>0){current--;loadQuestion();}}
+flagBtn.onclick=()=>{flags[questionOrder[current]]=!flags[questionOrder[current]];loadQuestion();}
 
-// Restart
-function restartQuiz(){if(confirm("Are you sure you want to restart the quiz?")){startBtn.click();} }
-topRestart.onclick=restartQuiz;
-restartBtn.onclick=restartQuiz;
-
-// Close overlay
+topRestart.onclick=()=>{if(confirm("Restart quiz?")) startBtn.click();}
+restartBtn.onclick=()=>{if(confirm("Restart quiz?")) startBtn.click();}
 closeOverlay.onclick=()=>{quizOverlay.style.display='none';}
-
-// Submit & score
-submitBtn.onclick=showScore;
-function showScore(){
-  quizDiv.style.display='none';
-  reviewDiv.style.display='none';
-  scoreScreen.style.display='block';
-  let correctCount=0;
-  missedList.innerHTML='';
-  questionOrder.forEach(i=>{
-    const ans=answers[i];
-    if(ans===quizData[i].correct) correctCount++;
-    else {
-      const li=document.createElement('li'); li.textContent=`${quizData[i].q} – Correct: ${quizData[i].a[quizData[i].correct]}`;
-      li.className='wrong'; missedList.appendChild(li);
-    }
-  });
-  const scorePct=Math.round((correctCount/quizData.length)*100);
-  scoreText.textContent=`You scored ${scorePct}%`;
-  // Update star
-  if(scorePct>=80) units[currentUnitIndex].mastered=true;
-  // Save last/highest score
-  units[currentUnitIndex].lastScore=scorePct;
-  if(!units[currentUnitIndex].highScore || scorePct>units[currentUnitIndex].highScore) units[currentUnitIndex].highScore=scorePct;
-
-  highScoreText.textContent=`Highest Unit Test Score: ${units[currentUnitIndex].highScore}`;
-  lastScoreText.textContent=`Last Unit Test Score: ${units[currentUnitIndex].lastScore}`;
-}
-
-// ========== TODO: Review Page Loading ==========
 </script>
-
 </body>
 </html>

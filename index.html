@@ -2,165 +2,204 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Unit 1 – Investing Vocabulary</title>
+<title>Investing Course – Unit 1</title>
 
 <style>
-* { box-sizing: border-box; font-family: Arial, sans-serif; }
+* { box-sizing: border-box; font-family: Inter, Arial, sans-serif; }
 
 body {
   margin: 0;
-  background: #f1f5f9;
+  background: #eef2f7;
 }
 
-.hidden { display: none; }
-
-button {
-  padding: 10px 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-/* START SCREEN */
-#startScreen {
-  height: 100vh;
-  background: #16a34a;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-#startBox {
-  text-align: center;
-}
-
-#startBox h1 {
-  margin-bottom: 20px;
-}
-
-#app {
-  max-width: 900px;
-  margin: 20px auto;
-  padding: 10px;
-}
-
-/* HEADER */
+/* ---------- LAYOUT ---------- */
 header {
+  background: #0f172a;
+  color: white;
+  padding: 16px 24px;
+  font-size: 20px;
+}
+
+main {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+/* ---------- UNIT CARD ---------- */
+.unit-card {
+  background: white;
+  border-radius: 14px;
+  padding: 20px;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(0,0,0,.08);
+}
+
+.unit-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-#stats {
+.unit-title {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.unit-stats {
   display: flex;
-  gap: 15px;
-  margin: 10px 0 20px;
+  gap: 16px;
+  font-size: 14px;
 }
 
-.stat {
-  background: white;
-  padding: 8px 12px;
+.star {
+  margin-left: 6px;
+  color: gold;
+}
+
+.unit-actions {
+  margin-top: 18px;
+  display: none;
+  gap: 12px;
+}
+
+.unit-actions button {
+  padding: 10px 16px;
   border-radius: 8px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  font-size: 14px;
 }
 
-/* QUIZ BOX */
-#quizBox {
+/* ---------- OVERLAY ---------- */
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+#modal {
   background: white;
-  padding: 20px;
-  border-radius: 12px;
-  max-height: 70vh;
+  width: 70%;
+  max-height: 85%;
+  border-radius: 16px;
+  padding: 24px;
   overflow-y: auto;
 }
 
-/* ANSWERS */
+/* ---------- START ---------- */
+.start-screen {
+  background: #16a34a;
+  color: white;
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+}
+
+/* ---------- QUIZ ---------- */
+.question {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
 .option {
   background: #e5e7eb;
-  padding: 10px;
-  margin-top: 8px;
-  border-radius: 6px;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
 }
 
 .option.correct { background: #bbf7d0; }
 .option.wrong { background: #fecaca; }
-.option.unanswered { background: #d1d5db; }
+.option.gray { background: #d1d5db; }
 
-/* CONTROLS */
-#controls {
+.quiz-controls {
   display: flex;
   justify-content: space-between;
-  margin-top: 15px;
   align-items: center;
+  margin-top: 16px;
 }
 
-/* REVIEW */
-.reviewItem {
+/* ---------- REVIEW ---------- */
+.review-title {
+  font-size: 22px;
+  margin-bottom: 16px;
+}
+
+.review-item {
   background: #f8fafc;
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 10px;
+  padding: 14px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+/* ---------- BUTTONS ---------- */
+button {
+  cursor: pointer;
 }
 </style>
 </head>
 
 <body>
 
-<!-- START -->
-<div id="startScreen">
-  <div id="startBox">
-    <h1>Unit 1 – Investing Vocabulary</h1>
-    <button id="startBtn">Start Quiz</button>
+<header>Investing Fundamentals</header>
+
+<main>
+  <div class="unit-card" id="unit1">
+    <div class="unit-header">
+      <div class="unit-title">
+        Unit 1 – Investing Vocabulary
+        <span id="unitStar"></span>
+      </div>
+      <div class="unit-stats">
+        <div>Last: <span id="lastScore">—</span></div>
+        <div>High: <span id="highScore">—</span></div>
+      </div>
+    </div>
+
+    <div class="unit-actions" id="unitActions">
+      <button>Study</button>
+      <button id="startQuizBtn">Unit Test</button>
+    </div>
   </div>
-</div>
 
-<!-- APP -->
-<div id="app" class="hidden">
+  <br>
+  <button onclick="clearData()">Clear Saved Data</button>
+</main>
 
-<header>
-  <h2>Unit 1 – Investing Vocabulary</h2>
-  <div id="star"></div>
-</header>
-
-<div id="stats">
-  <div class="stat">Last Unit Test Score: <span id="lastScore">—</span></div>
-  <div class="stat">Highest Unit Test Score: <span id="highScore">—</span></div>
-</div>
-
-<div id="quizBox"></div>
-
-<div id="controls">
-  <button id="nextBtn">Next</button>
-  <span id="flagBtn" class="hidden">🚩</span>
-</div>
-
-<div style="margin-top:15px;">
-  <button id="reviewBtn" class="hidden">Review</button>
-  <button id="clearBtn">Clear Data</button>
-</div>
-
+<!-- OVERLAY -->
+<div id="overlay">
+  <div id="modal"></div>
 </div>
 
 <script>
+/* ---------- DATA ---------- */
 const questions = [
   {
     q: "What is a stock?",
     options: [
-      "A loan given to a company",
+      "Money loaned to a company",
       "Partial ownership in a company",
-      "A government bond"
+      "A government-issued asset"
     ],
     answer: 1,
-    explanation: "A stock represents ownership, meaning you own a small part of the company."
+    explanation: "A stock represents ownership, meaning you own part of a company."
   },
   {
-    q: "What is diversification?",
+    q: "What does diversification reduce?",
     options: [
-      "Investing in one company",
-      "Spreading investments to reduce risk",
-      "Buying only low-risk assets"
+      "Taxes",
+      "Risk",
+      "Returns"
     ],
     answer: 1,
-    explanation: "Diversification reduces risk by spreading investments across different assets."
+    explanation: "Diversification spreads investments to reduce overall risk."
   }
 ];
 
@@ -169,94 +208,120 @@ let answers = [];
 let flags = [];
 let score = 0;
 
-const quizBox = document.getElementById("quizBox");
-const flagBtn = document.getElementById("flagBtn");
+/* ---------- UNIT CARD ---------- */
+unit1.onclick = () => {
+  unitActions.style.display =
+    unitActions.style.display === "flex" ? "none" : "flex";
+};
 
+/* ---------- STORAGE ---------- */
 function loadStats() {
   lastScore.textContent = localStorage.getItem("lastScore") || "—";
   highScore.textContent = localStorage.getItem("highScore") || "—";
-  if (localStorage.getItem("unitComplete")) star.textContent = "⭐ Unit Complete";
+  if (localStorage.getItem("unitComplete")) {
+    unitStar.textContent = "⭐";
+  }
+}
+
+loadStats();
+
+/* ---------- QUIZ FLOW ---------- */
+startQuizBtn.onclick = () => {
+  openOverlay();
+  renderStart();
+};
+
+function openOverlay() {
+  overlay.style.display = "flex";
+}
+
+function closeOverlay() {
+  overlay.style.display = "none";
+}
+
+function renderStart() {
+  modal.innerHTML = `
+    <div class="start-screen">
+      <h2>Unit 1 – Investing Vocabulary</h2>
+      <button onclick="beginQuiz()">Start Quiz</button>
+    </div>
+  `;
+}
+
+function beginQuiz() {
+  current = 0;
+  answers = [];
+  flags = [];
+  score = 0;
+  renderQuestion();
 }
 
 function renderQuestion() {
-  flagBtn.classList.remove("hidden");
-  quizBox.innerHTML = `<h3>${questions[current].q}</h3>`;
-
-  questions[current].options.forEach((opt,i)=>{
-    const d = document.createElement("div");
-    d.className = "option";
-    d.textContent = opt;
-    d.onclick = ()=>selectAnswer(i,d);
-    quizBox.appendChild(d);
-  });
+  const q = questions[current];
+  modal.innerHTML = `
+    <div class="question">${q.q}</div>
+    ${q.options.map((o,i)=>`
+      <div class="option" onclick="answer(${i})">${o}</div>
+    `).join("")}
+    <div class="quiz-controls">
+      <button onclick="toggleFlag()">🚩</button>
+      <button onclick="next()">Next</button>
+    </div>
+  `;
 }
 
-function selectAnswer(i,el) {
+function answer(i) {
   if (answers[current] !== undefined) return;
   answers[current] = i;
-  if (i === questions[current].answer) {
-    el.classList.add("correct");
-    score++;
-  } else {
-    el.classList.add("wrong");
-  }
+  if (i === questions[current].answer) score++;
 }
 
-flagBtn.onclick = () => {
+function toggleFlag() {
   if (!flags.includes(current)) flags.push(current);
-};
+}
 
-nextBtn.onclick = () => {
+function next() {
   current++;
-  if (current < questions.length) {
-    renderQuestion();
-  } else {
-    finishQuiz();
-  }
-};
+  if (current < questions.length) renderQuestion();
+  else finishQuiz();
+}
 
 function finishQuiz() {
-  flagBtn.classList.add("hidden");
   const percent = Math.round(score / questions.length * 100);
-
   localStorage.setItem("lastScore", percent + "%");
+
   const high = parseInt(localStorage.getItem("highScore")) || 0;
   if (percent > high) localStorage.setItem("highScore", percent + "%");
+
   if (percent >= 90) localStorage.setItem("unitComplete", "true");
 
-  quizBox.innerHTML = `<h3>Your Score: ${percent}%</h3>`;
-  reviewBtn.classList.remove("hidden");
   loadStats();
+
+  modal.innerHTML = `
+    <h2>Your Score: ${percent}%</h2>
+    <button onclick="review()">Review Answers</button>
+    <button onclick="closeOverlay()">Close</button>
+  `;
 }
 
-reviewBtn.onclick = () => {
-  quizBox.innerHTML = "<h3>Review Page</h3>";
+function review() {
+  modal.innerHTML = `<div class="review-title">Review Page</div>`;
   questions.forEach((q,i)=>{
-    const div = document.createElement("div");
-    div.className = "reviewItem";
-
-    let status = answers[i] === q.answer ? "✔" : "✖";
-    let flag = flags.includes(i) ? " 🚩" : "";
-
-    div.innerHTML = `
-      <strong>${status} ${q.q}${flag}</strong>
-      <div>${q.explanation}</div>
+    const correct = answers[i] === q.answer;
+    const flagged = flags.includes(i);
+    modal.innerHTML += `
+      <div class="review-item">
+        <strong>${correct ? "✔" : "✖"} ${q.q} ${flagged ? "🚩" : ""}</strong>
+        <div>${q.explanation}</div>
+      </div>
     `;
-    quizBox.appendChild(div);
   });
-};
+}
 
-clearBtn.onclick = () => {
+function clearData() {
   localStorage.clear();
   location.reload();
-};
-
-startBtn.onclick = () => {
-  startScreen.classList.add("hidden");
-  app.classList.remove("hidden");
-  loadStats();
-  renderQuestion();
-};
+}
 </script>
 
 </body>

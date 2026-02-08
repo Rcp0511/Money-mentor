@@ -12,7 +12,7 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 .container { max-width:900px; margin:30px auto; padding:0 20px; }
 .unit-card { background:#4caf50; border-radius:18px; margin-bottom:20px; padding:20px; box-shadow:0 5px 15px rgba(0,0,0,0.15); cursor:pointer; transition:0.3s; }
 .unit-card:hover { transform:translateY(-2px); }
-.unit-header { display:flex; justify-content:space-between; align-items:center; }
+.unit-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:5px; }
 .unit-header .title { font-weight:600; font-size:1.3em; display:flex; align-items:center; gap:10px; }
 .unit-header .scores { font-size:0.95em; color:#0a3d0a; }
 .unit-header .unit-complete { font-size:0.9em; color:#fff; background:#ff9800; padding:3px 8px; border-radius:6px; display:none; font-weight:600; }
@@ -54,7 +54,7 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 .review-box { padding:12px; text-align:center; border-radius:8px; cursor:pointer; position:relative; font-weight:600; }
 
 #scoreScreen { display:none; text-align:left; margin-top:20px; }
-#scoreScreen li { margin:8px 0; padding:8px; border-radius:5px; display:flex; align-items:center; gap:10px; }
+#scoreScreen li { margin:8px 0; padding:8px; border-radius:5px; display:flex; align-items:flex-start; gap:10px; }
 .correct-score { color:green; }
 .wrong-score { color:red; }
 
@@ -141,7 +141,6 @@ function createUnitCards() {
 
 createUnitCards();
 
-// ------------------ Quiz code ------------------
 const quizDataOriginal=[
   {q:"What is a 'stock'?", a:["Share of ownership in a company","Company's debt","A loan from a bank","An investment account"], correct:0, explanation:"A stock represents ownership in a company."},
   {q:"What is a 'bond'?", a:["Loan to a company or government","Ownership share in a company","Bank deposit","Certificate of deposit"], correct:0, explanation:"A bond is a loan to a company or government."},
@@ -223,11 +222,17 @@ function showReview(){
     const box=document.createElement('div'); box.className='review-box';
     if(answers[i]!==null) box.style.backgroundColor='green';
     else box.style.backgroundColor='red';
+    box.textContent=`Q${i+1}`;
     if(flags[i]){
-      const flagIcon=document.createElement('i'); flagIcon.className='fas fa-flag'; flagIcon.style.position='absolute'; flagIcon.style.top='5px'; flagIcon.style.right='5px'; flagIcon.style.color='red'; flagIcon.style.fontSize='0.8em';
+      const flagIcon=document.createElement('i'); 
+      flagIcon.className='fas fa-flag'; 
+      flagIcon.style.position='absolute'; 
+      flagIcon.style.top='5px'; 
+      flagIcon.style.right='5px'; 
+      flagIcon.style.color='red'; 
+      flagIcon.style.fontSize='0.8em';
       box.appendChild(flagIcon);
     }
-    box.textContent=`Q${i+1}`;
     box.onclick=()=>{ reviewDiv.style.display='none'; quiz.style.display='block'; current=i; loadQuestion(); };
     reviewGrid.appendChild(box);
   });
@@ -251,8 +256,8 @@ function calculateScore(){
   });
   const percent=Math.round((score/quizData.length)*100);
   lastScoreText.textContent=`Last Unit Test Score: ${percent}%`;
-  units[0].lastScore=percent;
   if(percent>=90){ units[0].highScore=Math.max(units[0].highScore||0, percent); }
+  units[0].lastScore = percent;
   createUnitCards();
 }
 

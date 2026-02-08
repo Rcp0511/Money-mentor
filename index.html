@@ -1,11 +1,11 @@
-=<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Student Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
 <style>
 body { margin:0; font-family:'Montserrat', sans-serif; background:#e0f5e0; color:#111; }
 header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-size:2em; font-weight:700; box-shadow:0 4px 10px rgba(0,0,0,0.3); }
@@ -23,7 +23,7 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 #quizOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000; }
 .quiz-container { background:#fff; border-radius:20px; padding:25px; max-width:600px; width:90%; position:relative; max-height:90%; overflow-y:auto; }
 #closeQuiz { position:absolute; top:15px; right:20px; font-size:1.8em; cursor:pointer; }
-#flagBtn { position:absolute; top:15px; right:60px; font-size:1.5em; background:none; border:none; cursor:pointer; color:red; }
+#flagBtn { position:absolute; top:15px; right:60px; font-size:1.5em; background:none; border:none; cursor:pointer; color:red; display:none; }
 #startScreen { text-align:center; }
 #startBtn { padding:15px 25px; font-size:1.2em; border:none; border-radius:12px; background:#28a745; color:white; cursor:pointer; margin-top:20px; }
 #startBtn:hover { background:#218838; }
@@ -41,12 +41,12 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 #prevBtn:hover { background:#5a6268; }
 .progress-bar { height:12px; background:#eee; border-radius:6px; overflow:hidden; margin-top:20px; }
 .progress { height:100%; width:0%; background:linear-gradient(90deg,#28a745,#85e085); transition:width 0.3s; }
-#review { display:none; }
+#review { display:none; margin-top:15px; }
 .review-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(50px,1fr)); gap:10px; margin-top:10px; }
-.review-box { padding:10px; text-align:center; border-radius:8px; cursor:pointer; }
+.review-box { padding:10px; text-align:center; border-radius:8px; cursor:pointer; position:relative; }
 .review-box.answered { background:#ccc; color:#000; }
 .review-box.notanswered { background:#e57373; color:#fff; }
-.review-box.flagged::after { content:'⚑'; color:red; position:absolute; top:5px; right:8px; font-size:1em; font-weight:bold; }
+.review-box.flagged { background:#ffc107; color:#000; }
 #scoreScreen { display:none; text-align:center; }
 #missedList { list-style:none; padding:0; text-align:left; }
 #missedList li { margin:5px 0; padding:5px; border-left:4px solid #007bff; border-radius:5px; background:#fdfdfd; }
@@ -60,11 +60,10 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 <header>Student Dashboard</header>
 <div class="container" id="unitContainer"></div>
 
-<!-- Quiz Overlay -->
 <div id="quizOverlay">
   <div class="quiz-container">
     <span id="closeQuiz">&times;</span>
-    <button id="flagBtn" style="display:none;"><i class="far fa-flag"></i></button>
+    <button id="flagBtn"><i class="far fa-flag"></i></button>
 
     <div id="startScreen">
       <h2>📈 Unit 1: Investing Vocab 📈</h2>
@@ -83,7 +82,6 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
     </div>
 
     <div id="review">
-      <p class="legend">Legend: ⚑ = flagged, red = not answered, grey = answered</p>
       <div class="review-grid" id="reviewGrid"></div>
       <button class="restart-btn" id="toScoreBtn">Submit Quiz</button>
     </div>
@@ -102,7 +100,7 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 // ------------------ Units ------------------
 const units=[{name:"Unit 1: Investing Vocab", mastered:false,lastScore:null,highScore:null}];
 const container=document.getElementById('unitContainer');
-units.forEach((unit,index)=>{
+units.forEach((unit)=>{
   const card=document.createElement('div'); card.className='unit-card';
   const header=document.createElement('div'); header.className='unit-header';
   const titleDiv=document.createElement('div'); titleDiv.className='title';
@@ -135,6 +133,7 @@ const quizDataOriginal=[
 
 let quizData=[],answers=[],flags=[],current=0;
 
+// ------------------ Elements ------------------
 const quizOverlay=document.getElementById('quizOverlay');
 const startScreen=document.getElementById('startScreen');
 const startBtn=document.getElementById('startBtn');
@@ -155,23 +154,30 @@ const lastScoreText=document.getElementById('lastScoreText');
 const highScoreText=document.getElementById('highScoreText');
 const restartBtn=document.getElementById('restartBtn');
 const closeQuiz=document.getElementById('closeQuiz');
+const progressEl=document.getElementById('progress');
 
 function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;}
+
 function openQuiz(){
-  quizOverlay.style.display='flex'; startScreen.style.display='block'; quiz.style.display='none'; reviewDiv.style.display='none'; scoreScreen.style.display='none';
-  flagBtn.style.display='none'; answers=[]; flags=[]; current=0; quizData=shuffleArray([...quizDataOriginal]);
+  quizOverlay.style.display='flex';
+  startScreen.style.display='block'; quiz.style.display='none'; reviewDiv.style.display='none'; scoreScreen.style.display='none';
+  flagBtn.style.display='none';
+  quizData=shuffleArray(quizDataOriginal.map(q=>({...q})));
+  answers=Array(quizData.length).fill(null);
+  flags=Array(quizData.length).fill(false);
+  current=0;
 }
 
-// ------------------ Load Question ------------------
 function loadQuestion(){
   const q=quizData[current];
   questionNumberEl.textContent=`Question ${current+1} of ${quizData.length}`;
   questionEl.textContent=q.q;
   optionsEl.innerHTML='';
   const shuffledAnswers=shuffleArray([...q.a]);
+  q.shuffledAnswers=shuffledAnswers;
   shuffledAnswers.forEach((opt,i)=>{
     const btn=document.createElement('button'); btn.textContent=opt;
-    btn.classList.toggle('selected',answers[current]===i);
+    if(answers[current]===i) btn.classList.add('selected');
     btn.onclick=()=>{
       answers[current]=i;
       Array.from(optionsEl.children).forEach(b=>b.classList.remove('selected'));
@@ -184,18 +190,15 @@ function loadQuestion(){
   nextBtn.textContent=(current===quizData.length-1)?'Submit':'Next';
 }
 
-// ------------------ Navigation ------------------
 nextBtn.onclick=()=>{
-  if(current===quizData.length-1){showReview();}else{current++; loadQuestion();}
+  if(current===quizData.length-1){showReview();}
+  else{current++; loadQuestion();}
 };
 prevBtn.onclick=()=>{if(current>0){current--; loadQuestion();}};
-flagBtn.onclick=()=>{
-  flags[current]=!flags[current]; loadQuestion();
-};
+flagBtn.onclick=()=>{flags[current]=!flags[current]; loadQuestion();};
 
-// ------------------ Review ------------------
 function showReview(){
-  quiz.style.display='none'; reviewDiv.style.display='block'; reviewGrid.innerHTML='';
+  quiz.style.display='none'; reviewDiv.style.display='grid'; reviewGrid.innerHTML='';
   quizData.forEach((q,i)=>{
     const box=document.createElement('div'); box.className='review-box';
     if(flags[i]) box.classList.add('flagged'); else if(answers[i]===null) box.classList.add('notanswered'); else box.classList.add('answered');
@@ -205,16 +208,17 @@ function showReview(){
   });
 }
 
-// ------------------ Score ------------------
 toScoreBtn.onclick=calculateScore;
 function calculateScore(){
-  reviewDiv.style.display='none'; scoreScreen.style.display='block';
-  let score=0; missedList.innerHTML='';
+  reviewDiv.style.display='none'; scoreScreen.style.display='block'; missedList.innerHTML='';
+  let score=0;
   quizData.forEach((q,i)=>{
+    const correctText=q.a[q.correct];
+    const userAnswer=answers[i]!==null?q.shuffledAnswers[answers[i]]:null;
+    if(userAnswer===correctText) score++;
     const li=document.createElement('li');
-    const correctIndex=q.a.indexOf(q.aOriginal??q.a[q.correct]);
-    if(answers[i]!==null && shuffledAnswersMatch(q.a,answers[i])) score++; li.classList.add(score===0?'wrong':'correct');
-    li.innerHTML=`Q${i+1}: Your answer: ${answers[i]!==null?q.a[answers[i]]:'None'}<br>Correct: ${q.a[q.correct]}<br>Explanation: ${q.explanation}`;
+    li.innerHTML=`Q${i+1}: Your answer: ${userAnswer||'None'}<br>Correct: ${correctText}<br>Explanation: ${q.explanation}`;
+    li.className=(userAnswer===correctText)?'correct':'wrong';
     missedList.appendChild(li);
   });
   const percent=Math.round((score/quizData.length)*100);
@@ -226,12 +230,15 @@ function calculateScore(){
   updateUnitCardScore(percent,highScore);
 }
 
-// ------------------ Helpers ------------------
-function updateUnitCardScore(last,high){const cardScores=container.children[0].querySelector('.scores'); cardScores.textContent=`Last Unit Test Score: ${last}% | Highest Unit Test Score: ${high}%`;}
+function updateUnitCardScore(last,high){
+  const cardScores=container.children[0].querySelector('.scores');
+  cardScores.textContent=`Last Unit Test Score: ${last}% | Highest Unit Test Score: ${high}%`;
+}
+
 closeQuiz.onclick=()=>{quizOverlay.style.display='none';};
 startBtn.onclick=()=>{startScreen.style.display='none'; quiz.style.display='block'; flagBtn.style.display='block'; loadQuestion();};
 restartBtn.onclick=()=>{openQuiz();};
-function shuffledAnswersMatch(a,index){return a[index]===quizData[current].a[quizData[current].correct];}
+
 </script>
 </body>
 </html>

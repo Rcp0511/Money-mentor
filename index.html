@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -21,45 +20,37 @@ header { background:#1976d2; color:white; padding:25px 0; text-align:center; fon
 .unit-dropdown button:hover { transform:translateY(-2px);}
 .study-btn { background:#43a047; }
 .test-btn { background:#1b5e20; }
-
 #quizOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000; overflow:auto;}
-.quiz-container { background:#fff; border-radius:20px; padding:30px; width:95%; max-width:900px; min-height:650px; position:relative; margin:50px auto; box-shadow:0 8px 25px rgba(0,0,0,0.25); overflow-y:auto;}
+.quiz-container { background:#fff; border-radius:20px; padding:30px; width:95%; max-width:900px; min-height:650px; position:relative; margin:0 auto; box-shadow:0 8px 25px rgba(0,0,0,0.25); overflow-y:auto;}
 #closeQuiz { position:absolute; top:20px; right:20px; font-size:1.8em; cursor:pointer; color:#1976d2;}
 #flagBtn { position:absolute; top:20px; right:60px; font-size:1.4em; background:none; border:none; cursor:pointer; color:red; display:none;}
-
-#startScreen { text-align:center; padding:40px; background:#43a047; border-radius:20px; width:60%; max-width:400px; margin:50px auto; color:white;}
+#startScreen { text-align:center; padding:40px; background:#43a047; border-radius:20px; width:100%; max-width:none; margin:0 auto; color:white;}
 #startScreen h2 { font-size:1.6em; margin-bottom:20px;}
 #startBtn { padding:15px 25px; font-size:1.2em; border:none; border-radius:12px; background:#1b5e20; color:white; cursor:pointer;}
 #startBtn:hover { background:#155d27; }
-
 #quiz { display:none; }
 .question-number { font-size:0.9em; color:#555; margin-bottom:5px; }
 .question { font-size:1.3em; margin-bottom:20px; }
 .options button { display:block; width:100%; margin:8px 0; padding:14px; font-size:1em; border:2px solid #ccc; border-radius:10px; cursor:pointer; text-align:left; background:#fdfdfd; transition:0.2s;}
 .options button:hover { border-color:#1976d2; background-color:#e3f2fd; }
 .options button.selected { background-color:#d4edda; border-color:#43a047; }
-
 .controls { display:flex; justify-content:space-between; margin-top:20px;}
 .controls button { padding:12px 20px; border:none; border-radius:8px; cursor:pointer;}
 #nextBtn { background:#1976d2; color:white;}
 #nextBtn:hover { background:#115293;}
 #prevBtn { background:#6c757d; color:white;}
 #prevBtn:hover { background:#5a6268;}
-
 .progress-bar { height:12px; background:#eee; border-radius:6px; overflow:hidden; margin-top:20px;}
 .progress { height:100%; width:0%; background:linear-gradient(90deg,#43a047,#85e085); transition:width 0.3s;}
-
 #review { display:none; margin-top:15px; }
 #review h2 { text-align:center; margin-bottom:10px; font-weight:600; color:#1976d2; }
 .review-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(60px,1fr)); gap:12px; margin-top:10px;}
 .review-box { padding:12px; text-align:center; border-radius:8px; cursor:pointer; position:relative; font-weight:600;}
 .review-flag { position:absolute; top:6px; right:8px; color:red; font-size:0.9em; }
-
 #scoreScreen { display:none; text-align:left; margin-top:20px; max-height:500px; overflow-y:auto; }
 #scoreScreen li { margin:8px 0; padding:8px; border-radius:5px; display:flex; flex-direction:column; gap:4px; }
 .correct-score { color:green; }
 .wrong-score { color:red; }
-
 .restart-btn, .clear-btn { margin-top:20px; padding:14px 22px; border:none; border-radius:10px; cursor:pointer; font-weight:600;}
 .restart-btn { background:#43a047; color:white;}
 .restart-btn:hover { background:#388e3c; }
@@ -71,101 +62,95 @@ header { background:#1976d2; color:white; padding:25px 0; text-align:center; fon
 <header>Student Dashboard</header>
 <div class="container" id="unitContainer"></div>
 
-<div id="quizOverlay">
-    <div class="quiz-container">
-        <span id="closeQuiz">&times;</span>
+    
+        ×
         <button id="flagBtn"><i class="fas fa-flag"></i></button>
-
-        <div id="startScreen">
-            <h2>📈 Unit 1: Investing Vocab 📈</h2>
+        
+            📈 Unit 1: Investing Vocab 📈
             <button class="restart-btn" id="startBtn">Start Quiz</button>
-        </div>
-
-        <div id="quiz">
-            <div class="question-number" id="questionNumber"></div>
-            <div class="question" id="question"></div>
-            <div class="options" id="options"></div>
-            <div class="controls">
+        
+        
+            
+            
+            
+            
                 <button id="prevBtn">Previous</button>
                 <button id="nextBtn">Next</button>
-            </div>
-            <div class="progress-bar"><div class="progress" id="progress"></div></div>
-        </div>
-
-        <div id="review">
-            <h2>Review Page</h2>
-            <div id="reviewLegend" style="margin-bottom:10px;">
-                <span style="color:green;font-weight:bold;">Answered</span> | 
-                <span style="color:gray;font-weight:bold;">Not Answered</span> | 
-                <i class="fas fa-flag" style="color:red;"></i> Flagged
-            </div>
-            <div class="review-grid" id="reviewGrid"></div>
+            
+            
+        
+        
+            Review Page
+            
+                Answered | 
+                Not Answered | 
+                 Flagged
+            
+            
             <button class="restart-btn" id="toScoreBtn">Submit Quiz</button>
-        </div>
-
-        <div id="scoreScreen">
-            <h3>Your Score</h3>
-            <ul id="missedList"></ul>
-            <p id="lastScoreText"></p>
-            <p id="highScoreText"></p>
-            <p id="unitCompleteText" style="color:gold; font-weight:bold;"></p>
+        
+        
+            Your Score
+            
+            
+            
+            
             <button class="restart-btn" id="restartBtn">Restart Quiz</button>
             <button class="clear-btn" id="clearDataBtn">Clear Saved Data</button>
-        </div>
-    </div>
-</div>
+        
+    
 
 <script>
 // ---------- Units ----------
 const units = [{name:"Unit 1: Investing Vocab"}];
 const container = document.getElementById('unitContainer');
 function renderUnitCard() {
-    container.innerHTML = '';
-    units.forEach(unit => {
-        const card = document.createElement('div'); card.className='unit-card';
-        const header = document.createElement('div'); header.className='unit-header';
-        const titleDiv = document.createElement('div'); titleDiv.className='title'; 
-        titleDiv.textContent = unit.name;
-        const unitCompleteStored = localStorage.getItem('unit1Complete')==='true';
-        if(unitCompleteStored){
-            const uc = document.createElement('span'); uc.className='unit-complete'; uc.textContent='Unit Complete'; 
-            titleDiv.prepend(uc);
-            const star = document.createElement('i'); star.className='fas fa-star'; star.style.color='gold'; star.style.marginLeft='10px';
-            titleDiv.appendChild(star);
-        }
-        const lastScore = parseInt(localStorage.getItem('unit1LastScore'))||0;
-        const highScore = parseInt(localStorage.getItem('unit1HighScore'))||0;
-        const scoreDiv = document.createElement('div'); scoreDiv.className='scores';
-        scoreDiv.textContent = `Last Unit Test Score: ${lastScore}% | Highest Unit Test Score: ${highScore}%`;
-        header.appendChild(titleDiv); header.appendChild(scoreDiv);
-        card.appendChild(header);
-        const dropdown = document.createElement('div'); dropdown.className='unit-dropdown';
-        const studyBtn = document.createElement('button'); studyBtn.className='study-btn';
-        studyBtn.innerHTML='<i class="fas fa-book"></i> Study';
-        studyBtn.onclick = () => alert(`Study ${unit.name}`);
-        const testBtn = document.createElement('button'); testBtn.className='test-btn';
-        testBtn.innerHTML='<i class="fas fa-clipboard"></i> Unit Test';
-        testBtn.onclick = openQuiz;
-        dropdown.appendChild(studyBtn); dropdown.appendChild(testBtn);
-        card.appendChild(dropdown);
-        card.onclick = () => { dropdown.style.display=(dropdown.style.display==='flex'?'none':'flex'); };
-        container.appendChild(card);
-    });
+container.innerHTML = '';
+units.forEach(unit => {
+const card = document.createElement('div'); card.className='unit-card';
+const header = document.createElement('div'); header.className='unit-header';
+const titleDiv = document.createElement('div'); titleDiv.className='title';
+titleDiv.textContent = unit.name;
+const unitCompleteStored = localStorage.getItem('unit1Complete')==='true';
+if(unitCompleteStored){
+const uc = document.createElement('span'); uc.className='unit-complete'; uc.textContent='Unit Complete';
+titleDiv.prepend(uc);
+const star = document.createElement('i'); star.className='fas fa-star'; star.style.color='gold'; star.style.marginLeft='10px';
+titleDiv.appendChild(star);
+}
+const lastScore = parseInt(localStorage.getItem('unit1LastScore'))||0;
+const highScore = parseInt(localStorage.getItem('unit1HighScore'))||0;
+const scoreDiv = document.createElement('div'); scoreDiv.className='scores';
+scoreDiv.textContent = `Last Unit Test Score: ${lastScore}% | Highest Unit Test Score: ${highScore}%`;
+header.appendChild(titleDiv); header.appendChild(scoreDiv);
+card.appendChild(header);
+const dropdown = document.createElement('div'); dropdown.className='unit-dropdown';
+const studyBtn = document.createElement('button'); studyBtn.className='study-btn';
+studyBtn.innerHTML='<i class="fas fa-book"></i> Study';
+studyBtn.onclick = () => alert(`Study ${unit.name}`);
+const testBtn = document.createElement('button'); testBtn.className='test-btn';
+testBtn.innerHTML='<i class="fas fa-clipboard"></i> Unit Test';
+testBtn.onclick = openQuiz;
+dropdown.appendChild(studyBtn); dropdown.appendChild(testBtn);
+card.appendChild(dropdown);
+card.onclick = () => { dropdown.style.display=(dropdown.style.display==='flex'?'none':'flex'); };
+container.appendChild(card);
+});
 }
 renderUnitCard();
 
 // ---------- Quiz Data (harder answers) ----------
 const quizDataOriginal = [
-  {q:"What is a 'stock'?", a:["Share of ownership in a company","Debt issued by a company","A bank savings account","A type of bond"], correct:0, explanation:"Stocks represent part ownership in a company and potential profits."},
-  {q:"What is a 'bond'?", a:["Loan to a company or government","Share of ownership in a company","An interest-bearing account","A type of insurance"], correct:0, explanation:"Bonds are loans you give to companies or governments in exchange for interest."},
-  {q:"What is an 'asset'?", a:["Something valuable you own","Debt you owe","Potential future income","An expense item"], correct:0, explanation:"Assets are valuable resources you own, either physical or financial."},
-  {q:"What is a 'liability'?", a:["Debt or obligation you owe","A company's owned stock","A shareholder payment","A financial asset"], correct:0, explanation:"Liabilities are obligations or debts owed to others."},
-  {q:"What is a 'dividend'?", a:["Payment to shareholders","Company retained earnings","Stock price change","Interest on a bond"], correct:0, explanation:"Dividends are profits distributed to shareholders."},
-  {q:"What is 'capital'?", a:["Money used for investment","Company revenue","Loan principal","Dividend earnings"], correct:0, explanation:"Capital is money allocated for investment purposes."},
-  {q:"What is a 'portfolio'?", a:["Collection of investments","Single stock holding","Bank savings account","Outstanding debt"], correct:0, explanation:"A portfolio is your complete collection of financial investments."},
-  {q:"What is 'risk'?", a:["Possibility of losing money","Guaranteed investment return","Fixed interest payment","Company revenue growth"], correct:0, explanation:"Risk is the chance that an investment’s actual return will differ from expected."},
-  {q:"What is 'liquidity'?", a:["Ease of converting an asset to cash","Profitability of an investment","Market demand for stocks","Long-term investment potential"], correct:0, explanation:"Liquidity indicates how quickly an asset can be converted to cash without losing value."},
-  {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stock sales","Investment principal","Dividend received"], correct:0, explanation:"Interest is the cost of borrowing money, usually expressed as a percentage."}
+{q:"What is a 'stock'?", a:["Share of ownership in a company","Debt issued by a company","A bank savings account","A type of bond"], correct:0, explanation:"Stocks represent part ownership in a company and potential profits."},
+{q:"What is a 'bond'?", a:["Loan to a company or government","Share of ownership in a company","An interest-bearing account","A type of insurance"], correct:0, explanation:"Bonds are loans you give to companies or governments in exchange for interest."},
+{q:"What is an 'asset'?", a:["Something valuable you own","Debt you owe","Potential future income","An expense item"], correct:0, explanation:"Assets are valuable resources you own, either physical or financial."},
+{q:"What is a 'liability'?", a:["Debt or obligation you owe","A company's owned stock","A shareholder payment","A financial asset"], correct:0, explanation:"Liabilities are obligations or debts owed to others."},
+{q:"What is a 'dividend'?", a:["Payment to shareholders","Company retained earnings","Stock price change","Interest on a bond"], correct:0, explanation:"Dividends are profits distributed to shareholders."},
+{q:"What is 'capital'?", a:["Money used for investment","Company revenue","Loan principal","Dividend earnings"], correct:0, explanation:"Capital is money allocated for investment purposes."},
+{q:"What is a 'portfolio'?", a:["Collection of investments","Single stock holding","Bank savings account","Outstanding debt"], correct:0, explanation:"A portfolio is your complete collection of financial investments."},
+{q:"What is 'risk'?", a:["Possibility of losing money","Guaranteed investment return","Fixed interest payment","Company revenue growth"], correct:0, explanation:"Risk is the chance that an investment’s actual return will differ from expected."},
+{q:"What is 'liquidity'?", a:["Ease of converting an asset to cash","Profitability of an investment","Market demand for stocks","Long-term investment potential"], correct:0, explanation:"Liquidity indicates how quickly an asset can be converted to cash without losing value."},
+{q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stock sales","Investment principal","Dividend received"], correct:0, explanation:"Interest is the cost of borrowing money, usually expressed as a percentage."}
 ];
 
 // ---------- Quiz Logic ----------
@@ -196,32 +181,32 @@ const progressEl=document.getElementById('progress');
 function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;}
 
 function openQuiz(){
-    quizOverlay.style.display='flex';
-    startScreen.style.display='block'; quiz.style.display='none'; reviewDiv.style.display='none'; scoreScreen.style.display='none';
-    flagBtn.style.display='none';
-    quizData=quizDataOriginal.map(q=>({...q}));
-    answers=Array(quizData.length).fill(null);
-    flags=Array(quizData.length).fill(false);
-    current=0;
+quizOverlay.style.display='flex';
+startScreen.style.display='block'; quiz.style.display='none'; reviewDiv.style.display='none'; scoreScreen.style.display='none';
+flagBtn.style.display='none';
+quizData=quizDataOriginal.map(q=>({...q}));
+answers=Array(quizData.length).fill(null);
+flags=Array(quizData.length).fill(false);
+current=0;
 }
 
 startBtn.onclick = () => { startScreen.style.display='none'; quiz.style.display='block'; flagBtn.style.display='inline'; loadQuestion(); };
 closeQuiz.onclick = () => { quizOverlay.style.display='none'; };
 
 function loadQuestion(){
-    const q = quizData[current];
-    questionNumberEl.textContent=`Question ${current+1} of ${quizData.length}`;
-    questionEl.textContent = q.q;
-    optionsEl.innerHTML = '';
-    if(!q.shuffledAnswers) q.shuffledAnswers = shuffleArray([...q.a]);
-    q.shuffledAnswers.forEach((opt,i)=>{
-        const btn = document.createElement('button'); btn.textContent = opt;
-        if(answers[current]===i) btn.classList.add('selected');
-        btn.onclick = ()=>{ answers[current]=i; Array.from(optionsEl.children).forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); };
-        optionsEl.appendChild(btn);
-    });
-    flagBtn.innerHTML = flags[current]?'<i class="fas fa-flag"></i>':'<i class="far fa-flag"></i>';
-    progressEl.style.width = `${((current+1)/quizData.length)*100}%`;
+const q = quizData[current];
+questionNumberEl.textContent=`Question ${current+1} of ${quizData.length}`;
+questionEl.textContent = q.q;
+optionsEl.innerHTML = '';
+if(!q.shuffledAnswers) q.shuffledAnswers = shuffleArray([...q.a]);
+q.shuffledAnswers.forEach((opt,i)=>{
+const btn = document.createElement('button'); btn.textContent = opt;
+if(answers[current]===i) btn.classList.add('selected');
+btn.onclick = ()=>{ answers[current]=i; Array.from(optionsEl.children).forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); };
+optionsEl.appendChild(btn);
+});
+flagBtn.innerHTML = flags[current]?'<i class="fas fa-flag"></i>':'<i class="far fa-flag"></i>';
+progressEl.style.width = `${((current+1)/quizData.length)*100}%`;
 }
 
 nextBtn.onclick = ()=>{ if(current===quizData.length-1){showReview();} else{current++; loadQuestion();}};
@@ -229,53 +214,53 @@ prevBtn.onclick = ()=>{ if(current>0){current--; loadQuestion();}};
 flagBtn.onclick = ()=>{ flags[current] = !flags[current]; loadQuestion(); };
 
 function showReview(){
-    quiz.style.display='none'; reviewDiv.style.display='block'; flagBtn.style.display='none';
-    reviewGrid.innerHTML='';
-    quizData.forEach((q,i)=>{
-        const box = document.createElement('div'); box.className='review-box';
-        box.style.background = answers[i]!==null?'#d4edda':'#ccc';
-        box.textContent = `${i+1}`;
-        if(flags[i]){
-            const flagIcon = document.createElement('i'); flagIcon.className='fas fa-flag review-flag';
-            box.appendChild(flagIcon);
-        }
-        box.onclick = ()=>{ current=i; reviewDiv.style.display='none'; quiz.style.display='block'; flagBtn.style.display='inline'; loadQuestion(); };
-        reviewGrid.appendChild(box);
-    });
+quiz.style.display='none'; reviewDiv.style.display='block'; flagBtn.style.display='none';
+reviewGrid.innerHTML='';
+quizData.forEach((q,i)=>{
+const box = document.createElement('div'); box.className='review-box';
+box.style.background = answers[i]!==null?'#d4edda':'#ccc';
+box.textContent = `${i+1}`;
+if(flags[i]){
+const flagIcon = document.createElement('i'); flagIcon.className='fas fa-flag review-flag';
+box.appendChild(flagIcon);
+}
+box.onclick = ()=>{ current=i; reviewDiv.style.display='none'; quiz.style.display='block'; flagBtn.style.display='inline'; loadQuestion(); };
+reviewGrid.appendChild(box);
+});
 }
 
 toScoreBtn.onclick = showScore;
 
 function showScore(){
-    reviewDiv.style.display='none'; scoreScreen.style.display='block';
-    let correctCount = 0; missedList.innerHTML = '';
-    quizData.forEach((q,i)=>{
-        const li = document.createElement('li');
-        if(q.shuffledAnswers[answers[i]]===q.a[q.correct]){
-            correctCount++; li.className='correct-score'; li.textContent=`Q${i+1}: Correct! ✅`;
-        } else{
-            li.className='wrong-score'; li.textContent=`Q${i+1}: Wrong ❌ - ${q.explanation}`;
-        }
-        missedList.appendChild(li);
-    });
-    const score = Math.round((correctCount/quizData.length)*100);
-    lastScoreText.textContent = `Last Unit Test Score: ${score}%`;
-    let highScore = parseInt(localStorage.getItem('unit1HighScore'))||0;
-    if(score>highScore) localStorage.setItem('unit1HighScore',score);
-    highScoreText.textContent = `Highest Unit Test Score: ${Math.max(score,highScore)}%`;
-    localStorage.setItem('unit1LastScore',score);
-    if(score>=90){ unitCompleteText.textContent='Unit Complete'; localStorage.setItem('unit1Complete',true); } else{ unitCompleteText.textContent=''; }
-    renderUnitCard();
+reviewDiv.style.display='none'; scoreScreen.style.display='block';
+let correctCount = 0; missedList.innerHTML = '';
+quizData.forEach((q,i)=>{
+const li = document.createElement('li');
+if(q.shuffledAnswers[answers[i]]===q.a[q.correct]){
+correctCount++; li.className='correct-score'; li.textContent=`Q${i+1}: Correct! ✅`;
+} else{
+li.className='wrong-score'; li.textContent=`Q${i+1}: Wrong ❌ - ${q.explanation}`;
+}
+missedList.appendChild(li);
+});
+const score = Math.round((correctCount/quizData.length)*100);
+lastScoreText.textContent = `Last Unit Test Score: ${score}%`;
+let highScore = parseInt(localStorage.getItem('unit1HighScore'))||0;
+if(score>highScore) localStorage.setItem('unit1HighScore',score);
+highScoreText.textContent = `Highest Unit Test Score: ${Math.max(score,highScore)}%`;
+localStorage.setItem('unit1LastScore',score);
+if(score>=90){ unitCompleteText.textContent='Unit Complete'; localStorage.setItem('unit1Complete',true); } else{ unitCompleteText.textContent=''; }
+renderUnitCard();
 }
 
 restartBtn.onclick = ()=>{
-    answers = Array(quizData.length).fill(null);
-    flags = Array(quizData.length).fill(false);
-    current = 0;
-    quiz.style.display='block'; scoreScreen.style.display='none'; startScreen.style.display='none'; loadQuestion();
+answers = Array(quizData.length).fill(null);
+flags = Array(quizData.length).fill(false);
+current = 0;
+quiz.style.display='block'; scoreScreen.style.display='none'; startScreen.style.display='none'; loadQuestion();
 };
 clearDataBtn.onclick = ()=>{
-    localStorage.clear(); renderUnitCard(); alert('All saved data cleared.');
+localStorage.clear(); renderUnitCard(); alert('All saved data cleared.');
 };
 
 </script>

@@ -132,7 +132,6 @@ header {
     color: var(--red);
     z-index: 10;
     line-height: 1;
-    display: none; /* hidden until overlay opens */
 }
 
 [data-theme="dark"] #closeQuiz { color: var(--red-dark); }
@@ -308,11 +307,14 @@ function renderUnitCard() {
     units.forEach(unit => {
         const card = document.createElement('div');
         card.className = 'unit-card';
+
         const header = document.createElement('div');
         header.className = 'unit-header';
+
         const titleDiv = document.createElement('div');
         titleDiv.className = 'title';
         titleDiv.textContent = unit.name;
+
         const isComplete = localStorage.getItem(unit.id + 'Complete') === 'true';
         if (isComplete) {
             const uc = document.createElement('span');
@@ -326,34 +328,44 @@ function renderUnitCard() {
             titleDiv.appendChild(star);
             completedCount++;
         }
+
         const lastScore = parseInt(localStorage.getItem(unit.id + 'LastScore')) || 0;
         const highScore = parseInt(localStorage.getItem(unit.id + 'HighScore')) || 0;
+
         const scoreDiv = document.createElement('div');
         scoreDiv.className = 'scores';
         scoreDiv.textContent = `Last: ${lastScore}% | Best: ${highScore}%`;
+
         header.appendChild(titleDiv);
         header.appendChild(scoreDiv);
         card.appendChild(header);
+
         const dropdown = document.createElement('div');
         dropdown.className = 'unit-dropdown';
+
         const studyBtn = document.createElement('button');
         studyBtn.className = 'study-btn';
         studyBtn.innerHTML = '<i class="fas fa-book"></i> Study';
-        studyBtn.onclick = () => alert('Study mode coming soon!');
+        studyBtn.addEventListener('click', () => alert('Study mode coming soon!'));
+
         const testBtn = document.createElement('button');
         testBtn.className = 'test-btn';
         testBtn.innerHTML = '<i class="fas fa-clipboard"></i> Unit Test';
-        testBtn.onclick = openQuiz;
+        testBtn.addEventListener('click', openQuiz);
+
         dropdown.appendChild(studyBtn);
         dropdown.appendChild(testBtn);
         card.appendChild(dropdown);
+
         card.addEventListener('click', (e) => {
             if (e.target.tagName !== 'BUTTON') {
                 dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
             }
         });
+
         unitContainer.appendChild(card);
     });
+
     progressText.textContent = `${completedCount} out of ${units.length} units completed`;
 }
 renderUnitCard();
@@ -377,7 +389,7 @@ let quizData = [], answers = [], current = 0;
 const quizOverlay = document.getElementById('quizOverlay');
 const startScreen = document.getElementById('startScreen');
 const startBtn = document.getElementById('startBtn');
-const closeQuizBtn = document.getElementById('closeQuiz');
+const closeQuiz = document.getElementById('closeQuiz');
 const quiz = document.getElementById('quiz');
 const questionNumberEl = document.getElementById('questionNumber');
 const questionEl = document.getElementById('question');
@@ -410,22 +422,22 @@ function openQuiz() {
     quiz.style.display = 'none';
     reviewDiv.style.display = 'none';
     scoreScreen.style.display = 'none';
-    closeQuizBtn.style.display = 'block';
+    closeQuiz.style.display = 'block';
     quizData = quizDataOriginal.map(q => ({...q}));
     answers = Array(quizData.length).fill(null);
     current = 0;
 }
 
-startBtn.onclick = () => {
+startBtn.addEventListener('click', () => {
     startScreen.style.display = 'none';
     quiz.style.display = 'block';
     loadQuestion();
-};
+});
 
-closeQuizBtn.onclick = () => {
+closeQuiz.addEventListener('click', () => {
     quizOverlay.style.display = 'none';
-    closeQuizBtn.style.display = 'none';
-};
+    closeQuiz.style.display = 'none';
+});
 
 function loadQuestion() {
     const q = quizData[current];
@@ -437,31 +449,31 @@ function loadQuestion() {
         const btn = document.createElement('button');
         btn.textContent = opt;
         if (answers[current] === i) btn.classList.add('selected');
-        btn.onclick = () => {
+        btn.addEventListener('click', () => {
             answers[current] = i;
             Array.from(optionsEl.children).forEach(b => b.classList.remove('selected'));
             btn.classList.add('selected');
-        };
+        });
         optionsEl.appendChild(btn);
     });
     progressEl.style.width = `${((current + 1) / quizData.length) * 100}%`;
 }
 
-nextBtn.onclick = () => {
+nextBtn.addEventListener('click', () => {
     if (current === quizData.length - 1) {
         showReview();
     } else {
         current++;
         loadQuestion();
     }
-};
+});
 
-prevBtn.onclick = () => {
+prevBtn.addEventListener('click', () => {
     if (current > 0) {
         current--;
         loadQuestion();
     }
-};
+});
 
 function showReview() {
     quiz.style.display = 'none';
@@ -472,17 +484,17 @@ function showReview() {
         box.className = 'review-box';
         box.style.background = answers[i] !== null ? '#d4edda' : '#ccc';
         box.textContent = i + 1;
-        box.onclick = () => {
+        box.addEventListener('click', () => {
             current = i;
             reviewDiv.style.display = 'none';
             quiz.style.display = 'block';
             loadQuestion();
-        };
+        });
         reviewGrid.appendChild(box);
     });
 }
 
-toScoreBtn.onclick = showScore;
+toScoreBtn.addEventListener('click', showScore);
 
 function showScore() {
     reviewDiv.style.display = 'none';
@@ -513,22 +525,22 @@ function showScore() {
     const isComplete = highScore >= 90;
     localStorage.setItem('unit1Complete', isComplete ? 'true' : 'false');
     unitCompleteText.textContent = isComplete ? '🎉 Unit Complete!' : '';
-    renderUnitCard();
+    renderUnitCard(); // re-render to show "Unit Complete" immediately
 }
 
-restartBtn.onclick = () => {
+restartBtn.addEventListener('click', () => {
     answers = Array(quizData.length).fill(null);
     current = 0;
     scoreScreen.style.display = 'none';
     quiz.style.display = 'block';
     loadQuestion();
-};
+});
 
-clearDataBtn.onclick = () => {
+clearDataBtn.addEventListener('click', () => {
     localStorage.clear();
     renderUnitCard();
     alert('All saved data cleared.');
-};
+});
 </script>
 </body>
 </html>

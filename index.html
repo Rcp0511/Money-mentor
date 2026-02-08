@@ -34,7 +34,7 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 
 #quiz { display:none; }
 .question-number { font-size:0.9em; color:#666; margin-bottom:5px; }
-.question { font-size:1.3em; margin-bottom:20px; }
+.question { font-size:1.3em; margin-bottom:20px; position:relative; }
 .options button { display:block; width:100%; margin:8px 0; padding:12px; font-size:1em; border:2px solid #ccc; border-radius:10px; cursor:pointer; text-align:left; background:#fdfdfd; transition:0.2s; }
 .options button:hover { border-color:#007bff; background-color:#e0f0ff; }
 .options button.selected { background-color:#d4edda; border-color:#28a745; }
@@ -60,6 +60,8 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 
 .restart-btn { margin-top:20px; padding:12px 20px; border:none; border-radius:10px; background:#28a745; color:white; cursor:pointer; }
 .restart-btn:hover { background:#218838; }
+
+.flag-small { position:absolute; top:0; right:0; color:red; font-size:0.8em; }
 </style>
 </head>
 <body>
@@ -108,8 +110,62 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 </div>
 
 <script>
-const units=[{name:"Unit 1: Investing Vocab", highScore:0, lastScore:null}];
+let units = JSON.parse(localStorage.getItem('units')) || [{name:"Unit 1: Investing Vocab", highScore:0, lastScore:null}];
 const container=document.getElementById('unitContainer');
+let quizDataOriginal=[
+  {q:"What is a 'stock'?", a:["Share of ownership in a company","Company's debt","A loan from a bank","An investment account"], correct:0, explanation:"A stock represents ownership in a company."},
+  {q:"What is a 'bond'?", a:["Loan to a company or government","Ownership share in a company","Bank deposit","Certificate of deposit"], correct:0, explanation:"A bond is a loan to a company or government."},
+  {q:"What is an 'asset'?", a:["Something valuable you own","Money owed by you","A liability","Expected income"], correct:0, explanation:"An asset is something valuable that you own."},
+  {q:"What is a 'liability'?", a:["Debt you owe","Stock you own","Company profit","Dividend received"], correct:0, explanation:"A liability is money you owe."},
+  {q:"What is a 'dividend'?", a:["Payment to shareholders","Company expense","Stock price change","Loan interest"], correct:0, explanation:"Dividends are payments made to shareholders."},
+  {q:"What is 'capital'?", a:["Money used for investment","Company revenue","Stock price","Savings account"], correct:0, explanation:"Capital is money used to invest."},
+  {q:"What is a 'portfolio'?", a:["Collection of investments","Single investment","Bank account","Loan balance"], correct:0, explanation:"A portfolio is all your investments together."},
+  {q:"What is 'risk'?", a:["Chance of losing money","Guaranteed profit","Fixed interest","Company revenue"], correct:0, explanation:"Risk is the chance that you may lose money."},
+  {q:"What is 'liquidity'?", a:["Ease of converting an asset to cash","Profitability of investment","Type of investment","Company stock value"], correct:0, explanation:"Liquidity is how quickly you can convert an asset to cash."},
+  {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stocks","Loan principal","Investment type"], correct:0, explanation:"Interest is what you pay for borrowing money."}
+];
+
+let quizData=[], answers=[], flags=[], current=0;
+
+// DOM elements
+const quizOverlay=document.getElementById('quizOverlay');
+const startScreen=document.getElementById('startScreen');
+const startBtn=document.getElementById('startBtn');
+const flagBtn=document.getElementById('flagBtn');
+const quiz=document.getElementById('quiz');
+const questionNumberEl=document.getElementById('questionNumber');
+const questionEl=document.getElementById('question');
+const optionsEl=document.getElementById('options');
+const prevBtn=document.getElementById('prevBtn');
+const nextBtn=document.getElementById('nextBtn');
+const reviewDiv=document.getElementById('review');
+const reviewGrid=document.getElementById('reviewGrid');
+const toScoreBtn=document.getElementById('toScoreBtn');
+const scoreScreen=document.getElementById('scoreScreen');
+const missedList=document.getElementById('missedList');
+const lastScoreText=document.getElementById('lastScoreText');
+const highScoreText=document.getElementById('highScoreText');
+const restartBtn=document.getElementById('restartBtn');
+const closeQuiz=document.getElementById('closeQuiz');
+const progressEl=document.getElementById('progress');
+
+function saveProgress(){
+  localStorage.setItem('quizAnswers', JSON.stringify(answers));
+  localStorage.setItem('quizFlags', JSON.stringify(flags));
+  localStorage.setItem('quizCurrent', current);
+  localStorage.setItem('units', JSON.stringify(units));
+}
+
+function loadProgress(){
+  const savedAnswers = JSON.parse(localStorage.getItem('quizAnswers'));
+  const savedFlags = JSON.parse(localStorage.getItem('quizFlags'));
+  const savedCurrent = localStorage.getItem('quizCurrent');
+  if(savedAnswers){ answers = savedAnswers; }
+  if(savedFlags){ flags = savedFlags; }
+  if(savedCurrent){ current = parseInt(savedCurrent); }
+}
+
+function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;}
 
 function createUnitCards() {
   container.innerHTML="";
@@ -138,46 +194,7 @@ function createUnitCards() {
     container.appendChild(card);
   });
 }
-
 createUnitCards();
-
-const quizDataOriginal=[
-  {q:"What is a 'stock'?", a:["Share of ownership in a company","Company's debt","A loan from a bank","An investment account"], correct:0, explanation:"A stock represents ownership in a company."},
-  {q:"What is a 'bond'?", a:["Loan to a company or government","Ownership share in a company","Bank deposit","Certificate of deposit"], correct:0, explanation:"A bond is a loan to a company or government."},
-  {q:"What is an 'asset'?", a:["Something valuable you own","Money owed by you","A liability","Expected income"], correct:0, explanation:"An asset is something valuable that you own."},
-  {q:"What is a 'liability'?", a:["Debt you owe","Stock you own","Company profit","Dividend received"], correct:0, explanation:"A liability is money you owe."},
-  {q:"What is a 'dividend'?", a:["Payment to shareholders","Company expense","Stock price change","Loan interest"], correct:0, explanation:"Dividends are payments made to shareholders."},
-  {q:"What is 'capital'?", a:["Money used for investment","Company revenue","Stock price","Savings account"], correct:0, explanation:"Capital is money used to invest."},
-  {q:"What is a 'portfolio'?", a:["Collection of investments","Single investment","Bank account","Loan balance"], correct:0, explanation:"A portfolio is all your investments together."},
-  {q:"What is 'risk'?", a:["Chance of losing money","Guaranteed profit","Fixed interest","Company revenue"], correct:0, explanation:"Risk is the chance that you may lose money."},
-  {q:"What is 'liquidity'?", a:["Ease of converting an asset to cash","Profitability of investment","Type of investment","Company stock value"], correct:0, explanation:"Liquidity is how quickly you can convert an asset to cash."},
-  {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stocks","Loan principal","Investment type"], correct:0, explanation:"Interest is what you pay for borrowing money."}
-];
-
-let quizData=[], answers=[], flags=[], current=0;
-
-const quizOverlay=document.getElementById('quizOverlay');
-const startScreen=document.getElementById('startScreen');
-const startBtn=document.getElementById('startBtn');
-const flagBtn=document.getElementById('flagBtn');
-const quiz=document.getElementById('quiz');
-const questionNumberEl=document.getElementById('questionNumber');
-const questionEl=document.getElementById('question');
-const optionsEl=document.getElementById('options');
-const prevBtn=document.getElementById('prevBtn');
-const nextBtn=document.getElementById('nextBtn');
-const reviewDiv=document.getElementById('review');
-const reviewGrid=document.getElementById('reviewGrid');
-const toScoreBtn=document.getElementById('toScoreBtn');
-const scoreScreen=document.getElementById('scoreScreen');
-const missedList=document.getElementById('missedList');
-const lastScoreText=document.getElementById('lastScoreText');
-const highScoreText=document.getElementById('highScoreText');
-const restartBtn=document.getElementById('restartBtn');
-const closeQuiz=document.getElementById('closeQuiz');
-const progressEl=document.getElementById('progress');
-
-function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;}
 
 function openQuiz(){
   quizOverlay.style.display='flex';
@@ -187,12 +204,13 @@ function openQuiz(){
   answers=Array(quizData.length).fill(null);
   flags=Array(quizData.length).fill(false);
   current=0;
+  loadProgress();
 }
 
 function loadQuestion(){
   const q=quizData[current];
   questionNumberEl.textContent=`Question ${current+1} of ${quizData.length}`;
-  questionEl.textContent=q.q;
+  questionEl.innerHTML=q.q + (flags[current]?'<i class="fas fa-flag flag-small"></i>':'');
   optionsEl.innerHTML='';
   if(!q.shuffledAnswers) q.shuffledAnswers=shuffleArray([...q.a]);
   q.shuffledAnswers.forEach((opt,i)=>{
@@ -202,6 +220,7 @@ function loadQuestion(){
       answers[current]=i;
       Array.from(optionsEl.children).forEach(b=>b.classList.remove('selected'));
       btn.classList.add('selected');
+      saveProgress();
     };
     optionsEl.appendChild(btn);
   });
@@ -211,9 +230,9 @@ function loadQuestion(){
   nextBtn.textContent=(current===quizData.length-1)?'Review':'Next';
 }
 
-nextBtn.onclick=()=>{if(current===quizData.length-1){showReview();} else{current++; loadQuestion();}};
-prevBtn.onclick=()=>{if(current>0){current--; loadQuestion();}};
-flagBtn.onclick=()=>{flags[current]=!flags[current]; loadQuestion();};
+nextBtn.onclick=()=>{if(current===quizData.length-1){showReview();} else{current++; loadQuestion(); saveProgress();}};
+prevBtn.onclick=()=>{if(current>0){current--; loadQuestion(); saveProgress();}};
+flagBtn.onclick=()=>{flags[current]=!flags[current]; loadQuestion(); saveProgress();};
 
 function showReview(){
   quiz.style.display='none'; reviewDiv.style.display='block'; reviewGrid.innerHTML='';
@@ -225,12 +244,7 @@ function showReview(){
     box.textContent=`Q${i+1}`;
     if(flags[i]){
       const flagIcon=document.createElement('i'); 
-      flagIcon.className='fas fa-flag'; 
-      flagIcon.style.position='absolute'; 
-      flagIcon.style.top='5px'; 
-      flagIcon.style.right='5px'; 
-      flagIcon.style.color='red'; 
-      flagIcon.style.fontSize='0.8em';
+      flagIcon.className='fas fa-flag flag-small'; 
       box.appendChild(flagIcon);
     }
     box.onclick=()=>{ reviewDiv.style.display='none'; quiz.style.display='block'; current=i; loadQuestion(); };
@@ -256,9 +270,12 @@ function calculateScore(){
   });
   const percent=Math.round((score/quizData.length)*100);
   lastScoreText.textContent=`Last Unit Test Score: ${percent}%`;
-  if(percent>=90){ units[0].highScore=Math.max(units[0].highScore||0, percent); }
   units[0].lastScore = percent;
+  if(percent>units[0].highScore){ units[0].highScore=percent; }
+  localStorage.setItem('units', JSON.stringify(units));
+  highScoreText.textContent=`Highest Unit Test Score: ${units[0].highScore}%`;
   createUnitCards();
+  saveProgress();
 }
 
 closeQuiz.onclick=()=>{quizOverlay.style.display='none';};

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Unit 1 Quiz Dashboard</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
@@ -52,83 +52,80 @@
 body {
     margin:0;
     font-family:'Inter', sans-serif;
-    background:var(--bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="%23c8e6c9"/><circle cx="20" cy="20" r="1" fill="%23c8e6c9"/><circle cx="80" cy="80" r="1.5" fill="%23c8e6c9"/><circle cx="30" cy="70" r="1" fill="%23c8e6c9"/><circle cx="70" cy="30" r="1.2" fill="%23c8e6c9"/></svg>') repeat;
+    background:var(--bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><circle cx="60" cy="60" r="2" fill="%23c8e6c9"/><circle cx="25" cy="25" r="1.2" fill="%23c8e6c9"/><circle cx="95" cy="95" r="1.5" fill="%23c8e6c9"/><circle cx="35" cy="85" r="1" fill="%23c8e6c9"/><circle cx="85" cy="35" r="1.2" fill="%23c8e6c9"/></svg>') repeat;
     color:var(--text);
     transition:all 0.35s;
 }
 
 /* =======================
-   HEADER (NOW WITH PATTERN)
+   HEADER (WITH PATTERN)
    ======================= */
 header {
     background:linear-gradient(135deg, #43a047, #2e7d32);
     color:white;
-    padding:20px 40px;
+    padding:18px 32px;
     display:flex;
     justify-content:space-between;
     align-items:center;
     box-shadow:0 4px 12px rgba(0,0,0,0.2);
     position:relative;
     font-family: 'Poppins', sans-serif;
-    font-size:1.8em;
+    font-size:1.6em;
     font-weight:600;
     gap:20px;
     overflow:hidden;
 }
 
-/* Pattern overlay on the green bar */
+/* Pattern overlay */
 header::after {
     content:"";
     position:absolute;
     inset:0;
     pointer-events:none;
     opacity:0.22;
-
     background-image:
-      radial-gradient(circle at 12px 12px, rgba(255,255,255,0.35) 2px, transparent 2.5px),
-      radial-gradient(circle at 36px 36px, rgba(255,255,255,0.22) 2px, transparent 2.5px);
-    background-size:48px 48px;
+      radial-gradient(circle at 14px 14px, rgba(255,255,255,0.35) 2px, transparent 2.6px),
+      radial-gradient(circle at 42px 42px, rgba(255,255,255,0.22) 2px, transparent 2.6px);
+    background-size:56px 56px;
     mix-blend-mode:overlay;
 }
 
 .header-left { display:flex; align-items:center; gap:12px; z-index:2; }
-.header-right { display:flex; align-items:center; gap:16px; font-size:1rem; z-index:2; }
+.header-right { display:flex; align-items:center; gap:14px; font-size:1rem; z-index:2; }
 
-/* NEW NAV BUTTONS */
+/* Back + Videos buttons */
 .nav-btn {
     border:none;
-    padding:10px 16px;
-    border-radius:12px;
-    font-weight:800;
     cursor:pointer;
-    transition:transform 0.12s ease, opacity 0.12s ease;
+    font-weight:800;
+    border-radius:14px;
+    padding:10px 14px;
     display:flex;
     align-items:center;
     gap:10px;
-    font-size:1rem;
+    transition:0.18s;
+    font-size:0.95rem;
 }
 
-.nav-btn:active { transform:scale(0.98); }
+.nav-btn:hover { transform:translateY(-1px) scale(1.03); }
 
 .back-btn {
-    background:#0b3d1a;
+    background:#0f3d1f;
     color:white;
+    box-shadow:0 8px 18px rgba(0,0,0,0.18);
 }
 
 .videos-btn {
-    background:#1f7a3b;
+    background:rgba(255,255,255,0.18);
     color:white;
+    border:1px solid rgba(255,255,255,0.18);
 }
 
-.back-btn:hover,
-.videos-btn:hover { opacity:0.92; }
-
-/* THEME TOGGLE */
 #theme-toggle {
     background:rgba(255,255,255,0.15);
     border:none;
     color:white;
-    font-size:1.4rem;
+    font-size:1.25rem;
     cursor:pointer;
     padding:10px 12px;
     border-radius:12px;
@@ -136,12 +133,11 @@ header::after {
 }
 #theme-toggle:hover { transform:scale(1.08); }
 
-/* Units completed pill */
 .progress-pill {
     background:rgba(0,0,0,0.22);
     padding:10px 14px;
     border-radius:14px;
-    font-weight:700;
+    font-weight:600;
     font-size:0.95rem;
     display:flex;
     align-items:center;
@@ -151,7 +147,7 @@ header::after {
 
 .container {
     max-width:1100px;
-    margin:40px auto;
+    margin:34px auto 90px auto;
     padding:30px;
     background:var(--card-bg);
     border-radius:20px;
@@ -199,8 +195,8 @@ header::after {
     display:flex;
     align-items:center;
     gap:12px;
-    font-weight:600;
-    font-size:1.3em;
+    font-weight:700;
+    font-size:1.25em;
     color:white;
 }
 
@@ -220,7 +216,7 @@ header::after {
 }
 
 .unit-complete {
-    font-weight:800;
+    font-weight:900;
     color:#ffd700;
     background:rgba(0,0,0,0.22);
     padding:6px 10px;
@@ -240,7 +236,7 @@ header::after {
     border:none;
     border-radius:14px;
     font-size:1.1em;
-    font-weight:600;
+    font-weight:700;
     color:white;
     cursor:pointer;
     display:flex;
@@ -344,7 +340,7 @@ header::after {
     background:#1b5e20;
     color:white;
     cursor:pointer;
-    font-weight:800;
+    font-weight:900;
 }
 #startBtn:hover { background:#155d27; }
 
@@ -367,7 +363,6 @@ header::after {
     color:var(--text);
 }
 
-/* Selected fix for dark mode */
 .options button.selected {
     background-color:var(--option-selected-bg);
     border-color:var(--option-selected-border);
@@ -385,7 +380,7 @@ header::after {
     border:none;
     border-radius:10px;
     cursor:pointer;
-    font-weight:700;
+    font-weight:800;
 }
 
 #nextBtn { background:#43a047; color:white; }
@@ -400,7 +395,7 @@ header::after {
 
 /* Review page */
 #review { display:none; margin-top:15px; padding:30px; box-sizing:border-box; }
-#review h2 { text-align:center; margin-bottom:10px; font-weight:800; color:var(--green); }
+#review h2 { text-align:center; margin-bottom:10px; font-weight:900; color:var(--green); }
 
 .review-grid {
     display:grid;
@@ -415,7 +410,7 @@ header::after {
     border-radius:10px;
     cursor:pointer;
     position:relative;
-    font-weight:800;
+    font-weight:900;
     background:#e9ecef;
     user-select:none;
     border:2px solid transparent;
@@ -435,7 +430,6 @@ header::after {
 }
 [data-theme="dark"] .review-box.not-answered { background:#3a3a3a; }
 
-/* Flag shows correctly now */
 .review-flag {
     position:absolute;
     top:6px;
@@ -474,15 +468,13 @@ header::after {
     border:none;
     border-radius:12px;
     cursor:pointer;
-    font-weight:800;
+    font-weight:900;
 }
 
 .restart-btn { background:#43a047; color:white; }
 .restart-btn:hover { background:#388e3c; }
 
-.clear-btn { background:#dc3545; color:white; }
-.clear-btn:hover { background:#b02a37; }
-
+/* Info note */
 .warning-note {
     text-align:center;
     font-size:0.9em;
@@ -491,39 +483,53 @@ header::after {
     padding:10px;
     background:var(--note-bg);
     border-radius:10px;
-    max-width:600px;
+    max-width:650px;
     transition:all 0.4s;
 }
 
-/* GLOBAL CLEAR ALL DATA (BOTTOM RIGHT) */
-.danger-zone {
+/* ======= GLOBAL CLEAR ALL DATA BUTTON ======= */
+.global-clear-wrap {
     position:fixed;
-    right:18px;
+    right:20px;
     bottom:18px;
+    z-index:2000;
     display:flex;
     flex-direction:column;
+    align-items:flex-end;
     gap:8px;
-    z-index:9999;
-    max-width:280px;
 }
 
-#clearAllBtn {
-    background:#d60000;
+#globalClearBtn {
+    background:var(--red);
     color:white;
     border:none;
-    padding:12px 14px;
     border-radius:14px;
+    padding:12px 16px;
     font-weight:900;
     cursor:pointer;
-    box-shadow:0 12px 28px rgba(0,0,0,0.25);
+    box-shadow:0 10px 22px rgba(0,0,0,0.18);
+    transition:0.18s;
 }
 
-#clearAllBtn:hover { opacity:0.92; }
+#globalClearBtn:hover {
+    transform:translateY(-1px) scale(1.03);
+    background:var(--red-dark);
+}
 
-.danger-text {
-    font-size:0.8rem;
-    opacity:0.85;
-    line-height:1.2;
+.global-clear-warning {
+    max-width:260px;
+    font-size:0.78rem;
+    line-height:1.25;
+    opacity:0.92;
+    color:var(--text-light);
+    background:var(--card-bg);
+    padding:10px 12px;
+    border-radius:14px;
+    border:1px solid rgba(0,0,0,0.08);
+}
+
+[data-theme="dark"] .global-clear-warning {
+    border:1px solid rgba(255,255,255,0.08);
 }
 </style>
 </head>
@@ -532,11 +538,11 @@ header::after {
 
 <header>
     <div class="header-left">
-        <button id="backBtn" class="nav-btn back-btn">
+        <button class="nav-btn back-btn" id="backBtn">
             <i class="fas fa-arrow-left"></i> Back
         </button>
 
-        <button id="videosBtn" class="nav-btn videos-btn">
+        <button class="nav-btn videos-btn" id="videosBtn">
             <i class="fas fa-video"></i> Videos
         </button>
     </div>
@@ -544,7 +550,6 @@ header::after {
     <div style="z-index:2;">Student Dashboard</div>
 
     <div class="header-right">
-        <!-- THEME TOGGLE MOVED LEFT OF PROGRESS -->
         <button id="theme-toggle" title="Toggle theme"><i class="far fa-lightbulb"></i></button>
 
         <div class="progress-pill">
@@ -561,11 +566,13 @@ header::after {
     Data does not sync across devices. Scores and progress are stored locally in your browser.
 </div>
 
-<!-- CLEAR ALL DATA FEATURE (BOTTOM RIGHT) -->
-<div class="danger-zone">
-    <button id="clearAllBtn">Clear All Data</button>
-    <div class="danger-text">
-        Warning: This permanently removes all saved scores, completed units, and dashboard progress.
+<!-- Global Clear -->
+<div class="global-clear-wrap">
+    <button id="globalClearBtn">
+        <i class="fas fa-trash"></i> Clear All Data
+    </button>
+    <div class="global-clear-warning">
+        <b>Warning:</b> This permanently deletes your scores, unit completion, and saved progress from this browser.
     </div>
 </div>
 
@@ -596,8 +603,8 @@ header::after {
             <h2>Review Page</h2>
 
             <div id="reviewLegend" style="margin-bottom:10px;">
-                <span style="color:var(--green);font-weight:800;">Answered</span> |
-                <span style="color:gray;font-weight:800;">Not Answered</span> |
+                <span style="color:var(--green);font-weight:900;">Answered</span> |
+                <span style="color:gray;font-weight:900;">Not Answered</span> |
                 <i class="fas fa-flag" style="color:var(--red);"></i> Flagged
             </div>
 
@@ -608,40 +615,31 @@ header::after {
         <div id="scoreScreen">
             <h3>Your Score</h3>
             <ul id="missedList"></ul>
+
             <p id="lastScoreText"></p>
             <p id="highScoreText"></p>
-            <p id="unitCompleteText" style="color:gold; font-weight:bold;"></p>
+            <p id="unitCompleteText" style="color:gold; font-weight:900;"></p>
 
             <button class="restart-btn" id="restartBtn">Restart Quiz</button>
-            <button class="clear-btn" id="clearDataBtn">Clear Saved Data (Unit 1)</button>
         </div>
     </div>
 </div>
 
 <script>
-/* ---------- HEADER NAV ---------- */
-document.getElementById("backBtn").onclick = () => {
-    window.history.back();
-};
-
-document.getElementById("videosBtn").onclick = () => {
-    window.location.href =
-        "https://sites.google.com/view/money--dash--mentor/learn/videos?authuser=0";
-};
-
-/* ---------- THEME TOGGLE ---------- */
+/* =========================================================
+   THEME (DEFAULT TO DARK ON FIRST VISIT)
+   ========================================================= */
 const themeToggle = document.getElementById('theme-toggle');
 const html = document.documentElement;
 
-// Default to dark if never visited
 let savedTheme = localStorage.getItem('theme');
-if (!savedTheme) {
+if(!savedTheme){
     savedTheme = 'dark';
-    localStorage.setItem('theme', savedTheme);
+    localStorage.setItem('theme', 'dark');
 }
 html.setAttribute('data-theme', savedTheme);
 
-function updateBulb() {
+function updateBulb(){
     const isDark = html.getAttribute('data-theme') === 'dark';
     themeToggle.innerHTML = isDark
         ? '<i class="fas fa-lightbulb"></i>'
@@ -655,77 +653,115 @@ themeToggle.addEventListener('click', () => {
 });
 updateBulb();
 
-/* ---------- UNITS ---------- */
-const units = [{name:"Unit 1: Investing Vocab", id: 'unit1'}];
-const container = document.getElementById('unitContainer');
-const progressText = document.getElementById('progressText');
+/* =========================================================
+   NAV BUTTONS
+   ========================================================= */
+document.getElementById("backBtn").addEventListener("click", () => {
+    // If embedded in Google Sites, history.back() is the best "back"
+    // If it doesn't work, it still won't break anything.
+    window.history.back();
+});
 
-function isUnitCompleted(unitId) {
-    const highScore = parseInt(localStorage.getItem(unitId + 'HighScore')) || 0;
-    return highScore >= 90;
+document.getElementById("videosBtn").addEventListener("click", () => {
+    window.location.href = "https://sites.google.com/view/money--mentor/learn/videos?authuser=0";
+});
+
+/* =========================================================
+   UNITS
+   ========================================================= */
+const units = [{ name:"Unit 1: Investing Vocab", id:"unit1" }];
+const container = document.getElementById("unitContainer");
+const progressText = document.getElementById("progressText");
+
+function getUnitLastScore(unitId){
+    return parseInt(localStorage.getItem(unitId + "LastScore")) || 0;
 }
 
-function renderUnitCard() {
-    container.innerHTML = '';
+function getUnitHighScore(unitId){
+    return parseInt(localStorage.getItem(unitId + "HighScore")) || 0;
+}
+
+function setUnitLastScore(unitId, score){
+    localStorage.setItem(unitId + "LastScore", String(score));
+}
+
+function setUnitHighScore(unitId, score){
+    localStorage.setItem(unitId + "HighScore", String(score));
+}
+
+function isUnitComplete(unitId){
+    // COMPLETE is tied to HIGH SCORE, not most recent
+    return getUnitHighScore(unitId) >= 90;
+}
+
+function renderUnitCard(){
+    container.innerHTML = "";
     let completedCount = 0;
 
     units.forEach(unit => {
-        const card = document.createElement('div');
-        card.className = 'unit-card';
+        const card = document.createElement("div");
+        card.className = "unit-card";
 
-        const header = document.createElement('div');
-        header.className = 'unit-header';
+        const header = document.createElement("div");
+        header.className = "unit-header";
 
-        const titleDiv = document.createElement('div');
-        titleDiv.className = 'title';
+        const titleDiv = document.createElement("div");
+        titleDiv.className = "title";
         titleDiv.textContent = unit.name;
 
-        // Completion is now based on HIGHEST SCORE
-        if (isUnitCompleted(unit.id)) {
-            const uc = document.createElement('span');
-            uc.className='unit-complete';
-            uc.textContent='Unit Complete';
-            titleDiv.prepend(uc);
+        // If unit complete (based on HIGH SCORE)
+        if(isUnitComplete(unit.id)){
+            const uc = document.createElement("span");
+            uc.className = "unit-complete";
+            uc.textContent = "Unit Complete";
 
-            const star = document.createElement('i');
-            star.className='fas fa-star';
-            star.style.color='gold';
-            star.style.marginLeft='10px';
+            const star = document.createElement("i");
+            star.className = "fas fa-star";
+            star.style.color = "gold";
+            star.style.marginLeft = "10px";
+
+            titleDiv.prepend(uc);
             titleDiv.appendChild(star);
 
             completedCount++;
         }
 
-        const lastScore = parseInt(localStorage.getItem(unit.id + 'LastScore')) || 0;
-        const highScore = parseInt(localStorage.getItem(unit.id + 'HighScore')) || 0;
+        const lastScore = getUnitLastScore(unit.id);
+        const highScore = getUnitHighScore(unit.id);
 
-        const scoreDiv = document.createElement('div');
-        scoreDiv.className='scores';
+        const scoreDiv = document.createElement("div");
+        scoreDiv.className = "scores";
         scoreDiv.textContent = `Last Unit Test Score: ${lastScore}% | Highest Unit Test Score: ${highScore}%`;
 
         header.appendChild(titleDiv);
         header.appendChild(scoreDiv);
         card.appendChild(header);
 
-        const dropdown = document.createElement('div');
-        dropdown.className='unit-dropdown';
+        const dropdown = document.createElement("div");
+        dropdown.className = "unit-dropdown";
 
-        const studyBtn = document.createElement('button');
-        studyBtn.className='study-btn';
-        studyBtn.innerHTML='<i class="fas fa-book"></i> Study';
-        studyBtn.onclick = (e) => { e.stopPropagation(); alert(`Study ${unit.name}`); };
+        const studyBtn = document.createElement("button");
+        studyBtn.className = "study-btn";
+        studyBtn.innerHTML = '<i class="fas fa-book"></i> Study';
+        studyBtn.onclick = (e) => {
+            e.stopPropagation();
+            alert("Study mode not added yet. (You can add it next.)");
+        };
 
-        const testBtn = document.createElement('button');
-        testBtn.className='test-btn';
-        testBtn.innerHTML='<i class="fas fa-clipboard"></i> Unit Test';
-        testBtn.onclick = (e) => { e.stopPropagation(); openQuiz(); };
+        const testBtn = document.createElement("button");
+        testBtn.className = "test-btn";
+        testBtn.innerHTML = '<i class="fas fa-clipboard"></i> Unit Test';
+        testBtn.onclick = (e) => {
+            e.stopPropagation();
+            openQuiz(unit.id);
+        };
 
         dropdown.appendChild(studyBtn);
         dropdown.appendChild(testBtn);
         card.appendChild(dropdown);
 
         card.onclick = () => {
-            dropdown.style.display = (dropdown.style.display === 'flex' ? 'none' : 'flex');
+            dropdown.style.display = (dropdown.style.display === "flex" ? "none" : "flex");
         };
 
         container.appendChild(card);
@@ -735,7 +771,9 @@ function renderUnitCard() {
 }
 renderUnitCard();
 
-/* ---------- QUIZ DATA ---------- */
+/* =========================================================
+   QUIZ DATA
+   ========================================================= */
 const quizDataOriginal = [
   {q:"What is a 'stock'?", a:["Share of ownership in a company","Debt issued by a company","A bank savings account","A type of bond"], correct:0, explanation:"Stocks represent part ownership in a company and potential profits."},
   {q:"What is a 'bond'?", a:["Loan to a company or government","Share of ownership in a company","An interest-bearing account","A type of insurance"], correct:0, explanation:"Bonds are loans you give to companies or governments in exchange for interest."},
@@ -749,31 +787,36 @@ const quizDataOriginal = [
   {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stock sales","Investment principal","Dividend received"], correct:0, explanation:"Interest is the cost of borrowing money, usually expressed as a percentage."}
 ];
 
-/* ---------- QUIZ LOGIC ---------- */
-let quizData=[], answers=[], flags=[], current=0;
+/* =========================================================
+   QUIZ LOGIC
+   ========================================================= */
+let quizData = [];
+let answers = [];
+let flags = [];
+let current = 0;
+let activeUnitId = "unit1";
 
-const quizOverlay=document.getElementById('quizOverlay');
-const startScreen=document.getElementById('startScreen');
-const startBtn=document.getElementById('startBtn');
-const flagBtn=document.getElementById('flagBtn');
-const quiz=document.getElementById('quiz');
-const questionNumberEl=document.getElementById('questionNumber');
-const questionEl=document.getElementById('question');
-const optionsEl=document.getElementById('options');
-const prevBtn=document.getElementById('prevBtn');
-const nextBtn=document.getElementById('nextBtn');
-const reviewDiv=document.getElementById('review');
-const reviewGrid=document.getElementById('reviewGrid');
-const toScoreBtn=document.getElementById('toScoreBtn');
-const scoreScreen=document.getElementById('scoreScreen');
-const missedList=document.getElementById('missedList');
-const lastScoreText=document.getElementById('lastScoreText');
-const highScoreText=document.getElementById('highScoreText');
-const unitCompleteText=document.getElementById('unitCompleteText');
-const restartBtn=document.getElementById('restartBtn');
-const clearDataBtn=document.getElementById('clearDataBtn');
-const closeQuiz=document.getElementById('closeQuiz');
-const progressEl=document.getElementById('progress');
+const quizOverlay = document.getElementById("quizOverlay");
+const startScreen = document.getElementById("startScreen");
+const startBtn = document.getElementById("startBtn");
+const flagBtn = document.getElementById("flagBtn");
+const quiz = document.getElementById("quiz");
+const questionNumberEl = document.getElementById("questionNumber");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const reviewDiv = document.getElementById("review");
+const reviewGrid = document.getElementById("reviewGrid");
+const toScoreBtn = document.getElementById("toScoreBtn");
+const scoreScreen = document.getElementById("scoreScreen");
+const missedList = document.getElementById("missedList");
+const lastScoreText = document.getElementById("lastScoreText");
+const highScoreText = document.getElementById("highScoreText");
+const unitCompleteText = document.getElementById("unitCompleteText");
+const restartBtn = document.getElementById("restartBtn");
+const closeQuiz = document.getElementById("closeQuiz");
+const progressEl = document.getElementById("progress");
 
 function shuffleArray(a){
     for(let i=a.length-1;i>0;i--){
@@ -783,16 +826,18 @@ function shuffleArray(a){
     return a;
 }
 
-function openQuiz(){
-    quizOverlay.style.display='flex';
-    document.body.style.overflow='hidden';
+function openQuiz(unitId){
+    activeUnitId = unitId;
 
-    startScreen.style.display='flex';
-    quiz.style.display='none';
-    reviewDiv.style.display='none';
-    scoreScreen.style.display='none';
+    quizOverlay.style.display = "flex";
+    document.body.style.overflow = "hidden";
 
-    flagBtn.style.display='none';
+    startScreen.style.display = "flex";
+    quiz.style.display = "none";
+    reviewDiv.style.display = "none";
+    scoreScreen.style.display = "none";
+
+    flagBtn.style.display = "none";
 
     quizData = quizDataOriginal.map(q => ({...q, shuffledAnswers:null}));
     answers = Array(quizData.length).fill(null);
@@ -803,23 +848,23 @@ function openQuiz(){
 }
 
 function closeQuizOverlay(){
-    quizOverlay.style.display='none';
-    document.body.style.overflow='';
+    quizOverlay.style.display="none";
+    document.body.style.overflow="";
 }
 
 closeQuiz.onclick = closeQuizOverlay;
 
-quizOverlay.addEventListener('click', (e) => {
+quizOverlay.addEventListener("click", (e) => {
     if(e.target === quizOverlay) closeQuizOverlay();
 });
 
 startBtn.onclick = () => {
-    startScreen.style.display='none';
-    quiz.style.display='block';
-    reviewDiv.style.display='none';
-    scoreScreen.style.display='none';
+    startScreen.style.display = "none";
+    quiz.style.display = "block";
+    reviewDiv.style.display = "none";
+    scoreScreen.style.display = "none";
 
-    flagBtn.style.display='inline-flex';
+    flagBtn.style.display = "inline-flex";
     loadQuestion();
 };
 
@@ -834,20 +879,20 @@ function loadQuestion(){
 
     questionNumberEl.textContent = `Question ${current+1} of ${quizData.length}`;
     questionEl.textContent = q.q;
-    optionsEl.innerHTML = '';
+    optionsEl.innerHTML = "";
 
     if(!q.shuffledAnswers) q.shuffledAnswers = shuffleArray([...q.a]);
 
     q.shuffledAnswers.forEach((opt,i)=>{
-        const btn = document.createElement('button');
+        const btn = document.createElement("button");
         btn.textContent = opt;
 
-        if(answers[current] === i) btn.classList.add('selected');
+        if(answers[current] === i) btn.classList.add("selected");
 
         btn.onclick = ()=>{
             answers[current] = i;
-            Array.from(optionsEl.children).forEach(b=>b.classList.remove('selected'));
-            btn.classList.add('selected');
+            Array.from(optionsEl.children).forEach(b=>b.classList.remove("selected"));
+            btn.classList.add("selected");
         };
 
         optionsEl.appendChild(btn);
@@ -879,36 +924,36 @@ flagBtn.onclick = ()=>{
 };
 
 function showReview(){
-    quiz.style.display='none';
-    reviewDiv.style.display='block';
-    scoreScreen.style.display='none';
-    flagBtn.style.display='none';
+    quiz.style.display="none";
+    reviewDiv.style.display="block";
+    scoreScreen.style.display="none";
+    flagBtn.style.display="none";
 
-    reviewGrid.innerHTML = '';
+    reviewGrid.innerHTML="";
 
     quizData.forEach((q,i)=>{
-        const box = document.createElement('div');
-        box.className='review-box';
+        const box = document.createElement("div");
+        box.className="review-box";
 
         if(answers[i] !== null){
-            box.classList.add('answered');
+            box.classList.add("answered");
         } else {
-            box.classList.add('not-answered');
+            box.classList.add("not-answered");
         }
 
         box.textContent = `${i+1}`;
 
         if(flags[i]){
-            const flagIcon = document.createElement('i');
-            flagIcon.className='fas fa-flag review-flag';
+            const flagIcon = document.createElement("i");
+            flagIcon.className="fas fa-flag review-flag";
             box.appendChild(flagIcon);
         }
 
         box.onclick = ()=>{
             current=i;
-            reviewDiv.style.display='none';
-            quiz.style.display='block';
-            flagBtn.style.display='inline-flex';
+            reviewDiv.style.display="none";
+            quiz.style.display="block";
+            flagBtn.style.display="inline-flex";
             loadQuestion();
         };
 
@@ -919,16 +964,16 @@ function showReview(){
 toScoreBtn.onclick = showScore;
 
 function showScore(){
-    reviewDiv.style.display='none';
-    quiz.style.display='none';
-    scoreScreen.style.display='block';
-    flagBtn.style.display='none';
+    reviewDiv.style.display="none";
+    quiz.style.display="none";
+    scoreScreen.style.display="block";
+    flagBtn.style.display="none";
 
     let correctCount = 0;
-    missedList.innerHTML = '';
+    missedList.innerHTML = "";
 
     quizData.forEach((q,i)=>{
-        const li = document.createElement('li');
+        const li = document.createElement("li");
 
         const chosenIndex = answers[i];
         const chosenText = chosenIndex === null ? null : q.shuffledAnswers[chosenIndex];
@@ -936,13 +981,13 @@ function showScore(){
 
         if(chosenText === correctText){
             correctCount++;
-            li.className='correct-score';
+            li.className="correct-score";
             li.textContent=`Q${i+1}: Correct! ✅`;
         } else {
-            li.className='wrong-score';
+            li.className="wrong-score";
             li.innerHTML = `
                 <div>Q${i+1}: Wrong ❌</div>
-                <div style="font-weight:700; opacity:0.95;">Correct Answer: ${correctText}</div>
+                <div style="font-weight:800; opacity:0.95;">Correct Answer: ${correctText}</div>
                 <div style="font-weight:600; opacity:0.85;">${q.explanation}</div>
             `;
         }
@@ -951,25 +996,23 @@ function showScore(){
     });
 
     const score = Math.round((correctCount/quizData.length)*100);
+
+    // Save last score
+    setUnitLastScore(activeUnitId, score);
+
+    // Save high score
+    const oldHigh = getUnitHighScore(activeUnitId);
+    const newHigh = Math.max(oldHigh, score);
+    setUnitHighScore(activeUnitId, newHigh);
+
     lastScoreText.textContent = `Last Unit Test Score: ${score}%`;
+    highScoreText.textContent = `Highest Unit Test Score: ${newHigh}%`;
 
-    // Save last score always
-    localStorage.setItem('unit1LastScore', score);
-
-    // Save highest score only if better
-    let highScore = parseInt(localStorage.getItem('unit1HighScore')) || 0;
-    if(score > highScore){
-        highScore = score;
-        localStorage.setItem('unit1HighScore', highScore);
-    }
-
-    highScoreText.textContent = `Highest Unit Test Score: ${highScore}%`;
-
-    // Unit Complete is now PERMANENT based on highest score
-    if(highScore >= 90){
-        unitCompleteText.textContent='Unit Complete ⭐';
+    // UNIT COMPLETE TEXT based on HIGH SCORE
+    if(newHigh >= 90){
+        unitCompleteText.textContent = "⭐ Unit Complete (based on your highest score)";
     } else {
-        unitCompleteText.textContent='';
+        unitCompleteText.textContent = "";
     }
 
     renderUnitCard();
@@ -980,38 +1023,49 @@ restartBtn.onclick = ()=>{
     flags = Array(quizData.length).fill(false);
     current = 0;
 
-    startScreen.style.display='none';
-    reviewDiv.style.display='none';
-    scoreScreen.style.display='none';
-    quiz.style.display='block';
-    flagBtn.style.display='inline-flex';
+    startScreen.style.display="none";
+    reviewDiv.style.display="none";
+    scoreScreen.style.display="none";
+    quiz.style.display="block";
+    flagBtn.style.display="inline-flex";
 
     loadQuestion();
 };
 
-// Clear Unit 1 data only
-clearDataBtn.onclick = ()=>{
-    localStorage.removeItem('unit1HighScore');
-    localStorage.removeItem('unit1LastScore');
+/* =========================================================
+   GLOBAL CLEAR ALL DATA (BUT KEEP THEME)
+   ========================================================= */
+document.getElementById("globalClearBtn").addEventListener("click", () => {
+    const ok = confirm(
+        "This will permanently delete all saved scores and unit completion for this dashboard on this browser.\n\nDo you want to continue?"
+    );
+
+    if(!ok) return;
+
+    // Keep theme
+    const theme = localStorage.getItem("theme") || "dark";
+
+    // Remove only dashboard keys
+    // (This prevents nuking other Google Sites storage)
+    const keysToRemove = [];
+    for(let i=0;i<localStorage.length;i++){
+        const k = localStorage.key(i);
+        if(!k) continue;
+
+        // unit score keys
+        if(k.startsWith("unit1")) keysToRemove.push(k);
+    }
+
+    keysToRemove.forEach(k => localStorage.removeItem(k));
+
+    // Restore theme
+    localStorage.setItem("theme", theme);
+    html.setAttribute("data-theme", theme);
+    updateBulb();
+
     renderUnitCard();
-    alert('Unit 1 saved data cleared.');
-};
-
-/* ---------- CLEAR ALL DATA FEATURE ---------- */
-document.getElementById("clearAllBtn").onclick = ()=>{
-    const confirm1 = confirm(
-        "Clear ALL data?\n\nThis will permanently delete your saved scores, unit progress, and theme settings."
-    );
-    if(!confirm1) return;
-
-    const confirm2 = confirm(
-        "Last warning.\n\nPress OK to permanently delete everything."
-    );
-    if(!confirm2) return;
-
-    localStorage.clear();
-    location.reload();
-};
+    alert("All saved dashboard data cleared.");
+});
 </script>
 </body>
 </html>

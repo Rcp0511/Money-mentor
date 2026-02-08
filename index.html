@@ -120,12 +120,13 @@ const container=document.getElementById('unitContainer');
 
 function renderUnitCard(){
   container.innerHTML='';
-  units.forEach((unit,idx)=>{
+  units.forEach(unit=>{
     const card=document.createElement('div'); card.className='unit-card';
     const header=document.createElement('div'); header.className='unit-header';
     const titleDiv=document.createElement('div'); titleDiv.className='title'; 
     titleDiv.textContent=unit.name;
 
+    // Check Unit Complete
     const unitCompleteStored=localStorage.getItem('unit1Complete')==='true';
     if(unitCompleteStored){
       const uc=document.createElement('span'); uc.className='unit-complete'; uc.textContent='Unit Complete'; 
@@ -138,6 +139,7 @@ function renderUnitCard(){
     const highScore=parseInt(localStorage.getItem('unit1HighScore'))||0;
     const scoreDiv=document.createElement('div'); scoreDiv.className='scores'; 
     scoreDiv.textContent=`Last Unit Test Score: ${lastScore}% | Highest Unit Test Score: ${highScore}%`;
+
     header.appendChild(titleDiv); header.appendChild(scoreDiv);
     card.appendChild(header);
 
@@ -170,6 +172,7 @@ const quizDataOriginal=[
   {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stocks","Loan principal","Investment type"], correct:0, explanation:"Interest is what you pay for borrowing money."}
 ];
 
+// ------------------ Variables ------------------
 let quizData=[], answers=[], flags=[], current=0;
 
 // ------------------ Elements ------------------
@@ -196,58 +199,42 @@ const progressEl=document.getElementById('progress');
 const clearDataBtn=document.getElementById('clearDataBtn');
 const unitCompleteText=document.getElementById('unitCompleteText');
 
+// ------------------ Functions ------------------
 function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;}
-
-// ------------------ Open Quiz ------------------
-function openQuiz(){
-  quizOverlay.style.display='flex';
-  startScreen.style.display='block';
-  quiz.style.display='none'; reviewDiv.style.display='none'; scoreScreen.style.display='none';
-  flagBtn.style.display='none';
-  quizData=quizDataOriginal.map(q=>({...q}));
-  answers=Array(quizData.length).fill(null);
-  flags=Array(quizData.length).fill(false);
-  current=0;
-}
-
+function openQuiz(){quizOverlay.style.display='flex'; startScreen.style.display='block'; quiz.style.display='none'; reviewDiv.style.display='none'; scoreScreen.style.display='none'; flagBtn.style.display='none'; quizData=quizDataOriginal.map(q=>({...q})); answers=Array(quizData.length).fill(null); flags=Array(quizData.length).fill(false); current=0;}
 startBtn.onclick=()=>{startScreen.style.display='none'; quiz.style.display='block'; loadQuestion();};
 closeQuiz.onclick=()=>{quizOverlay.style.display='none';};
-restartBtn.onclick=()=>{answers=Array(quizData.length).fill(null); flags=Array(quizData.length).fill(false); current=0; startScreen.style.display='block'; quiz.style.display='none'; scoreScreen.style.display='none'; unitCompleteText.textContent='';};
+restartBtn.onclick=()=>{answers=Array(quizData.length).fill(null); flags=Array(quizData.length).fill(false); current=0; startScreen.style.display='block'; quiz.style.display='none'; scoreScreen.style.display='none'; unitCompleteText.textContent=''; renderUnitCard();};
 clearDataBtn.onclick=()=>{localStorage.clear(); alert('Saved data cleared'); renderUnitCard(); unitCompleteText.textContent='';};
 
 // ------------------ Load Question ------------------
-let shuffledAnswersBackup=[];
 function loadQuestion(){
   const q=quizData[current];
   questionNumberEl.textContent=`Question ${current+1} of ${quizData.length}`;
   questionEl.textContent=q.q;
   optionsEl.innerHTML='';
-
-  if(!q.shuffledAnswers){ q.shuffledAnswers=shuffleArray([...q.a]); shuffledAnswersBackup[current]=q.shuffledAnswers;}
+  if(!q.shuffledAnswers){ q.shuffledAnswers=shuffleArray([...q.a]); }
   q.shuffledAnswers.forEach((opt,i)=>{
     const btn=document.createElement('button'); btn.textContent=opt;
     if(answers[current]===i) btn.classList.add('selected');
     btn.onclick=()=>{answers[current]=i; Array.from(optionsEl.children).forEach(b=>b.classList.remove('selected')); btn.classList.add('selected');};
     optionsEl.appendChild(btn);
   });
-
   flagBtn.style.display='inline-block';
   flagBtn.innerHTML=flags[current]?'<i class="fas fa-flag"></i>':'<i class="far fa-flag"></i>';
   progressEl.style.width=`${((current+1)/quizData.length)*100}%`;
   nextBtn.textContent=(current===quizData.length-1)?'Review':'Next';
 }
-
 nextBtn.onclick=()=>{if(current===quizData.length-1){showReview();}else{current++;loadQuestion();}};
 prevBtn.onclick=()=>{if(current>0){current--;loadQuestion();}};
-flagBtn.onclick=()=>{flags[current]=!flags[current];loadQuestion();};
+flagBtn.onclick=()=>{flags[current]=!flags[current]; loadQuestion();};
 
 // ------------------ Review ------------------
 function showReview(){
   quiz.style.display='none'; reviewDiv.style.display='block'; reviewGrid.innerHTML='';
   quizData.forEach((q,i)=>{
     const box=document.createElement('div'); box.className='review-box';
-    if(answers[i]!==null) box.style.backgroundColor='green';
-    else box.style.backgroundColor='gray';
+    box.style.backgroundColor=(answers[i]!==null)?'green':'gray';
     box.textContent=`Q${i+1}`;
     if(flags[i]){
       const f=document.createElement('i'); f.className='fas fa-flag'; f.style.position='absolute'; f.style.top='5px'; f.style.right='5px'; f.style.color='red';
@@ -285,6 +272,7 @@ function calculateScore(){
   renderUnitCard();
 }
 
+// ------------------ Initialize ------------------
 renderUnitCard();
 </script>
 </body>

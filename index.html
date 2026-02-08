@@ -1,221 +1,114 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Unit 1 Quiz</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background: #f0f0f0;
-}
-#quizOverlay {
-  display: flex;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-.quiz-container {
-  background: #fff;
-  border-radius: 20px;
-  padding: 25px;
-  width: 70%;
-  max-width: 700px;
-  min-height: 600px;
-  overflow-y: auto;
-  position: relative;
-}
-.question-text {
-  font-size: 1.2em;
-  margin-bottom: 20px;
-}
-.choices button {
-  display: block;
-  width: 90%;
-  margin: 8px auto;
-  padding: 10px;
-  font-size: 1em;
-  border-radius: 8px;
-  cursor: pointer;
-}
-#flagBtn {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  color: red;
-  font-size: 1.3em;
-  cursor: pointer;
-}
-#reviewGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-  gap: 10px;
-}
-.review-box {
-  padding: 12px;
-  text-align: center;
-  border-radius: 8px;
-  position: relative;
-  font-weight: 600;
-  cursor: pointer;
-  color: #fff;
-}
-.review-box .flag-icon {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  color: red;
-  font-size: 1em;
-}
-#scoreList li {
-  margin: 10px 0;
-  font-size: 1.1em;
-}
-</style>
-</head>
-<body>
+// ------------------ Quiz Setup ------------------
+let quizData=[], answers=[], flags=[], current=0;
 
-<div id="quizOverlay">
-  <div class="quiz-container" id="quiz">
-    <i id="flagBtn" class="fas fa-flag"></i>
-    <div class="question-text" id="questionText"></div>
-    <div class="choices" id="choices"></div>
-    <button onclick="nextQuestion()">Next</button>
-    <button onclick="showReview()">Review Your Answers</button>
-    <button onclick="submitQuiz()">Submit Quiz</button>
-  </div>
-  <div class="quiz-container" id="reviewDiv" style="display:none;">
-    <h2>Review Questions</h2>
-    <div id="reviewGrid"></div>
-    <button onclick="backToQuiz()">Back to Quiz</button>
-  </div>
-  <div class="quiz-container" id="scoreDiv" style="display:none;">
-    <h2>Your Score</h2>
-    <ul id="scoreList"></ul>
-  </div>
-</div>
+// Use the original data and shuffle answers for each question
+function openQuiz(){
+  quizOverlay.style.display='flex';
+  startScreen.style.display='block'; quiz.style.display='none'; reviewDiv.style.display='none'; scoreScreen.style.display='none';
+  flagBtn.style.display='none';
+  quizData=quizDataOriginal.map(q=>({...q, shuffledAnswers: shuffleArray([...q.a])}));
+  answers=Array(quizData.length).fill(null);
+  flags=Array(quizData.length).fill(false);
+  current=0;
+}
 
-<script>
-const quizData = [
-  {
-    question: "What is the capital of France?",
-    choices: ["Paris", "Lyon", "Marseille", "Toulouse"],
-    answer: "Paris"
-  },
-  {
-    question: "Which element has the chemical symbol O?",
-    choices: ["Oxygen", "Gold", "Osmium", "Zinc"],
-    answer: "Oxygen"
-  },
-  {
-    question: "Which planet is known as the Red Planet?",
-    choices: ["Mars", "Venus", "Jupiter", "Mercury"],
-    answer: "Mars"
-  },
-  {
-    question: "What is the largest ocean on Earth?",
-    choices: ["Pacific", "Atlantic", "Indian", "Arctic"],
-    answer: "Pacific"
-  },
-  {
-    question: "Who wrote 'Romeo and Juliet'?",
-    choices: ["Shakespeare", "Dickens", "Hemingway", "Austen"],
-    answer: "Shakespeare"
-  }
-];
-
-let current = 0;
-let answers = Array(quizData.length).fill(null);
-let flags = Array(quizData.length).fill(false);
-
-const questionText = document.getElementById("questionText");
-const choicesDiv = document.getElementById("choices");
-const quiz = document.getElementById("quiz");
-const reviewDiv = document.getElementById("reviewDiv");
-const reviewGrid = document.getElementById("reviewGrid");
-const scoreDiv = document.getElementById("scoreDiv");
-const scoreList = document.getElementById("scoreList");
-const flagBtn = document.getElementById("flagBtn");
-
-function loadQuestion() {
-  const q = quizData[current];
-  questionText.textContent = `Q${current+1}: ${q.question}`;
-  choicesDiv.innerHTML = '';
-  const shuffled = [...q.choices].sort(() => Math.random() - 0.5);
-  shuffled.forEach(choice => {
-    const btn = document.createElement("button");
-    btn.textContent = choice;
-    btn.onclick = () => { answers[current] = choice; loadQuestion(); };
-    choicesDiv.appendChild(btn);
+// ------------------ Load Question ------------------
+function loadQuestion(){
+  const q=quizData[current];
+  questionNumberEl.textContent=`Question ${current+1} of ${quizData.length}`;
+  questionEl.textContent=q.q;
+  optionsEl.innerHTML='';
+  
+  q.shuffledAnswers.forEach((opt,i)=>{
+    const btn=document.createElement('button'); 
+    btn.textContent=opt;
+    if(answers[current]===i) btn.classList.add('selected');
+    btn.onclick=()=>{
+      answers[current]=i;
+      Array.from(optionsEl.children).forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+    };
+    optionsEl.appendChild(btn);
   });
-}
-loadQuestion();
 
-function nextQuestion() {
-  if (current < quizData.length - 1) current++;
+  // Flag button red if flagged
+  flagBtn.innerHTML=flags[current]?'<i class="fas fa-flag"></i>':'<i class="far fa-flag"></i>';
+  progressEl.style.width=`${((current+1)/quizData.length)*100}%`;
+  nextBtn.textContent=(current===quizData.length-1)?'Review':'Next';
+}
+
+// ------------------ Navigation ------------------
+nextBtn.onclick=()=>{
+  if(current===quizData.length-1){ showReview(); }
+  else{ current++; loadQuestion(); }
+};
+prevBtn.onclick=()=>{
+  if(current>0){ current--; loadQuestion(); }
+};
+flagBtn.onclick=()=>{
+  flags[current]=!flags[current];
   loadQuestion();
-}
-
-flagBtn.onclick = () => {
-  flags[current] = !flags[current];
-  alert(flags[current] ? "Question flagged" : "Flag removed");
 };
 
+// ------------------ Review Screen ------------------
 function showReview(){
-  quiz.style.display = 'none';
-  reviewDiv.style.display = 'block';
-  reviewGrid.innerHTML = '';
-
-  quizData.forEach((q,i) => {
-    const box = document.createElement('div');
-    box.className = 'review-box';
-
-    // Determine background
+  quiz.style.display='none'; reviewDiv.style.display='block'; reviewGrid.innerHTML='';
+  quizData.forEach((q,i)=>{
+    const box=document.createElement('div'); 
+    box.className='review-box';
+    // Background: answered=green, not answered=red
+    let bgColor = answers[i]!==null ? 'green' : 'red';
+    // If flagged: keep flag and adjust color based on answered
     if(flags[i]){
-      box.style.backgroundColor = answers[i] !== null ? 'green' : 'red';
-      const flagIcon = document.createElement('i');
-      flagIcon.className = 'fas fa-flag flag-icon';
+      const flagIcon=document.createElement('i');
+      flagIcon.className='fas fa-flag';
+      flagIcon.style.position='absolute';
+      flagIcon.style.top='5px';
+      flagIcon.style.right='5px';
+      flagIcon.style.color='red';
       box.appendChild(flagIcon);
-    } else {
-      box.style.backgroundColor = answers[i] !== null ? 'green' : 'red';
+      bgColor = answers[i]!==null ? 'green' : 'red';
     }
-
-    box.textContent = `Q${i+1}`;
-    box.onclick = () => {
-      reviewDiv.style.display = 'none';
-      quiz.style.display = 'block';
-      current = i;
-      loadQuestion();
-    };
+    box.style.backgroundColor = bgColor;
+    box.textContent=`Q${i+1}`;
+    box.onclick=()=>{ reviewDiv.style.display='none'; quiz.style.display='block'; current=i; loadQuestion(); };
     reviewGrid.appendChild(box);
   });
 }
 
-function backToQuiz(){
-  reviewDiv.style.display = 'none';
-  quiz.style.display = 'block';
-}
-
-function submitQuiz(){
-  quiz.style.display = 'none';
-  reviewDiv.style.display = 'none';
-  scoreDiv.style.display = 'block';
-  scoreList.innerHTML = '';
-
-  quizData.forEach((q,i) => {
-    const li = document.createElement('li');
-    const correct = q.answer === answers[i];
-    li.innerHTML = `Q${i+1}: ${correct ? '✅' : '❌'} Your answer: ${answers[i] || 'None'} | Correct: ${q.answer}`;
-    scoreList.appendChild(li);
+// ------------------ Score Calculation ------------------
+toScoreBtn.onclick=calculateScore;
+function calculateScore(){
+  reviewDiv.style.display='none'; scoreScreen.style.display='block'; missedList.innerHTML='';
+  let score=0;
+  quizData.forEach((q,i)=>{
+    const correctText=q.a[q.correct];
+    const userAnswer=answers[i]!==null?q.shuffledAnswers[answers[i]]:null;
+    if(userAnswer===correctText) score++;
+    const li=document.createElement('li');
+    li.innerHTML=`Q${i+1}: Your answer: ${userAnswer||'None'}<br>Correct: ${correctText}<br>Explanation: ${q.explanation}`;
+    li.innerHTML = `${userAnswer===correctText?'✅':'❌'} ${li.innerHTML}`;
+    li.classList.add(userAnswer===correctText?'correct-score':'wrong-score');
+    missedList.appendChild(li);
   });
+  const percent=Math.round((score/quizData.length)*100);
+  lastScoreText.textContent=`Last Unit Test Score: ${percent}%`;
+  let highScore=localStorage.getItem('unit1HighScore')||0;
+  highScore=Math.max(highScore,percent); 
+  localStorage.setItem('unit1HighScore',highScore);
+  highScoreText.textContent=`Highest Unit Test Score: ${highScore}%`;
+  updateUnitCardScore(percent,highScore);
 }
-</script>
-</body>
-</html>
+
+// ------------------ Utility Functions ------------------
+function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;}
+
+function updateUnitCardScore(last,high){
+  const cardScores=container.children[0].querySelector('.scores');
+  cardScores.textContent=`Last Unit Test Score: ${last}% | Highest Unit Test Score: ${high}%`;
+}
+
+// ------------------ Button Handlers ------------------
+closeQuiz.onclick=()=>{quizOverlay.style.display='none';};
+startBtn.onclick=()=>{startScreen.style.display='none'; quiz.style.display='block'; flagBtn.style.display='block'; loadQuestion();};
+restartBtn.onclick=openQuiz;

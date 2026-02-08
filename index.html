@@ -22,6 +22,9 @@ header {
     align-items:center; 
     box-shadow:0 4px 12px rgba(0,0,0,0.2);
     position:relative;
+    font-family: 'Poppins', sans-serif;
+    font-size:1.8em;
+    font-weight:600;
 }
 .header-left { display:flex; align-items:center; gap:15px; }
 .home-btn {
@@ -45,7 +48,19 @@ header {
 .container { 
     max-width:1100px; 
     margin:40px auto; 
-    padding:0 30px; 
+    padding:30px; 
+    background:white; 
+    border-radius:20px; 
+    box-shadow:0 8px 20px rgba(0,0,0,0.1); 
+}
+.intro-image {
+    text-align:center;
+    margin-bottom:30px;
+}
+.intro-image img {
+    max-width:100%;
+    border-radius:15px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.1);
 }
 .unit-card { 
     background:linear-gradient(145deg,#66bb6a,#388e3c); 
@@ -129,7 +144,10 @@ header {
 .test-btn { background:#1b5e20; }
 
 #quizOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000; overflow:auto; }
-.quiz-container { background:#fff; border-radius:20px; padding:0; width:95%; max-width:900px; min-height:650px; position:relative; margin:0 auto; box-shadow:0 8px 25px rgba(0,0,0,0.25); overflow-y:auto; }
+.quiz-container { background:#fff; border-radius:20px; padding:0; width:95%; max-width:900px; min-height:80vh; position:relative; margin:20px auto; box-shadow:0 8px 25px rgba(0,0,0,0.25); overflow-y:auto; }
+@media (max-width: 600px) {
+    .quiz-container { width:100%; margin:0; border-radius:0; min-height:100vh; }
+}
 #closeQuiz { position:absolute; top:20px; right:20px; font-size:1.8em; cursor:pointer; color:#43a047; }
 #flagBtn { position:absolute; top:20px; right:60px; font-size:1.4em; background:none; border:none; cursor:pointer; color:red; display:none; }
 
@@ -138,6 +156,7 @@ header {
 #startBtn { padding:15px 25px; font-size:1.2em; border:none; border-radius:12px; background:#1b5e20; color:white; cursor:pointer; }
 #startBtn:hover { background:#155d27; }
 
+#quiz { display:none; padding:30px; box-sizing:border-box; }
 .question-number { font-size:0.9em; color:#555; margin-bottom:5px; }
 .question { font-size:1.3em; margin-bottom:20px; }
 .options button { display:block; width:100%; margin:8px 0; padding:14px; font-size:1em; border:2px solid #ccc; border-radius:10px; cursor:pointer; text-align:left; background:#fdfdfd; transition:0.2s; }
@@ -188,13 +207,18 @@ header {
     <div class="header-left">
         <a href="https://sites.google.com/view/money--mentor/home" class="home-btn"><i class="fas fa-home"></i> Go to Homepage</a>
     </div>
+    Student Dashboard
     <div class="header-right">
         <span id="progressText">0 out of 1 units completed</span>
         <!-- TODO: Update this dynamically when more units are added. Currently hardcoded to 1 unit. -->
     </div>
 </header>
 
-<div class="container" id="unitContainer"></div>
+<div class="container" id="unitContainer">
+    <div class="intro-image">
+        <img src="https://cdn.vectorstock.com/i/1000v/43/11/little-kids-engaged-in-economic-education-vector-43554311.jpg" alt="Fun investing learning illustration">
+    </div>
+</div>
 <div class="warning-note"><i class="fas fa-info-circle"></i> Data does not sync across devices. Scores and progress are stored locally in your browser.</div>
 
 <div id="quizOverlay">
@@ -243,24 +267,28 @@ header {
 
 <script>
 // ---------- Units ----------
-const units = [{name:"Unit 1: Investing Vocab"}];
+const units = [{name:"Unit 1: Investing Vocab", id: 'unit1'}];
 const container = document.getElementById('unitContainer');
+const progressText = document.getElementById('progressText');
+
 function renderUnitCard() {
     container.innerHTML = '';
+    let completedCount = 0;
     units.forEach(unit => {
         const card = document.createElement('div'); card.className='unit-card';
         const header = document.createElement('div'); header.className='unit-header';
         const titleDiv = document.createElement('div'); titleDiv.className='title'; 
         titleDiv.textContent = unit.name;
-        const unitCompleteStored = localStorage.getItem('unit1Complete')==='true';
+        const unitCompleteStored = localStorage.getItem(unit.id + 'Complete') === 'true';
         if(unitCompleteStored){
             const uc = document.createElement('span'); uc.className='unit-complete'; uc.textContent='Unit Complete'; 
             titleDiv.prepend(uc);
             const star = document.createElement('i'); star.className='fas fa-star'; star.style.color='gold'; star.style.marginLeft='10px';
             titleDiv.appendChild(star);
+            completedCount++;
         }
-        const lastScore = parseInt(localStorage.getItem('unit1LastScore'))||0;
-        const highScore = parseInt(localStorage.getItem('unit1HighScore'))||0;
+        const lastScore = parseInt(localStorage.getItem(unit.id + 'LastScore'))||0;
+        const highScore = parseInt(localStorage.getItem(unit.id + 'HighScore'))||0;
         const scoreDiv = document.createElement('div'); scoreDiv.className='scores';
         scoreDiv.textContent = `Last Unit Test Score: ${lastScore}% | Highest Unit Test Score: ${highScore}%`;
         header.appendChild(titleDiv); header.appendChild(scoreDiv);
@@ -277,6 +305,7 @@ function renderUnitCard() {
         card.onclick = () => { dropdown.style.display=(dropdown.style.display==='flex'?'none':'flex'); };
         container.appendChild(card);
     });
+    progressText.textContent = `${completedCount} out of ${units.length} units completed`;
 }
 renderUnitCard();
 
@@ -291,7 +320,7 @@ const quizDataOriginal = [
   {q:"What is a 'portfolio'?", a:["Collection of investments","Single stock holding","Bank savings account","Outstanding debt"], correct:0, explanation:"A portfolio is your complete collection of financial investments."},
   {q:"What is 'risk'?", a:["Possibility of losing money","Guaranteed investment return","Fixed interest payment","Company revenue growth"], correct:0, explanation:"Risk is the chance that an investment’s actual return will differ from expected."},
   {q:"What is 'liquidity'?", a:["Ease of converting an asset to cash","Profitability of an investment","Market demand for stocks","Long-term investment potential"], correct:0, explanation:"Liquidity indicates how quickly an asset can be converted to cash without losing value."},
-  {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stock sales","Investment principal","Dividend received"], correct:0, explanation:"Interest is the cost of borrowing money, usually expressed of a percentage."}
+  {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stock sales","Investment principal","Dividend received"], correct:0, explanation:"Interest is the cost of borrowing money, usually expressed as a percentage."}
 ];
 
 // ---------- Quiz Logic ----------
@@ -390,7 +419,7 @@ function showScore(){
     if(score>highScore) localStorage.setItem('unit1HighScore',score);
     highScoreText.textContent = `Highest Unit Test Score: ${Math.max(score,highScore)}%`;
     localStorage.setItem('unit1LastScore',score);
-    if(score>=90){ unitCompleteText.textContent='Unit Complete'; localStorage.setItem('unit1Complete',true); } else{ unitCompleteText.textContent=''; }
+    if(score>=90){ unitCompleteText.textContent='Unit Complete'; localStorage.setItem('unit1Complete',true); } else{ unitCompleteText.textContent=''; localStorage.setItem('unit1Complete',false); }
     renderUnitCard();
 }
 

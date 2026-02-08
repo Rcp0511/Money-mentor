@@ -231,7 +231,7 @@ header {
     text-align: center;
     border-radius: 8px;
     cursor: pointer;
-    position: relative; /* <- Needed for flag */
+    position: relative;
     font-weight: 600;
 }
 .review-flag {
@@ -433,4 +433,58 @@ function loadQuestion(){
 }
 
 nextBtn.onclick=()=>{if(current===quizData.length-1){showReview();} else{current++; loadQuestion();}};
-prevBtn.onclick
+prevBtn.onclick=()=>{if(current>0){current--; loadQuestion();}};
+flagBtn.onclick=()=>{flags[current]=!flags[current]; loadQuestion();};
+
+// ---------- Review ----------
+function showReview(){
+    quiz.style.display='none'; reviewDiv.style.display='block'; flagBtn.style.display='none';
+    reviewGrid.innerHTML='';
+    quizData.forEach((q,i)=>{
+        const box=document.createElement('div'); box.className='review-box';
+        box.style.background=answers[i]!==null?'#d4edda':'#ccc';
+        box.textContent=`${i+1}`;
+        if(flags[i]){
+            const flagIcon=document.createElement('i'); flagIcon.className='fas fa-flag review-flag';
+            box.appendChild(flagIcon);
+        }
+        box.onclick=()=>{current=i; reviewDiv.style.display='none'; quiz.style.display='block'; flagBtn.style.display='inline'; loadQuestion();};
+        reviewGrid.appendChild(box);
+    });
+}
+
+// ---------- Score ----------
+toScoreBtn.onclick=showScore;
+
+function showScore(){
+    reviewDiv.style.display='none'; scoreScreen.style.display='block';
+    let correctCount=0; missedList.innerHTML='';
+    quizData.forEach((q,i)=>{
+        const li=document.createElement('li');
+        if(q.shuffledAnswers[answers[i]]===q.a[q.correct]){
+            correctCount++;
+            li.className='correct-score';
+            li.textContent=`Q${i+1}: Correct! ✅`;
+        } else{
+            li.className='wrong-score';
+            li.textContent=`Q${i+1}: Wrong ❌ - ${q.explanation}`;
+        }
+        missedList.appendChild(li);
+    });
+    const score=Math.round((correctCount/quizData.length)*100);
+    lastScoreText.textContent=`Last Unit Test Score: ${score}%`;
+    let highScore=parseInt(localStorage.getItem('unit1HighScore'))||0;
+    if(score>highScore) localStorage.setItem('unit1HighScore',score);
+    highScoreText.textContent=`Highest Unit Test Score: ${Math.max(score,highScore)}%`;
+    localStorage.setItem('unit1LastScore',score);
+    if(score>=90){unitCompleteText.textContent='Unit Complete'; localStorage.setItem('unit1Complete',true);} else{unitCompleteText.textContent='';}
+    renderUnitCard();
+}
+
+// ---------- Restart ----------
+restartBtn.onclick=()=>{answers=Array(quizData.length).fill(null); flags=Array(quizData.length).fill(false); current=0; quiz.style.display='block'; scoreScreen.style.display='none'; startScreen.style.display='none'; loadQuestion();};
+clearDataBtn.onclick=()=>{localStorage.clear(); renderUnitCard(); alert('All saved data cleared.');};
+
+</script>
+</body>
+</html>

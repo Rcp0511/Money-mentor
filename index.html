@@ -3,34 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Unit Test Quiz</title>
+<title>Student Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-body { font-family: sans-serif; margin:0; background:#e0f5e0; }
-header { background:#388e3c; color:white; text-align:center; padding:20px; font-size:2em; font-weight:bold; }
-.container { max-width:900px; margin:20px auto; }
-.unit-card { background:#66bb6a; padding:15px; border-radius:15px; margin-bottom:15px; cursor:pointer; position:relative; }
-.unit-card .title { font-weight:bold; font-size:1.2em; display:flex; align-items:center; gap:10px; }
-.unit-card .scores { font-size:0.85em; margin-top:5px; }
-.unit-dropdown { display:none; margin-top:10px; display:flex; gap:10px; }
-.unit-dropdown button { flex:1; padding:10px; border:none; border-radius:10px; color:white; cursor:pointer; }
-.study-btn { background:#2e7d32; } .test-btn { background:#1b5e20; }
+body { margin:0; font-family:'Montserrat', sans-serif; background: linear-gradient(150deg,#e0f5e0,#66bb6a); color:#111; }
+header { background: linear-gradient(120deg,#388e3c,#1b5e20); color:#fff; padding:25px; text-align:center; font-size:2.2em; font-weight:700; box-shadow:0 4px 10px rgba(0,0,0,0.3);}
+.container { max-width:900px; margin:30px auto; padding:0 20px; }
+.unit-card { background: linear-gradient(135deg,#c8f0c8,#4caf50); border-radius:18px; margin-bottom:20px; padding:20px; box-shadow:0 5px 15px rgba(0,0,0,0.15); transition: transform 0.3s ease, box-shadow 0.3s ease; cursor:pointer; }
+.unit-card:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+.unit-header { display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
+.unit-header .title { display:flex; align-items:center; gap:10px; font-weight:600; font-size:1.3em; }
+.unit-header .title .star { color:gold; font-size:1.2em; }
+.unit-header .scores { font-size:0.95em; color:#0a3d0a; }
+.unit-dropdown { display:none; margin-top:15px; gap:10px; }
+.unit-dropdown button { flex:1; padding:12px 0; border:none; border-radius:12px; font-size:1em; font-weight:500; color:white; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition: all 0.2s ease; }
+.unit-dropdown button:hover { transform: scale(1.05); box-shadow:0 5px 12px rgba(0,0,0,0.2); }
+.study-btn { background:#2e7d32; }
+.test-btn { background:#1b5e20; }
+@media(max-width:600px){ .unit-header { flex-direction: column; align-items:flex-start; gap:5px; } .unit-dropdown { flex-direction: column; } }
 
-/* Overlay */
+/* ===== Quiz Overlay ===== */
 #quizOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; overflow:auto; }
-.quiz-container { background:white; max-width:500px; margin:50px auto; padding:25px; border-radius:20px; position:relative; }
+.quiz-container { background:#fff; max-width:500px; margin:50px auto; padding:25px; border-radius:20px; position:relative; }
 #topRestart,#closeOverlay { position:absolute; top:15px; padding:8px 12px; border:none; border-radius:8px; cursor:pointer; color:white; }
 #topRestart { left:15px; background:#dc3545; display:none; } 
 #closeOverlay { right:15px; background:#888; }
-
-#startScreen { text-align:center; }
-.start-btn { padding:15px 25px; background:#28a745; color:white; border:none; border-radius:12px; font-size:1.2em; cursor:pointer; }
+#startScreen,#quiz,.review,#scoreScreen { display:none; text-align:center; }
+.start-btn { padding:15px 25px; font-size:1.2em; border:none; border-radius:12px; background:#28a745; color:white; cursor:pointer; }
 .start-btn:hover { background:#218838; }
-
-/* Quiz */
-#quiz { display:none; }
-.question-number { margin-bottom:5px; font-size:0.9em; color:#555; }
-.question { margin-bottom:15px; font-size:1.2em; }
-.options button { display:block; width:100%; margin:8px 0; padding:12px; text-align:left; border:2px solid #ccc; border-radius:10px; cursor:pointer; background:#fdfdfd; }
+.question-number { font-size:0.9em; color:#666; margin-bottom:5px; }
+.question { font-size:1.2em; margin-bottom:15px; }
+.options button { display:block; width:100%; margin:8px 0; padding:12px; font-size:1em; border:2px solid #ccc; border-radius:10px; cursor:pointer; text-align:left; background:#fdfdfd; }
 .options button:hover { border-color:#007bff; background:#e0f0ff; }
 .options button.selected { background:#d4edda; border-color:#28a745; }
 .controls { display:flex; justify-content:space-between; margin-top:15px; }
@@ -38,9 +41,6 @@ header { background:#388e3c; color:white; text-align:center; padding:20px; font-
 #prevBtn { background:#6c757d; } #nextBtn { background:#007bff; } #flagBtn { background:#ffc107; }
 .progress-bar { height:12px; background:#eee; border-radius:6px; margin-top:15px; }
 .progress { height:100%; width:0%; background:linear-gradient(90deg,#28a745,#85e085); transition:0.3s; }
-
-/* Review and Score */
-.review, #scoreScreen { display:none; text-align:center; }
 .review-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(40px,1fr)); gap:8px; margin:10px 0; }
 .review-box { padding:8px; border-radius:6px; font-size:0.85em; cursor:pointer; position:relative; }
 .review-box.answered { background:#ccc; } .review-box.notanswered { background:#e57373; color:white; }
@@ -78,7 +78,7 @@ header { background:#388e3c; color:white; text-align:center; padding:20px; font-
       <div class="progress-bar"><div class="progress" id="progress"></div></div>
     </div>
 
-    <div class="review" id="review">
+    <div class="review">
       <h3>Review Questions</h3>
       <div class="review-grid" id="reviewGrid"></div>
       <button id="submitBtn" class="restart-btn">Submit Quiz</button>
@@ -91,40 +91,37 @@ header { background:#388e3c; color:white; text-align:center; padding:20px; font-
       <p id="highScoreText"></p>
       <button id="restartBtn" class="restart-btn">Restart Quiz</button>
     </div>
+
   </div>
 </div>
 
 <script>
-// ========== Units ==========
-const units = [
-  {name:"Unit 1: Investing Vocab", mastered:false, lastScore:null, highScore:null},
-  {name:"Unit 2", mastered:false, lastScore:null, highScore:null},
-  {name:"Unit 3", mastered:false, lastScore:null, highScore:null},
-];
-
-// ========== Render Units ==========
+// ======= Units =======
+const units = [];
+for(let i=1;i<=10;i++){ units.push({name:`Unit ${i}`, mastered:false, lastScore:null, highScore:null}); }
 const container=document.getElementById('unitContainer');
-units.forEach((unit,index)=>{
+
+units.forEach((unit,i)=>{
   const card=document.createElement('div'); card.className='unit-card';
+  const header=document.createElement('div'); header.className='unit-header';
   const titleDiv=document.createElement('div'); titleDiv.className='title'; titleDiv.textContent=unit.name;
-  if(unit.mastered){ titleDiv.innerHTML='<span style="color:gold;">★</span> '+titleDiv.textContent; }
-  card.appendChild(titleDiv);
+  if(unit.mastered) titleDiv.innerHTML='★ '+titleDiv.textContent;
   const scoreDiv=document.createElement('div'); scoreDiv.className='scores';
   scoreDiv.textContent=`Last Unit Test Score: ${unit.lastScore!==null?unit.lastScore:'N/A'} | Highest Unit Test Score: ${unit.highScore!==null?unit.highScore:'N/A'}`;
-  card.appendChild(scoreDiv);
+  header.appendChild(titleDiv); header.appendChild(scoreDiv);
+  card.appendChild(header);
 
   const dropdown=document.createElement('div'); dropdown.className='unit-dropdown';
   const studyBtn=document.createElement('button'); studyBtn.className='study-btn'; studyBtn.textContent='Study';
   studyBtn.onclick=()=>alert('Study '+unit.name);
   const testBtn=document.createElement('button'); testBtn.className='test-btn'; testBtn.textContent='Unit Test';
-  testBtn.onclick=()=>openQuiz(index);
-  dropdown.appendChild(studyBtn); dropdown.appendChild(testBtn);
-  card.appendChild(dropdown);
-  card.onclick=()=>{ dropdown.style.display = dropdown.style.display==='flex'?'none':'flex'; };
+  testBtn.onclick=()=>openQuiz(i);
+  dropdown.appendChild(studyBtn); dropdown.appendChild(testBtn); card.appendChild(dropdown);
+  header.onclick=()=>{ dropdown.style.display = dropdown.style.display==='flex'?'none':'flex'; };
   container.appendChild(card);
 });
 
-// ========== Quiz Overlay ==========
+// ======= Quiz =======
 const quizOverlay=document.getElementById('quizOverlay');
 const startScreen=document.getElementById('startScreen');
 const startBtn=document.getElementById('startBtn');
@@ -137,7 +134,7 @@ const prevBtn=document.getElementById('prevBtn');
 const nextBtn=document.getElementById('nextBtn');
 const flagBtn=document.getElementById('flagBtn');
 const progressEl=document.getElementById('progress');
-const reviewDiv=document.getElementById('review');
+const reviewDiv=document.querySelector('.review');
 const reviewGrid=document.getElementById('reviewGrid');
 const submitBtn=document.getElementById('submitBtn');
 const scoreScreen=document.getElementById('scoreScreen');
@@ -149,18 +146,16 @@ const highScoreText=document.getElementById('highScoreText');
 const topRestart=document.getElementById('topRestart');
 const closeOverlay=document.getElementById('closeOverlay');
 
-// Sample Quiz Data
-const quizData=[
+let quizData=[
   {q:"What is a 'stock'?",a:["Ownership share","Type of loan","Company expense","Bank account"],correct:0},
   {q:"What is a 'bond'?",a:["Loan to company/government","Stock","Debt you own","Savings account"],correct:0},
   {q:"What is an 'asset'?",a:["Something valuable you own","Debt you owe","Company liability","Stock market"],correct:0}
 ];
 
-let currentUnitIndex=0,questionOrder=[],answers=[],flags=[],shuffledChoices=[],current=0;
+let currentUnitIndex=0,current=0,questionOrder=[],answers=[],flags=[],shuffledChoices=[];
 
 function shuffleArray(arr){for(let i=arr.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}}
 
-// Open quiz overlay
 function openQuiz(index){
   currentUnitIndex=index;
   quizOverlay.style.display='block';
@@ -172,31 +167,20 @@ function openQuiz(index){
   scoreInfo.textContent=`Last Unit Test Score: ${units[index].lastScore!==null?units[index].lastScore:'N/A'} | Highest Unit Test Score: ${units[index].highScore!==null?units[index].highScore:'N/A'}`;
 }
 
-// Start Quiz
 startBtn.onclick=()=>{
-  startScreen.style.display='none';
-  quizDiv.style.display='block';
-  topRestart.style.display='block';
-
-  // Shuffle questions
-  questionOrder=Array.from(Array(quizData.length).keys());
-  shuffleArray(questionOrder);
-  shuffledChoices=quizData.map(q=>{let arr=q.a.map((text,index)=>({text,index}));shuffleArray(arr);return arr;});
-  current=0;
-  answers=Array(quizData.length).fill(null);
-  flags=Array(quizData.length).fill(false);
+  startScreen.style.display='none'; quizDiv.style.display='block'; topRestart.style.display='block';
+  questionOrder=Array.from(Array(quizData.length).keys()); shuffleArray(questionOrder);
+  shuffledChoices=quizData.map(q=>{let arr=q.a.map((t,i)=>({text:t,index:i}));shuffleArray(arr); return arr; });
+  current=0; answers=Array(quizData.length).fill(null); flags=Array(quizData.length).fill(false);
   loadQuestion();
 };
 
 function loadQuestion(){
-  const qIndex=questionOrder[current];
-  const q=quizData[qIndex];
+  const qIndex=questionOrder[current]; const q=quizData[qIndex];
   questionNumberEl.textContent=`Question ${current+1} of ${quizData.length}`;
-  questionEl.textContent=q.q;
-  optionsEl.innerHTML='';
+  questionEl.textContent=q.q; optionsEl.innerHTML='';
   shuffledChoices[qIndex].forEach(c=>{
-    const btn=document.createElement('button');
-    btn.textContent=c.text;
+    const btn=document.createElement('button'); btn.textContent=c.text;
     if(answers[qIndex]===c.index) btn.classList.add('selected');
     btn.onclick=()=>{ answers[qIndex]=c.index; loadQuestion(); };
     optionsEl.appendChild(btn);
@@ -204,13 +188,23 @@ function loadQuestion(){
   progressEl.style.width=`${((current+1)/quizData.length)*100}%`;
 }
 
-nextBtn.onclick=()=>{if(current<quizData.length-1){current++;loadQuestion();}}
+nextBtn.onclick=()=>{if(current<quizData.length-1){current++;loadQuestion();} else showReview();}
 prevBtn.onclick=()=>{if(current>0){current--;loadQuestion();}}
-flagBtn.onclick=()=>{flags[questionOrder[current]]=!flags[questionOrder[current]];loadQuestion();}
-
+flagBtn.onclick=()=>{flags[questionOrder[current]]=!flags[questionOrder[current]]; loadQuestion();}
 topRestart.onclick=()=>{if(confirm("Restart quiz?")) startBtn.click();}
 restartBtn.onclick=()=>{if(confirm("Restart quiz?")) startBtn.click();}
 closeOverlay.onclick=()=>{quizOverlay.style.display='none';}
+
+function showReview(){
+  quizDiv.style.display='none'; reviewDiv.style.display='block'; reviewGrid.innerHTML='';
+  quizData.forEach((q,i)=>{
+    const box=document.createElement('div'); box.className='review-box';
+    if(answers[i]===null) box.classList.add('notanswered'); else box.classList.add('answered');
+    if(flags[i]) box.classList.add('flagged');
+    box.textContent=`Q${i+1}`; box.onclick=()=>{ reviewDiv.style.display='none'; quizDiv.style.display='block'; current=i; loadQuestion(); };
+    reviewGrid.appendChild(box);
+  });
+}
 </script>
 </body>
 </html>

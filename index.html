@@ -59,8 +59,9 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 .correct-score { color:green; }
 .wrong-score { color:red; }
 
-.restart-btn { margin-top:20px; padding:12px 20px; border:none; border-radius:10px; background:#28a745; color:white; cursor:pointer; }
-.restart-btn:hover { background:#218838; }
+.restart-btn, .clear-btn { margin-top:20px; padding:12px 20px; border:none; border-radius:10px; background:#28a745; color:white; cursor:pointer; }
+.restart-btn:hover, .clear-btn:hover { background:#218838; }
+.clear-btn { background:#dc3545; }
 </style>
 </head>
 <body>
@@ -105,6 +106,7 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
       <p id="lastScoreText"></p>
       <p id="highScoreText"></p>
       <button class="restart-btn" id="restartBtn">Restart Quiz</button>
+      <button class="clear-btn" id="clearDataBtn">Clear Saved Data</button>
     </div>
   </div>
 </div>
@@ -175,6 +177,7 @@ const highScoreText=document.getElementById('highScoreText');
 const restartBtn=document.getElementById('restartBtn');
 const closeQuiz=document.getElementById('closeQuiz');
 const progressEl=document.getElementById('progress');
+const clearDataBtn=document.getElementById('clearDataBtn');
 
 function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;}
 
@@ -255,9 +258,7 @@ function calculateScore(){
   localStorage.setItem('unit1HighScore', highScore);
   highScoreText.textContent=`Highest Unit Test Score: ${highScore}%`;
 
-  // Star if >=90%
-  if(percent>=90) units[0].mastered=true;
-  else units[0].mastered=false;
+  if(percent>=90) units[0].mastered=true; else units[0].mastered=false;
   updateUnitCardScore(percent,highScore);
 }
 
@@ -279,8 +280,12 @@ function updateUnitCardScore(last,high){
 
 // ------------------ Buttons ------------------
 closeQuiz.onclick=()=>{quizOverlay.style.display='none';};
-startBtn.onclick=()=>{startScreen.style.display='none'; quiz.style.display='block'; flagBtn.style.display='inline-block'; loadQuestion();};
-restartBtn.onclick=()=>{openQuiz();};
+startBtn.onclick=()=>{startScreen.style.display='none'; quiz.style.display='block'; loadQuestion();};
+restartBtn.onclick=()=>{answers=Array(quizData.length).fill(null); flags=Array(quizData.length).fill(false); current=0; startScreen.style.display='block'; quiz.style.display='none'; scoreScreen.style.display='none';};
+clearDataBtn.onclick=()=>{localStorage.clear(); alert('Saved data cleared');};
+
+// ------------------ Load previous high score ------------------
+window.onload=()=>{const highScore = parseInt(localStorage.getItem('unit1HighScore'))||0; updateUnitCardScore(0,highScore);};
 </script>
 </body>
 </html>

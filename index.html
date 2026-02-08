@@ -7,246 +7,64 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
 <style>
-body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    background: #f4f7fa;
-    color: #1c1e21;
-}
+body { margin:0; font-family:'Inter',sans-serif; background:#f4f7fa; color:#1c1e21; }
+header { background:#1976d2; color:white; padding:25px 0; text-align:center; font-size:2em; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+.container { max-width:1000px; margin:30px auto; padding:0 20px; }
+.unit-card { background:linear-gradient(145deg,#42a5f5,#1e88e5); border-radius:16px; margin-bottom:20px; padding:18px 25px; box-shadow:0 6px 18px rgba(0,0,0,0.15); cursor:pointer; transition: transform 0.2s, box-shadow 0.2s;}
+.unit-card:hover { transform:translateY(-3px); box-shadow:0 10px 20px rgba(0,0,0,0.2);}
+.unit-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;}
+.unit-header .title { display:flex; align-items:center; gap:10px; font-weight:600; font-size:1.2em; color:white;}
+.unit-header .scores { font-size:0.95em; color:#e3f2fd;}
+.unit-complete { font-weight:700; color:#ffd700;}
+.unit-dropdown { display:none; flex-direction:row; gap:15px; margin-top:15px;}
+.unit-dropdown button { padding:12px 18px; border:none; border-radius:12px; font-size:1em; font-weight:500; color:white; cursor:pointer; display:flex; align-items:center; gap:10px; transition: transform 0.2s, opacity 0.2s;}
+.unit-dropdown button:hover { transform:translateY(-2px);}
+.study-btn { background:#43a047; }
+.test-btn { background:#1b5e20; }
 
-header {
-    background: #1976d2;
-    color: white;
-    padding: 25px 0;
-    text-align: center;
-    font-size: 2em;
-    font-weight: 700;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
+#quizOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000; overflow:auto;}
+.quiz-container { background:#fff; border-radius:20px; padding:30px; width:95%; max-width:900px; min-height:650px; position:relative; margin:50px auto; box-shadow:0 8px 25px rgba(0,0,0,0.25); overflow-y:auto;}
+#closeQuiz { position:absolute; top:20px; right:20px; font-size:1.8em; cursor:pointer; color:#1976d2;}
+#flagBtn { position:absolute; top:20px; right:60px; font-size:1.4em; background:none; border:none; cursor:pointer; color:red; display:none;}
 
-.container {
-    max-width: 1000px;
-    margin: 30px auto;
-    padding: 0 20px;
-}
+#startScreen { text-align:center; padding:40px; background:#43a047; border-radius:20px; width:60%; max-width:400px; margin:50px auto; color:white;}
+#startScreen h2 { font-size:1.6em; margin-bottom:20px;}
+#startBtn { padding:15px 25px; font-size:1.2em; border:none; border-radius:12px; background:#1b5e20; color:white; cursor:pointer;}
+#startBtn:hover { background:#155d27; }
 
-.unit-card {
-    background: linear-gradient(145deg,#42a5f5,#1e88e5);
-    border-radius: 16px;
-    margin-bottom: 20px;
-    padding: 18px 25px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-.unit-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}
+#quiz { display:none; }
+.question-number { font-size:0.9em; color:#555; margin-bottom:5px; }
+.question { font-size:1.3em; margin-bottom:20px; }
+.options button { display:block; width:100%; margin:8px 0; padding:14px; font-size:1em; border:2px solid #ccc; border-radius:10px; cursor:pointer; text-align:left; background:#fdfdfd; transition:0.2s;}
+.options button:hover { border-color:#1976d2; background-color:#e3f2fd; }
+.options button.selected { background-color:#d4edda; border-color:#43a047; }
 
-.unit-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-}
-.unit-header .title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 600;
-    font-size: 1.2em;
-    color: white;
-}
-.unit-header .scores {
-    font-size: 0.95em;
-    color: #e3f2fd;
-}
-.unit-complete {
-    font-weight: 700;
-    color: #ffd700;
-}
-.unit-dropdown {
-    display: none;
-    flex-direction: row;
-    gap: 15px;
-    margin-top: 15px;
-}
-.unit-dropdown button {
-    padding: 12px 18px;
-    border: none;
-    border-radius: 12px;
-    font-size: 1em;
-    font-weight: 500;
-    color: white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: transform 0.2s, opacity 0.2s;
-}
-.unit-dropdown button:hover { transform: translateY(-2px); }
-.study-btn { background: #43a047; }
-.test-btn { background: #1b5e20; }
+.controls { display:flex; justify-content:space-between; margin-top:20px;}
+.controls button { padding:12px 20px; border:none; border-radius:8px; cursor:pointer;}
+#nextBtn { background:#1976d2; color:white;}
+#nextBtn:hover { background:#115293;}
+#prevBtn { background:#6c757d; color:white;}
+#prevBtn:hover { background:#5a6268;}
 
-#quizOverlay {
-    display: none;
-    position: fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background: rgba(0,0,0,0.6);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    overflow: auto;
-}
-.quiz-container {
-    background: #fff;
-    border-radius: 20px;
-    padding: 30px;
-    width: 95%;
-    max-width: 900px;
-    min-height: 650px;
-    position: relative;
-    margin: 50px auto;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-    overflow-y: auto;
-}
-#closeQuiz {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 1.8em;
-    cursor: pointer;
-    color: #1976d2;
-}
-#flagBtn {
-    position: absolute;
-    top: 20px;
-    right: 60px;
-    font-size: 1.4em;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: red;
-    display: none;
-}
-#startScreen {
-    text-align: center;
-    padding: 40px;
-    background: #43a047;
-    border-radius: 20px;
-    width: 60%;
-    max-width: 400px;
-    margin: 50px auto;
-    color: white;
-}
-#startScreen h2 {
-    font-size: 1.6em;
-    margin-bottom: 20px;
-}
-#startBtn {
-    padding: 15px 25px;
-    font-size: 1.2em;
-    border: none;
-    border-radius: 12px;
-    background: #1b5e20;
-    color: white;
-    cursor: pointer;
-}
-#startBtn:hover { background: #155d27; }
+.progress-bar { height:12px; background:#eee; border-radius:6px; overflow:hidden; margin-top:20px;}
+.progress { height:100%; width:0%; background:linear-gradient(90deg,#43a047,#85e085); transition:width 0.3s;}
 
-#quiz { display: none; }
-.question-number { font-size: 0.9em; color: #555; margin-bottom: 5px; }
-.question { font-size: 1.3em; margin-bottom: 20px; }
-.options button {
-    display: block;
-    width: 100%;
-    margin: 8px 0;
-    padding: 14px;
-    font-size: 1em;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-    cursor: pointer;
-    text-align: left;
-    background: #fdfdfd;
-    transition: 0.2s;
-}
-.options button:hover { border-color: #1976d2; background-color: #e3f2fd; }
-.options button.selected { background-color: #d4edda; border-color: #43a047; }
+#review { display:none; margin-top:15px; }
+#review h2 { text-align:center; margin-bottom:10px; font-weight:600; color:#1976d2; }
+.review-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(60px,1fr)); gap:12px; margin-top:10px;}
+.review-box { padding:12px; text-align:center; border-radius:8px; cursor:pointer; position:relative; font-weight:600;}
+.review-flag { position:absolute; top:6px; right:8px; color:red; font-size:0.9em; }
 
-.controls {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-.controls button {
-    padding: 12px 20px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
-#nextBtn { background: #1976d2; color: white; }
-#nextBtn:hover { background: #115293; }
-#prevBtn { background: #6c757d; color: white; }
-#prevBtn:hover { background: #5a6268; }
+#scoreScreen { display:none; text-align:left; margin-top:20px; max-height:500px; overflow-y:auto; }
+#scoreScreen li { margin:8px 0; padding:8px; border-radius:5px; display:flex; flex-direction:column; gap:4px; }
+.correct-score { color:green; }
+.wrong-score { color:red; }
 
-.progress-bar {
-    height: 12px;
-    background: #eee;
-    border-radius: 6px;
-    overflow: hidden;
-    margin-top: 20px;
-}
-.progress {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg,#43a047,#85e085);
-    transition: width 0.3s;
-}
-
-#review { display: none; margin-top: 15px; }
-#review h2 { text-align: center; margin-bottom: 10px; font-weight: 600; color: #1976d2; }
-.review-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(60px,1fr));
-    gap: 12px;
-    margin-top: 10px;
-}
-.review-box {
-    padding: 12px;
-    text-align: center;
-    border-radius: 8px;
-    cursor: pointer;
-    position: relative;
-    font-weight: 600;
-}
-.review-flag {
-    position: absolute;
-    top: 6px;
-    right: 8px;
-    color: red;
-    font-size: 0.9em;
-}
-
-#scoreScreen { display: none; text-align: left; margin-top: 20px; max-height: 500px; overflow-y: auto; }
-#scoreScreen li { margin: 8px 0; padding: 8px; border-radius: 5px; display: flex; flex-direction: column; gap: 4px; }
-.correct-score { color: green; }
-.wrong-score { color: red; }
-
-.restart-btn, .clear-btn {
-    margin-top: 20px;
-    padding: 14px 22px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-}
-.restart-btn { background: #43a047; color: white; }
-.restart-btn:hover { background: #388e3c; }
-.clear-btn { background: #dc3545; color: white; }
-.clear-btn:hover { background: #b02a37; }
-
+.restart-btn, .clear-btn { margin-top:20px; padding:14px 22px; border:none; border-radius:10px; cursor:pointer; font-weight:600;}
+.restart-btn { background:#43a047; color:white;}
+.restart-btn:hover { background:#388e3c; }
+.clear-btn { background:#dc3545; color:white;}
+.clear-btn:hover { background:#b02a37; }
 </style>
 </head>
 <body>
@@ -298,10 +116,9 @@ header {
 </div>
 
 <script>
-// ---------- Unit Card ----------
+// ---------- Units ----------
 const units = [{name:"Unit 1: Investing Vocab"}];
 const container = document.getElementById('unitContainer');
-
 function renderUnitCard() {
     container.innerHTML = '';
     units.forEach(unit => {
@@ -309,7 +126,6 @@ function renderUnitCard() {
         const header = document.createElement('div'); header.className='unit-header';
         const titleDiv = document.createElement('div'); titleDiv.className='title'; 
         titleDiv.textContent = unit.name;
-
         const unitCompleteStored = localStorage.getItem('unit1Complete')==='true';
         if(unitCompleteStored){
             const uc = document.createElement('span'); uc.className='unit-complete'; uc.textContent='Unit Complete'; 
@@ -317,15 +133,12 @@ function renderUnitCard() {
             const star = document.createElement('i'); star.className='fas fa-star'; star.style.color='gold'; star.style.marginLeft='10px';
             titleDiv.appendChild(star);
         }
-
         const lastScore = parseInt(localStorage.getItem('unit1LastScore'))||0;
         const highScore = parseInt(localStorage.getItem('unit1HighScore'))||0;
         const scoreDiv = document.createElement('div'); scoreDiv.className='scores';
         scoreDiv.textContent = `Last Unit Test Score: ${lastScore}% | Highest Unit Test Score: ${highScore}%`;
-
         header.appendChild(titleDiv); header.appendChild(scoreDiv);
         card.appendChild(header);
-
         const dropdown = document.createElement('div'); dropdown.className='unit-dropdown';
         const studyBtn = document.createElement('button'); studyBtn.className='study-btn';
         studyBtn.innerHTML='<i class="fas fa-book"></i> Study';
@@ -335,26 +148,24 @@ function renderUnitCard() {
         testBtn.onclick = openQuiz;
         dropdown.appendChild(studyBtn); dropdown.appendChild(testBtn);
         card.appendChild(dropdown);
-
         card.onclick = () => { dropdown.style.display=(dropdown.style.display==='flex'?'none':'flex'); };
         container.appendChild(card);
     });
 }
-
 renderUnitCard();
 
-// ---------- Quiz Data ----------
+// ---------- Quiz Data (harder answers) ----------
 const quizDataOriginal = [
-  {q:"What is a 'stock'?", a:["Share of ownership in a company","Company's debt","A loan from a bank","An investment account"], correct:0, explanation:"Stocks give part ownership in a company and potential profits."},
-  {q:"What is a 'bond'?", a:["Loan to a company or government","Ownership share in a company","Bank deposit","Certificate of deposit"], correct:0, explanation:"Bonds are loans you give and earn interest over time."},
-  {q:"What is an 'asset'?", a:["Something valuable you own","Money owed by you","A liability","Expected income"], correct:0, explanation:"Assets are things of value that you own."},
-  {q:"What is a 'liability'?", a:["Debt you owe","Stock you own","Company profit","Dividend received"], correct:0, explanation:"Liabilities are debts or obligations you owe."},
-  {q:"What is a 'dividend'?", a:["Payment to shareholders","Company expense","Stock price change","Loan interest"], correct:0, explanation:"Dividends are profits paid to shareholders."},
-  {q:"What is 'capital'?", a:["Money used for investment","Company revenue","Stock price","Savings account"], correct:0, explanation:"Capital is money used to invest in assets."},
-  {q:"What is a 'portfolio'?", a:["Collection of investments","Single investment","Bank account","Loan balance"], correct:0, explanation:"A portfolio is your collection of investments."},
-  {q:"What is 'risk'?", a:["Chance of losing money","Guaranteed profit","Fixed interest","Company revenue"], correct:0, explanation:"Risk is the possibility of losing money in investments."},
-  {q:"What is 'liquidity'?", a:["Ease of converting an asset to cash","Profitability of investment","Type of investment","Company stock value"], correct:0, explanation:"Liquidity shows how easily assets can be converted to cash."},
-  {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stocks","Loan principal","Investment type"], correct:0, explanation:"Interest is the cost of borrowing money."}
+  {q:"What is a 'stock'?", a:["Share of ownership in a company","Debt issued by a company","A bank savings account","A type of bond"], correct:0, explanation:"Stocks represent part ownership in a company and potential profits."},
+  {q:"What is a 'bond'?", a:["Loan to a company or government","Share of ownership in a company","An interest-bearing account","A type of insurance"], correct:0, explanation:"Bonds are loans you give to companies or governments in exchange for interest."},
+  {q:"What is an 'asset'?", a:["Something valuable you own","Debt you owe","Potential future income","An expense item"], correct:0, explanation:"Assets are valuable resources you own, either physical or financial."},
+  {q:"What is a 'liability'?", a:["Debt or obligation you owe","A company's owned stock","A shareholder payment","A financial asset"], correct:0, explanation:"Liabilities are obligations or debts owed to others."},
+  {q:"What is a 'dividend'?", a:["Payment to shareholders","Company retained earnings","Stock price change","Interest on a bond"], correct:0, explanation:"Dividends are profits distributed to shareholders."},
+  {q:"What is 'capital'?", a:["Money used for investment","Company revenue","Loan principal","Dividend earnings"], correct:0, explanation:"Capital is money allocated for investment purposes."},
+  {q:"What is a 'portfolio'?", a:["Collection of investments","Single stock holding","Bank savings account","Outstanding debt"], correct:0, explanation:"A portfolio is your complete collection of financial investments."},
+  {q:"What is 'risk'?", a:["Possibility of losing money","Guaranteed investment return","Fixed interest payment","Company revenue growth"], correct:0, explanation:"Risk is the chance that an investment’s actual return will differ from expected."},
+  {q:"What is 'liquidity'?", a:["Ease of converting an asset to cash","Profitability of an investment","Market demand for stocks","Long-term investment potential"], correct:0, explanation:"Liquidity indicates how quickly an asset can be converted to cash without losing value."},
+  {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stock sales","Investment principal","Dividend received"], correct:0, explanation:"Interest is the cost of borrowing money, usually expressed as a percentage."}
 ];
 
 // ---------- Quiz Logic ----------
@@ -415,7 +226,6 @@ function loadQuestion(){
 
 nextBtn.onclick = ()=>{ if(current===quizData.length-1){showReview();} else{current++; loadQuestion();}};
 prevBtn.onclick = ()=>{ if(current>0){current--; loadQuestion();}};
-
 flagBtn.onclick = ()=>{ flags[current] = !flags[current]; loadQuestion(); };
 
 function showReview(){
@@ -459,9 +269,9 @@ function showScore(){
 }
 
 restartBtn.onclick = ()=>{
-    answers=Array(quizData.length).fill(null);
-    flags=Array(quizData.length).fill(false);
-    current=0;
+    answers = Array(quizData.length).fill(null);
+    flags = Array(quizData.length).fill(false);
+    current = 0;
     quiz.style.display='block'; scoreScreen.style.display='none'; startScreen.style.display='none'; loadQuestion();
 };
 clearDataBtn.onclick = ()=>{

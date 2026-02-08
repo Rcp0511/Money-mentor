@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,7 +35,7 @@
 
 body { margin:0; font-family:'Inter', sans-serif; background:var(--bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="%23c8e6c9"/><circle cx="20" cy="20" r="1" fill="%23c8e6c9"/><circle cx="80" cy="80" r="1.5" fill="%23c8e6c9"/><circle cx="30" cy="70" r="1" fill="%23c8e6c9"/><circle cx="70" cy="30" r="1.2" fill="%23c8e6c9"/></svg>') repeat; color:var(--text); transition:all 0.4s; }
 
-header { background:linear-gradient(135deg, #43a047, #2e7d32); color:white; padding:20px 40px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 4px 12px rgba(0,0,0,0.2); position:relative; font-family:'Poppins', sans-serif; font-size:1.8em; font-weight:600; }
+header { background:linear-gradient(135deg, #43a047, #2e7d32); color:white; padding:20px 40px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 4px 12px rgba(0,0,0,0.2); font-family:'Poppins', sans-serif; font-size:1.8em; font-weight:600; }
 
 .header-left { display:flex; align-items:center; gap:15px; }
 .header-title { flex-grow:1; text-align:center; }
@@ -79,7 +79,7 @@ header { background:linear-gradient(135deg, #43a047, #2e7d32); color:white; padd
 
 .question-number { font-size:0.9em; color:var(--text-light); margin-bottom:5px; }
 .question { font-size:1.3em; margin-bottom:20px; }
-.options button { display:block; width:100%; margin:8px 0; padding:14px; font-size:1em; border:2px solid #ccc; border-radius:10px; cursor:pointer; text-align:left; background:#fdfdfd; transition:0.2s; color:var(--text); }
+.options button { display:block; width:100%; margin:8px 0; padding:14px; font-size:1em; border:2px solid #ccc; border-radius:10px; cursor:pointer; text-align:left; background:var(--card-bg); transition:0.2s; color:var(--text); }
 .options button:hover { border-color:#43a047; background-color:#e8f5e9; }
 .options button.selected { background-color:#d4edda; border-color:#43a047; }
 [data-theme="dark"] .options button { background:#2a2a2a; border-color:#555; color:#e0e0e0; }
@@ -178,7 +178,7 @@ themeToggle.addEventListener('click', () => {
 });
 updateBulb();
 
-// Unit cards (your original logic)
+// Unit cards
 const units = [{name:"Unit 1: Investing Vocab", id: 'unit1'}];
 const container = document.getElementById('unitContainer');
 const progressText = document.getElementById('progressText');
@@ -228,16 +228,19 @@ function renderUnitCard() {
         dropdown.appendChild(studyBtn);
         dropdown.appendChild(testBtn);
         card.appendChild(dropdown);
-        card.onclick = () => {
+        card.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                return; // stop bubbling so button onclick works
+            }
             dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
-        };
+        });
         container.appendChild(card);
     });
     progressText.textContent = `${completedCount} out of ${units.length} units completed`;
 }
 renderUnitCard();
 
-// Quiz logic (your original)
+// Quiz logic (your original, unchanged except minor cleanups)
 const quizDataOriginal = [
   {q:"What is a 'stock'?", a:["Share of ownership in a company","Debt issued by a company","A bank savings account","A type of bond"], correct:0, explanation:"Stocks represent part ownership in a company and potential profits."},
   {q:"What is a 'bond'?", a:["Loan to a company or government","Share of ownership in a company","An interest-bearing account","A type of insurance"], correct:0, explanation:"Bonds are loans you give to companies or governments in exchange for interest."},
@@ -305,87 +308,71 @@ function loadQuestion() {
     questionEl.textContent = q.q;
     optionsEl.innerHTML = '';
     if (!q.shuffledAnswers) q.shuffledAnswers = shuffleArray([...q.a]);
-    q.shuffledAnswers.forEach((opt, i) => {
-        const btn = document.createElement('button');
-        btn.textContent = opt;
-        if (answers[current] === i) btn.classList.add('selected');
-        btn.onclick = () => {
-            answers[current] = i;
-            Array.from(optionsEl.children).forEach(b => b.classList.remove('selected'));
-            btn.classList.add('selected');
-        };
+    q.shuffledAnswers.forEach((opt,i)=>{
+        const btn = document.createElement('button'); btn.textContent = opt;
+        if(answers[current]===i) btn.classList.add('selected');
+        btn.onclick = ()=>{ answers[current]=i; Array.from(optionsEl.children).forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); };
         optionsEl.appendChild(btn);
     });
     progressEl.style.width = `${((current+1)/quizData.length)*100}%`;
 }
 
-nextBtn.onclick = () => { if (current === quizData.length-1) { showReview(); } else { current++; loadQuestion(); } };
-prevBtn.onclick = () => { if (current > 0) { current--; loadQuestion(); } };
+nextBtn.onclick = ()=>{ if(current===quizData.length-1){showReview();} else{current++; loadQuestion();}};
+prevBtn.onclick = ()=>{ if(current>0){current--; loadQuestion();}};
 
-function showReview() {
-    quiz.style.display = 'none';
-    reviewDiv.style.display = 'block';
-    reviewGrid.innerHTML = '';
-    quizData.forEach((q, i) => {
-        const box = document.createElement('div');
-        box.className = 'review-box';
-        box.style.background = answers[i] !== null ? '#d4edda' : '#ccc';
+function showReview(){
+    quiz.style.display='none'; reviewDiv.style.display='block';
+    reviewGrid.innerHTML='';
+    quizData.forEach((q,i)=>{
+        const box = document.createElement('div'); box.className='review-box';
+        box.style.background = answers[i]!==null?'#d4edda':'#ccc';
         box.textContent = `${i+1}`;
-        box.onclick = () => { current = i; reviewDiv.style.display = 'none'; quiz.style.display = 'block'; loadQuestion(); };
+        box.onclick = ()=>{ current=i; reviewDiv.style.display='none'; quiz.style.display='block'; loadQuestion(); };
         reviewGrid.appendChild(box);
     });
 }
 
 toScoreBtn.onclick = showScore;
 
-function showScore() {
-    reviewDiv.style.display = 'none';
-    scoreScreen.style.display = 'block';
-    let correctCount = 0;
-    missedList.innerHTML = '';
-    quizData.forEach((q, i) => {
+function showScore(){
+    reviewDiv.style.display='none'; scoreScreen.style.display='block';
+    let correctCount = 0; missedList.innerHTML = '';
+    quizData.forEach((q,i)=>{
         const li = document.createElement('li');
-        if (q.shuffledAnswers[answers[i]] === q.a[q.correct]) {
-            correctCount++;
-            li.className = 'correct-score';
-            li.textContent = `Q${i+1}: Correct! ✅`;
-        } else {
-            li.className = 'wrong-score';
-            li.textContent = `Q${i+1}: Wrong ❌ - ${q.explanation}`;
+        if(q.shuffledAnswers[answers[i]]===q.a[q.correct]){
+            correctCount++; li.className='correct-score'; li.textContent=`Q${i+1}: Correct! ✅`;
+        } else{
+            li.className='wrong-score'; li.textContent=`Q${i+1}: Wrong ❌ - ${q.explanation}`;
         }
         missedList.appendChild(li);
     });
-    const score = Math.round((correctCount / quizData.length) * 100);
+    const score = Math.round((correctCount/quizData.length)*100);
     lastScoreText.textContent = `Last Unit Test Score: ${score}%`;
-    let highScore = parseInt(localStorage.getItem('unit1HighScore')) || 0;
-    if (score > highScore) {
-        localStorage.setItem('unit1HighScore', score);
+    let highScore = parseInt(localStorage.getItem('unit1HighScore'))||0;
+    if(score > highScore) {
+        localStorage.setItem('unit1HighScore',score);
         highScore = score;
     }
     highScoreText.textContent = `Highest Unit Test Score: ${highScore}%`;
-    localStorage.setItem('unit1LastScore', score);
-    if (highScore >= 90) {
-        localStorage.setItem('unit1Complete', 'true');
-        unitCompleteText.textContent = 'Unit Complete';
-    } else {
-        localStorage.setItem('unit1Complete', 'false');
-        unitCompleteText.textContent = '';
+    localStorage.setItem('unit1LastScore',score);
+    if(highScore >=90){
+        localStorage.setItem('unit1Complete','true');
+        unitCompleteText.textContent='Unit Complete';
+    } else{
+        localStorage.setItem('unit1Complete','false');
+        unitCompleteText.textContent='';
     }
-    renderUnitCard();  // Re-render dashboard to show "Unit Complete"
+    renderUnitCard();
 }
 
-restartBtn.onclick = () => {
+restartBtn.onclick = ()=>{
     answers = Array(quizData.length).fill(null);
     current = 0;
-    quiz.style.display = 'block';
-    scoreScreen.style.display = 'none';
-    loadQuestion();
+    quiz.style.display='block'; scoreScreen.style.display='none'; loadQuestion();
 };
 
-clearDataBtn.onclick = () => {
-    localStorage.clear();
-    renderUnitCard();
-    alert('All saved data cleared.');
+clearDataBtn.onclick = ()=>{
+    localStorage.clear(); renderUnitCard(); alert('All saved data cleared.');
 };
 </script>
 </body>

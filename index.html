@@ -3,107 +3,51 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Dashboard</title>
+<title>Investing Vocab Quiz</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
 <style>
-body {
-  margin:0;
-  font-family:'Montserrat',sans-serif;
-  background:linear-gradient(150deg,#e0f5e0,#66bb6a);
-  color:#111;
-}
-header {
-  background:linear-gradient(120deg,#388e3c,#1b5e20);
-  color:#fff;
-  padding:25px;
-  text-align:center;
-  font-size:2.2em;
-  font-weight:700;
-  box-shadow:0 4px 10px rgba(0,0,0,0.3);
-}
-
-/* Container */
-.container {
-  max-width:900px;
-  margin:30px auto;
-  padding:0 20px;
-}
-
-/* Unit Card */
-.unit-card {
-  background: linear-gradient(135deg,#c8f0c8,#4caf50);
-  border-radius:18px;
-  margin-bottom:20px;
-  padding:20px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.15);
-  transition:transform 0.3s ease, box-shadow 0.3s ease;
-}
-.unit-card:hover { transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,0.2); }
+body { margin:0; font-family:'Montserrat',sans-serif; background:linear-gradient(150deg,#dfffd6,#66bb6a); color:#111; }
+header { background:linear-gradient(120deg,#388e3c,#1b5e20); color:#fff; padding:25px; text-align:center; font-size:2em; font-weight:700; box-shadow:0 4px 10px rgba(0,0,0,0.3);}
+.container { max-width:900px; margin:30px auto; padding:0 20px;}
+.unit-card { background: linear-gradient(135deg,#c8f0c8,#4caf50); border-radius:18px; margin-bottom:20px; padding:20px; box-shadow:0 5px 15px rgba(0,0,0,0.15);}
 .unit-header { display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
 .unit-header .title { display:flex; align-items:center; gap:10px; font-weight:600; font-size:1.3em; }
 .unit-header .title .star { color:gold; font-size:1.2em; }
 .unit-header .scores { font-size:0.95em; color:#0a3d0a; }
-
-/* Dropdown buttons */
 .unit-dropdown { display:none; margin-top:15px; gap:10px; }
-.unit-dropdown button {
-  flex:1; padding:12px 0; border:none; border-radius:12px; font-size:1em; font-weight:500;
-  color:white; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
-  transition:all 0.2s ease;
-}
+.unit-dropdown button { flex:1; padding:12px 0; border:none; border-radius:12px; font-size:1em; font-weight:500; color:white; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:all 0.2s ease;}
 .unit-dropdown button:hover { transform:scale(1.05); box-shadow:0 5px 12px rgba(0,0,0,0.2);}
 .study-btn { background:#2e7d32; }
 .test-btn { background:#1b5e20; }
 
-/* Quiz Overlay */
-#quizOverlay {
-  display:none;
-  position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7);
-  justify-content:center; align-items:center; z-index:1000;
-}
-.quiz-container {
-  background:#fff; border-radius:20px; padding:25px; width:90%; max-width:600px;
-  max-height:90%; overflow-y:auto; position:relative;
-}
+#quizOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:1000;}
+.quiz-container { background:#fff; border-radius:20px; padding:30px; width:95%; max-width:700px; max-height:90%; overflow-y:auto; position:relative; }
 #closeQuiz { position:absolute; top:15px; right:20px; font-size:1.5em; cursor:pointer; }
-
-/* Flag icon top-right */
 #flagBtn { position:absolute; top:15px; right:60px; font-size:1.5em; cursor:pointer; color:red; background:none; border:none; }
-
-/* Quiz elements */
-.question-number { font-size:0.9em; color:#666; margin-bottom:5px; }
-.question { font-size:1.2em; margin-bottom:15px; }
-.options button {
-  display:block; width:100%; margin:8px 0; padding:12px; font-size:1em;
-  border:2px solid #ccc; border-radius:10px; background:linear-gradient(135deg,#e0f0ff,#ffffff);
-  cursor:pointer; text-align:left; transition:0.2s;
-}
-.options button:hover { transform:scale(1.02); background:linear-gradient(135deg,#cce5ff,#e0f0ff); }
+.question-number { font-size:1em; color:#555; margin-bottom:5px; }
+.question { font-size:1.4em; margin-bottom:15px; }
+.options button { display:block; width:100%; margin:8px 0; padding:14px; font-size:1.05em; border:2px solid #ccc; border-radius:10px; background:linear-gradient(135deg,#e0f0ff,#ffffff); cursor:pointer; text-align:left; transition:0.2s;}
+.options button:hover { transform:scale(1.02); background:linear-gradient(135deg,#cce5ff,#e0f0ff);}
 .options button.selected { border-color:#28a745; }
-
-/* Controls */
 .controls { display:flex; justify-content:space-between; margin-top:10px; }
-.controls button { padding:8px 12px; border:none; border-radius:8px; cursor:pointer; }
+.controls button { padding:10px 14px; border:none; border-radius:8px; cursor:pointer; }
 #prevBtn { background:#6c757d; color:#fff; }
 #nextBtn { background:#007bff; color:#fff; }
-#submitBtn { background:#28a745; color:#fff; }
+#submitBtn { background:#28a745; color:#fff; display:none; }
 
-/* Review */
 #reviewScreen { display:none; text-align:center; }
 .review-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(40px,1fr)); gap:8px; margin-top:10px; }
-.review-box { padding:10px; border-radius:8px; cursor:pointer; position:relative; color:#fff; }
+.review-box { padding:10px; border-radius:8px; position:relative; color:#fff; cursor:pointer; }
 .review-box.answered { background:#28a745; }
 .review-box.notanswered { background:#e57373; }
 .review-box.flagged::after { content:"⚑"; color:red; position:absolute; top:2px; right:5px; font-size:1em; }
 
-/* Score */
 #scoreScreen { display:none; text-align:center; }
 #scoreScreen ul { list-style:none; padding:0; text-align:left; }
 #scoreScreen li { margin:5px 0; padding:5px; border-left:4px solid #007bff; border-radius:5px; }
 #scoreScreen li.correct { border-left:4px solid #28a745; }
 #scoreScreen li.wrong { border-left:4px solid #dc3545; }
-.restart-confirm { position:absolute; top:15px; left:20px; background:#dc3545; color:#fff; border:none; padding:5px 10px; border-radius:6px; cursor:pointer; display:none; }
 
 @media(max-width:600px){
   .unit-header { flex-direction:column; align-items:flex-start; gap:5px; }
@@ -115,12 +59,10 @@ header {
 <header>Student Dashboard</header>
 <div class="container" id="unitContainer"></div>
 
-<!-- Quiz Overlay -->
 <div id="quizOverlay">
   <div class="quiz-container">
     <button id="closeQuiz">&times;</button>
     <button id="flagBtn"><i class="far fa-flag"></i></button>
-    <button class="restart-confirm" id="restartConfirm">Are you sure?</button>
     <div id="quizContent">
       <div id="startScreen">
         <h2>📈 Unit 1: Investing Vocab 📈</h2>
@@ -153,14 +95,11 @@ header {
 </div>
 
 <script>
-// Unit data
-const units = [
-  {name:"Unit 1: Investing Vocab", mastered:false, lastScore:null, highScore:null}
-];
-let currentUnitIndex = 0;
+// Unit
+const units=[{name:"Unit 1: Investing Vocab", lastScore:null, highScore:null, mastered:false}];
 
-// Quiz Data
-const quizData = [
+// Quiz data
+const quizData=[
   {q:"What is a 'stock'?", a:["Share of ownership in a company","Loan","Company expense","Bank account"], correct:0, explanation:"A stock represents ownership in a company."},
   {q:"What is a 'bond'?", a:["Loan to a company or government","Stock","Debt you own","Savings account"], correct:0, explanation:"A bond is a loan you give to a company or government."},
   {q:"What is an 'asset'?", a:["Something valuable you own","Debt you owe","Company liability","Stock market"], correct:0, explanation:"An asset is something valuable that you own."},
@@ -173,10 +112,10 @@ const quizData = [
   {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stocks","Company revenue","Loan type"], correct:0, explanation:"Interest is what you pay for borrowing money."}
 ];
 
-// Shuffle helper
-function shuffleArray(arr){ return arr.sort(()=>Math.random()-0.5); }
+// Helpers
+const shuffle=(arr)=>arr.sort(()=>Math.random()-0.5);
 
-// DOM Elements
+// DOM
 const container=document.getElementById('unitContainer');
 const quizOverlay=document.getElementById('quizOverlay');
 const closeQuiz=document.getElementById('closeQuiz');
@@ -197,41 +136,36 @@ const missedList=document.getElementById('missedList');
 const lastScoreText=document.getElementById('lastScoreText');
 const highScoreText=document.getElementById('highScoreText');
 const flagBtn=document.getElementById('flagBtn');
-const restartConfirm=document.getElementById('restartConfirm');
 
-let current=0;
-let answers=[];
-let flags=[];
-let shuffledQuestions=[];
+let current=0, answers=[], flags=[], shuffledQuestions=[];
 
 // Render Unit
 function renderUnit(){
+  container.innerHTML=''; // clear existing
   const card=document.createElement('div'); card.className='unit-card';
   const header=document.createElement('div'); header.className='unit-header';
   const titleDiv=document.createElement('div'); titleDiv.className='title';
   const starSpan=document.createElement('span'); starSpan.className='star';
   if(units[0].mastered) starSpan.innerHTML='<i class="fas fa-star"></i> '; 
-  titleDiv.appendChild(starSpan); 
-  titleDiv.append(units[0].name);
+  titleDiv.appendChild(starSpan); titleDiv.append(units[0].name);
   const scoreDiv=document.createElement('div'); scoreDiv.className='scores';
   const last=units[0].lastScore!==null?units[0].lastScore+'%':'NA';
   const high=units[0].highScore!==null?units[0].highScore+'%':'NA';
   scoreDiv.textContent=`Last Unit Test Score: ${last} | Highest Unit Test Score: ${high}`;
   header.append(titleDiv,scoreDiv); card.append(header);
   
-  // Dropdown
   const dropdown=document.createElement('div'); dropdown.className='unit-dropdown';
   const studyBtn=document.createElement('button'); studyBtn.className='study-btn'; studyBtn.innerHTML='<i class="fas fa-book"></i> Study';
   studyBtn.onclick=()=>alert('Study '+units[0].name);
   const testBtn=document.createElement('button'); testBtn.className='test-btn'; testBtn.innerHTML='<i class="fas fa-file-alt"></i> Unit Test';
-  testBtn.onclick=()=>openQuiz();
+  testBtn.onclick=openQuiz;
   dropdown.append(studyBtn,testBtn); card.append(dropdown);
-  header.onclick=()=>{dropdown.style.display=dropdown.style.display==='flex'?'none':'flex';};
+  header.onclick=()=>{ dropdown.style.display=dropdown.style.display==='flex'?'none':'flex';};
   container.append(card);
 }
 renderUnit();
 
-// Open Quiz
+// Quiz functions
 function openQuiz(){
   quizOverlay.style.display='flex';
   startScreen.style.display='block';
@@ -241,84 +175,57 @@ function openQuiz(){
   flagBtn.innerHTML='<i class="far fa-flag"></i>';
 }
 
-// Close Quiz
 closeQuiz.onclick=()=>{ quizOverlay.style.display='none'; };
+flagBtn.onclick=()=>{ flags[current]=!flags[current]; flagBtn.innerHTML=flags[current]?'<i class="fas fa-flag"></i>':'<i class="far fa-flag"></i>'; };
 
-// Flag Toggle
-flagBtn.onclick=()=>{
-  flags[current]=!flags[current];
-  flagBtn.innerHTML=flags[current]?'<i class="fas fa-flag"></i>':'<i class="far fa-flag"></i>';
-};
-
-// Start Quiz
 startBtn.onclick=()=>{
   startScreen.style.display='none';
   quizArea.style.display='block';
   current=0;
   answers=Array(quizData.length).fill(null);
   flags=Array(quizData.length).fill(false);
-  shuffledQuestions=shuffleArray([...quizData]);
+  shuffledQuestions=shuffle([...quizData]);
   loadQuestion();
 };
 
-// Load Question
 function loadQuestion(){
   const q=shuffledQuestions[current];
   questionNumberEl.textContent=`Question ${current+1} of ${shuffledQuestions.length}`;
   questionEl.textContent=q.q;
   optionsEl.innerHTML='';
-  const choices=shuffleArray([...q.a]);
-  choices.forEach((opt,i)=>{
+  const choices=shuffle([...q.a]);
+  choices.forEach(opt=>{
     const btn=document.createElement('button');
     btn.textContent=opt;
-    if(answers[current]!==null && choices[answers[current]]===opt) btn.classList.add('selected');
+    if(answers[current]!==null && shuffledQuestions[current].a[answers[current]]===opt) btn.classList.add('selected');
     btn.onclick=()=>{
-      answers[current]=choices.indexOf(opt);
+      answers[current]=shuffledQuestions[current].a.indexOf(opt);
       Array.from(optionsEl.children).forEach(b=>b.classList.remove('selected'));
       btn.classList.add('selected');
     };
     optionsEl.appendChild(btn);
   });
+  submitBtn.style.display=current===shuffledQuestions.length-1?'inline-block':'none';
 }
 
-// Navigation
-nextBtn.onclick=()=>{ if(current<shuffledQuestions.length-1){ current++; loadQuestion(); } else showReview(); };
+nextBtn.onclick=()=>{ if(current<shuffledQuestions.length-1){ current++; loadQuestion(); } };
 prevBtn.onclick=()=>{ if(current>0){ current--; loadQuestion(); } };
 
-// Show Review
-function showReview(){
-  quizArea.style.display='none'; reviewScreen.style.display='block';
-  reviewGrid.innerHTML='';
-  shuffledQuestions.forEach((q,i)=>{
-    const box=document.createElement('div'); box.className='review-box';
-    if(answers[i]===null) box.classList.add('notanswered');
-    else box.classList.add('answered');
-    if(flags[i]) box.classList.add('flagged');
-    box.textContent=`Q${i+1}`;
-    box.onclick=()=>{ reviewScreen.style.display='none'; quizArea.style.display='block'; current=i; loadQuestion(); };
-    reviewGrid.appendChild(box);
-  });
-}
-
-// Submit Quiz
 submitBtn.onclick=()=>{
-  reviewScreen.style.display='none';
-  scoreScreen.style.display='block';
-  let correctCount=0;
-  missedList.innerHTML='';
+  quizArea.style.display='none'; scoreScreen.style.display='block';
+  let correctCount=0; missedList.innerHTML='';
   shuffledQuestions.forEach((q,i)=>{
     const selectedIndex=answers[i];
-    const selectedAnswer=selectedIndex!==null?q.a[selectedIndex]:'None';
     const li=document.createElement('li');
-    li.innerHTML=`Q${i+1}: Your answer: ${selectedAnswer}<br>Correct: ${q.a[q.correct]}<br>Explanation: ${q.explanation}`;
-    if(selectedIndex===q.correct){ correctCount++; li.classList.add('correct'); }
+    const userAnswer=selectedIndex!==null?q.a[selectedIndex]:'None';
+    li.innerHTML=`Q${i+1}: Your answer: ${userAnswer}<br>Correct: ${q.a[q.correct]}<br>Explanation: ${q.explanation}`;
+    if(selectedIndex===q.correct) { correctCount++; li.classList.add('correct'); }
     else li.classList.add('wrong');
     missedList.appendChild(li);
   });
   const percent=Math.round((correctCount/shuffledQuestions.length)*100);
   units[0].lastScore=percent;
-  const prevHigh=units[0].highScore||0;
-  units[0].highScore=Math.max(prevHigh,percent);
+  units[0].highScore=units[0].highScore!==null?Math.max(units[0].highScore,percent):percent;
   units[0].mastered=percent>=80;
   scoreText.textContent=`Your Score: ${percent}%`;
   lastScoreText.textContent=`Last Unit Test Score: ${percent}%`;

@@ -84,7 +84,6 @@ header::after {
     pointer-events:none;
     opacity:0.22;
 
-    /* subtle diagonal dot-grid pattern */
     background-image:
       radial-gradient(circle at 12px 12px, rgba(255,255,255,0.35) 2px, transparent 2.5px),
       radial-gradient(circle at 36px 36px, rgba(255,255,255,0.22) 2px, transparent 2.5px);
@@ -92,21 +91,39 @@ header::after {
     mix-blend-mode:overlay;
 }
 
-.header-left { display:flex; align-items:center; gap:15px; z-index:2; }
+.header-left { display:flex; align-items:center; gap:12px; z-index:2; }
 .header-right { display:flex; align-items:center; gap:16px; font-size:1rem; z-index:2; }
 
-.home-btn {
-    color:white;
-    text-decoration:none;
-    font-size:1.1em;
-    font-weight:600;
+/* NEW NAV BUTTONS */
+.nav-btn {
+    border:none;
+    padding:10px 16px;
+    border-radius:12px;
+    font-weight:800;
+    cursor:pointer;
+    transition:transform 0.12s ease, opacity 0.12s ease;
     display:flex;
     align-items:center;
-    gap:8px;
-    transition:0.2s;
+    gap:10px;
+    font-size:1rem;
 }
-.home-btn:hover { opacity:0.9; transform:scale(1.05); }
 
+.nav-btn:active { transform:scale(0.98); }
+
+.back-btn {
+    background:#0b3d1a;
+    color:white;
+}
+
+.videos-btn {
+    background:#1f7a3b;
+    color:white;
+}
+
+.back-btn:hover,
+.videos-btn:hover { opacity:0.92; }
+
+/* THEME TOGGLE */
 #theme-toggle {
     background:rgba(255,255,255,0.15);
     border:none;
@@ -119,11 +136,12 @@ header::after {
 }
 #theme-toggle:hover { transform:scale(1.08); }
 
+/* Units completed pill */
 .progress-pill {
     background:rgba(0,0,0,0.22);
     padding:10px 14px;
     border-radius:14px;
-    font-weight:600;
+    font-weight:700;
     font-size:0.95rem;
     display:flex;
     align-items:center;
@@ -349,7 +367,7 @@ header::after {
     color:var(--text);
 }
 
-/* THIS is the dark mode visibility fix */
+/* Selected fix for dark mode */
 .options button.selected {
     background-color:var(--option-selected-bg);
     border-color:var(--option-selected-border);
@@ -476,6 +494,37 @@ header::after {
     max-width:600px;
     transition:all 0.4s;
 }
+
+/* GLOBAL CLEAR ALL DATA (BOTTOM RIGHT) */
+.danger-zone {
+    position:fixed;
+    right:18px;
+    bottom:18px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    z-index:9999;
+    max-width:280px;
+}
+
+#clearAllBtn {
+    background:#d60000;
+    color:white;
+    border:none;
+    padding:12px 14px;
+    border-radius:14px;
+    font-weight:900;
+    cursor:pointer;
+    box-shadow:0 12px 28px rgba(0,0,0,0.25);
+}
+
+#clearAllBtn:hover { opacity:0.92; }
+
+.danger-text {
+    font-size:0.8rem;
+    opacity:0.85;
+    line-height:1.2;
+}
 </style>
 </head>
 
@@ -483,14 +532,19 @@ header::after {
 
 <header>
     <div class="header-left">
-        <a href="https://sites.google.com/view/money--mentor/home" class="home-btn">
-            <i class="fas fa-home"></i> Go to Homepage
-        </a>
+        <button id="backBtn" class="nav-btn back-btn">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+
+        <button id="videosBtn" class="nav-btn videos-btn">
+            <i class="fas fa-video"></i> Videos
+        </button>
     </div>
 
     <div style="z-index:2;">Student Dashboard</div>
 
     <div class="header-right">
+        <!-- THEME TOGGLE MOVED LEFT OF PROGRESS -->
         <button id="theme-toggle" title="Toggle theme"><i class="far fa-lightbulb"></i></button>
 
         <div class="progress-pill">
@@ -505,6 +559,14 @@ header::after {
 <div class="warning-note">
     <i class="fas fa-info-circle"></i>
     Data does not sync across devices. Scores and progress are stored locally in your browser.
+</div>
+
+<!-- CLEAR ALL DATA FEATURE (BOTTOM RIGHT) -->
+<div class="danger-zone">
+    <button id="clearAllBtn">Clear All Data</button>
+    <div class="danger-text">
+        Warning: This permanently removes all saved scores, completed units, and dashboard progress.
+    </div>
 </div>
 
 <div id="quizOverlay">
@@ -551,17 +613,32 @@ header::after {
             <p id="unitCompleteText" style="color:gold; font-weight:bold;"></p>
 
             <button class="restart-btn" id="restartBtn">Restart Quiz</button>
-            <button class="clear-btn" id="clearDataBtn">Clear Saved Data</button>
+            <button class="clear-btn" id="clearDataBtn">Clear Saved Data (Unit 1)</button>
         </div>
     </div>
 </div>
 
 <script>
+/* ---------- HEADER NAV ---------- */
+document.getElementById("backBtn").onclick = () => {
+    window.history.back();
+};
+
+document.getElementById("videosBtn").onclick = () => {
+    window.location.href =
+        "https://sites.google.com/view/money--dash--mentor/learn/videos?authuser=0";
+};
+
 /* ---------- THEME TOGGLE ---------- */
 const themeToggle = document.getElementById('theme-toggle');
 const html = document.documentElement;
 
-let savedTheme = localStorage.getItem('theme') || 'dark';
+// Default to dark if never visited
+let savedTheme = localStorage.getItem('theme');
+if (!savedTheme) {
+    savedTheme = 'dark';
+    localStorage.setItem('theme', savedTheme);
+}
 html.setAttribute('data-theme', savedTheme);
 
 function updateBulb() {
@@ -583,6 +660,11 @@ const units = [{name:"Unit 1: Investing Vocab", id: 'unit1'}];
 const container = document.getElementById('unitContainer');
 const progressText = document.getElementById('progressText');
 
+function isUnitCompleted(unitId) {
+    const highScore = parseInt(localStorage.getItem(unitId + 'HighScore')) || 0;
+    return highScore >= 90;
+}
+
 function renderUnitCard() {
     container.innerHTML = '';
     let completedCount = 0;
@@ -598,8 +680,8 @@ function renderUnitCard() {
         titleDiv.className = 'title';
         titleDiv.textContent = unit.name;
 
-        const unitCompleteStored = localStorage.getItem(unit.id + 'Complete') === 'true';
-        if(unitCompleteStored){
+        // Completion is now based on HIGHEST SCORE
+        if (isUnitCompleted(unit.id)) {
             const uc = document.createElement('span');
             uc.className='unit-complete';
             uc.textContent='Unit Complete';
@@ -871,18 +953,23 @@ function showScore(){
     const score = Math.round((correctCount/quizData.length)*100);
     lastScoreText.textContent = `Last Unit Test Score: ${score}%`;
 
-    let highScore = parseInt(localStorage.getItem('unit1HighScore')) || 0;
-    if(score > highScore) localStorage.setItem('unit1HighScore', score);
-
-    highScoreText.textContent = `Highest Unit Test Score: ${Math.max(score,highScore)}%`;
+    // Save last score always
     localStorage.setItem('unit1LastScore', score);
 
-    if(score >= 90){
-        unitCompleteText.textContent='Unit Complete';
-        localStorage.setItem('unit1Complete', true);
+    // Save highest score only if better
+    let highScore = parseInt(localStorage.getItem('unit1HighScore')) || 0;
+    if(score > highScore){
+        highScore = score;
+        localStorage.setItem('unit1HighScore', highScore);
+    }
+
+    highScoreText.textContent = `Highest Unit Test Score: ${highScore}%`;
+
+    // Unit Complete is now PERMANENT based on highest score
+    if(highScore >= 90){
+        unitCompleteText.textContent='Unit Complete ⭐';
     } else {
         unitCompleteText.textContent='';
-        localStorage.setItem('unit1Complete', false);
     }
 
     renderUnitCard();
@@ -902,10 +989,28 @@ restartBtn.onclick = ()=>{
     loadQuestion();
 };
 
+// Clear Unit 1 data only
 clearDataBtn.onclick = ()=>{
-    localStorage.clear();
+    localStorage.removeItem('unit1HighScore');
+    localStorage.removeItem('unit1LastScore');
     renderUnitCard();
-    alert('All saved data cleared.');
+    alert('Unit 1 saved data cleared.');
+};
+
+/* ---------- CLEAR ALL DATA FEATURE ---------- */
+document.getElementById("clearAllBtn").onclick = ()=>{
+    const confirm1 = confirm(
+        "Clear ALL data?\n\nThis will permanently delete your saved scores, unit progress, and theme settings."
+    );
+    if(!confirm1) return;
+
+    const confirm2 = confirm(
+        "Last warning.\n\nPress OK to permanently delete everything."
+    );
+    if(!confirm2) return;
+
+    localStorage.clear();
+    location.reload();
 };
 </script>
 </body>

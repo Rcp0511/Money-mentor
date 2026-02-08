@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Dashboard</title>
+<title>Unit 1 Quiz - Investing Vocab</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <style>
@@ -23,29 +23,40 @@ header { background:#388e3c; color:#fff; padding:20px; text-align:center; font-s
 @media(max-width:600px){ .unit-header { flex-direction: column; align-items:flex-start; gap:5px; } .unit-dropdown { flex-direction: column; } }
 
 /* Quiz Overlay */
-#quizOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000; overflow:auto; }
-.quiz-container { background:#fff; max-width:500px; margin:50px auto; padding:25px; border-radius:20px; position:relative; }
-#topRestart,#closeOverlay { position:absolute; top:15px; padding:8px 12px; border:none; border-radius:8px; cursor:pointer; color:white; }
+#quizOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:1000; overflow:auto; }
+.quiz-container { background:#fff; max-width:800px; margin:20px auto; padding:25px; border-radius:20px; position:relative; min-height:80vh; display:flex; flex-direction:column; }
+#topRestart,#closeOverlay { position:absolute; top:15px; padding:8px 12px; border:none; border-radius:8px; cursor:pointer; color:white; font-weight:bold; }
 #topRestart { left:15px; background:#dc3545; display:none; } 
 #closeOverlay { right:15px; background:#888; }
-#startScreen,#quiz,.review,#scoreScreen { display:none; text-align:center; }
-.start-btn { padding:15px 25px; font-size:1.2em; border:none; border-radius:12px; background:#28a745; color:white; cursor:pointer; }
+#startScreen,#quiz,.review,#scoreScreen { display:none; text-align:center; flex:1; display:flex; flex-direction:column; justify-content:center; }
+.start-btn { padding:15px 25px; font-size:1.2em; border:none; border-radius:12px; background:#28a745; color:white; cursor:pointer; margin-top:20px; }
 .start-btn:hover { background:#218838; }
-.question-number { font-size:0.9em; color:#666; margin-bottom:5px; }
-.question { font-size:1.2em; margin-bottom:15px; }
-.options button { display:block; width:100%; margin:8px 0; padding:12px; font-size:1em; border:2px solid #ccc; border-radius:10px; cursor:pointer; text-align:left; background:#fdfdfd; }
-.options button:hover { border-color:#007bff; background:#e0f0ff; }
-.options button.selected { background:#d4edda; border-color:#28a745; }
+.question-number { font-size:1em; color:#555; margin-bottom:5px; font-weight:600; }
+.question { font-size:1.3em; margin-bottom:20px; background:#e8f5e9; padding:15px; border-radius:12px; }
+.options button { display:block; width:100%; margin:10px 0; padding:12px; font-size:1em; border:2px solid #ccc; border-radius:10px; cursor:pointer; text-align:left; background:#fdfdfd; transition:0.2s; }
+.options button:hover { border-color:#28a745; background:#e0f7fa; }
+.options button.selected { background:#c8e6c9; border-color:#2e7d32; }
 .controls { display:flex; justify-content:space-between; margin-top:15px; }
-.controls button { padding:8px 12px; border:none; border-radius:8px; cursor:pointer; color:white; }
-#prevBtn { background:#6c757d; } #nextBtn { background:#007bff; } #flagBtn { background:#ffc107; color:black; }
+.controls button { padding:8px 12px; border:none; border-radius:8px; cursor:pointer; color:white; font-weight:bold; }
+#prevBtn { background:#6c757d; } 
+#nextBtn { background:#007bff; } 
+#flagBtn { background:#ffc107; color:black; display:flex; align-items:center; gap:5px; justify-content:center; font-size:1.1em; }
 .progress-bar { height:12px; background:#eee; border-radius:6px; margin-top:15px; }
 .progress { height:100%; width:0%; background:linear-gradient(90deg,#28a745,#85e085); transition:0.3s; }
-.review-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(40px,1fr)); gap:8px; margin:10px 0; }
-.review-box { padding:8px; border-radius:6px; font-size:0.85em; cursor:pointer; position:relative; }
-.review-box.answered { background:#ccc; } .review-box.notanswered { background:#e57373; color:white; }
-.review-box.flagged::after { content:"⚑"; color:red; position:absolute; top:2px; right:2px; font-size:0.9em; }
-.restart-btn { margin-top:15px; padding:10px 18px; border:none; border-radius:10px; background:#28a745; color:white; cursor:pointer; }
+
+/* Review */
+.review { flex:1; }
+.review-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(50px,1fr)); gap:10px; margin:10px 0; }
+.review-box { padding:12px; border-radius:8px; font-size:0.9em; cursor:pointer; position:relative; }
+.review-box.answered { background:#ccc; } 
+.review-box.notanswered { background:#e57373; color:white; }
+.review-box.flagged::after { content:"⚑"; color:red; position:absolute; top:2px; right:2px; font-size:1em; }
+.review-rubric { text-align:left; margin-bottom:15px; font-size:0.9em; font-weight:600; }
+
+/* Score Screen */
+#scoreScreen h3 { font-size:1.5em; margin-bottom:15px; }
+#missedList { text-align:left; margin:0 20px; padding-left:15px; }
+.restart-btn { margin-top:20px; padding:12px 18px; border:none; border-radius:10px; background:#28a745; color:white; cursor:pointer; font-weight:bold; }
 .restart-btn:hover { background:#218838; }
 </style>
 </head>
@@ -60,7 +71,7 @@ header { background:#388e3c; color:#fff; padding:20px; text-align:center; font-s
     <button id="closeOverlay">✖</button>
 
     <div id="startScreen">
-      <h2 id="unitTitle">Unit Test Quiz</h2>
+      <h2 id="unitTitle">Unit 1: Investing Vocab</h2>
       <button class="start-btn" id="startBtn">Start Quiz</button>
       <p id="scoreInfo"></p>
     </div>
@@ -71,14 +82,16 @@ header { background:#388e3c; color:#fff; padding:20px; text-align:center; font-s
       <div class="options" id="options"></div>
       <div class="controls">
         <button id="prevBtn">Previous</button>
-        <button id="flagBtn">Flag</button>
+        <button id="flagBtn"><i class="fa-regular fa-flag"></i> Flag</button>
         <button id="nextBtn">Next</button>
       </div>
       <div class="progress-bar"><div class="progress" id="progress"></div></div>
     </div>
 
     <div class="review">
-      <h3>Review Questions</h3>
+      <div class="review-rubric">
+        <p><strong>Rubric:</strong> Hollow flag = flagged, Red = not answered, Grey = answered</p>
+      </div>
       <div class="review-grid" id="reviewGrid"></div>
       <button id="submitBtn" class="restart-btn">Submit Quiz</button>
     </div>
@@ -95,18 +108,9 @@ header { background:#388e3c; color:#fff; padding:20px; text-align:center; font-s
 </div>
 
 <script>
-// ======= Units =======
+// ======= Unit 1 Only =======
 const units = [
-  {name:"Unit 1: Investing Vocab", lastScore:null, highScore:null, mastered:false},
-  {name:"Unit 2: Stocks & Bonds", lastScore:null, highScore:null, mastered:false},
-  {name:"Unit 3: Financial Statements", lastScore:null, highScore:null, mastered:false},
-  {name:"Unit 4: Economics Basics", lastScore:null, highScore:null, mastered:false},
-  {name:"Unit 5: Market Trends", lastScore:null, highScore:null, mastered:false},
-  {name:"Unit 6: Risk Management", lastScore:null, highScore:null, mastered:false},
-  {name:"Unit 7: Portfolio Strategy", lastScore:null, highScore:null, mastered:false},
-  {name:"Unit 8: Retirement Planning", lastScore:null, highScore:null, mastered:false},
-  {name:"Unit 9: Taxes", lastScore:null, highScore:null, mastered:false},
-  {name:"Unit 10: Review & Test Prep", lastScore:null, highScore:null, mastered:false}
+  {name:"Unit 1: Investing Vocab", lastScore:null, highScore:null, mastered:false}
 ];
 
 const container=document.getElementById('unitContainer');
@@ -173,9 +177,9 @@ const unitTitle=document.getElementById('unitTitle');
 
 let currentUnitIndex=0,current=0,questionOrder=[],answers=[],flags=[],shuffledChoices=[];
 
-// ======= Functions =======
 function shuffleArray(arr){for(let i=arr.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}}
 
+// ======= Functions =======
 function openQuiz(index){
   currentUnitIndex=index;
   quizOverlay.style.display='block';
@@ -193,7 +197,6 @@ startBtn.onclick=()=>{
   startScreen.style.display='none';
   quizDiv.style.display='block';
   topRestart.style.display='block';
-
   questionOrder=Array.from(Array(quizDataUnit1.length).keys());
   shuffleArray(questionOrder);
   shuffledChoices=quizDataUnit1.map(q=>{let arr=q.a.map((t,i)=>({text:t,index:i})); shuffleArray(arr); return arr; });
@@ -213,7 +216,8 @@ function loadQuestion(){
     btn.onclick=()=>{ answers[qIndex]=c.index; loadQuestion(); };
     optionsEl.appendChild(btn);
   });
-  flagBtn.textContent= flags[qIndex] ? "Flagged" : "Flag";
+  // Flag icon
+  flagBtn.innerHTML= flags[qIndex] ? '<i class="fa-solid fa-flag" style="color:red;"></i>' : '<i class="fa-regular fa-flag"></i>';
   progressEl.style.width=`${((current+1)/quizDataUnit1.length)*100}%`;
 }
 
@@ -228,7 +232,7 @@ closeOverlay.onclick=()=>{ quizOverlay.style.display='none'; }
 // Review
 function showReview(){
   quizDiv.style.display='none';
-  reviewDiv.style.display='block';
+  reviewDiv.style.display='flex';
   reviewGrid.innerHTML='';
   quizDataUnit1.forEach((q,i)=>{
     const box=document.createElement('div'); box.className='review-box';
@@ -250,10 +254,13 @@ submitBtn.onclick=()=>{
   units[currentUnitIndex].lastScore=pct;
   if(units[currentUnitIndex].highScore===null || pct>units[currentUnitIndex].highScore) units[currentUnitIndex].highScore=pct;
   if(pct>=80) units[currentUnitIndex].mastered=true;
+  // Update home screen immediately
+  container.querySelector('.scores').textContent=`Last Unit Test Score: ${units[currentUnitIndex].lastScore} | Highest Unit Test Score: ${units[currentUnitIndex].highScore}`;
+  if(units[currentUnitIndex].mastered) container.querySelector('.title').innerHTML='★ '+units[currentUnitIndex].name;
+  reviewDiv.style.display='none';
+  scoreScreen.style.display='flex';
   lastScoreText.textContent=`Last Unit Test Score: ${units[currentUnitIndex].lastScore}`;
   highScoreText.textContent=`Highest Unit Test Score: ${units[currentUnitIndex].highScore}`;
-  reviewDiv.style.display='none';
-  scoreScreen.style.display='block';
 }
 </script>
 </body>

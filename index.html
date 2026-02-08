@@ -19,11 +19,11 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 .study-btn { background:#2e7d32; }
 .test-btn { background:#1b5e20; }
 
-#quizOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000; }
-.quiz-container { background:#fff; border-radius:20px; padding:25px; width:75%; max-width:750px; min-height:550px; overflow-y:auto; position:relative; }
+#quizOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000; overflow-y:auto; }
+.quiz-container { background:#fff; border-radius:20px; padding:25px; width:90%; max-width:750px; min-height:550px; max-height:90vh; overflow-y:auto; position:relative; }
 
-#closeQuiz { position:absolute; top:15px; right:20px; font-size:1.8em; cursor:pointer; }
-#flagBtn { position:absolute; top:15px; right:60px; font-size:1.3em; background:none; border:none; cursor:pointer; color:red; }
+#closeQuiz { position:absolute; top:15px; right:20px; font-size:1.5em; cursor:pointer; z-index:10; }
+#flagBtn { position:absolute; top:15px; right:60px; font-size:1.1em; background:none; border:none; cursor:pointer; color:red; z-index:10; }
 
 #startScreen { text-align:center; }
 #startBtn { padding:15px 25px; font-size:1.2em; border:none; border-radius:12px; background:#28a745; color:white; cursor:pointer; margin-top:20px; }
@@ -180,9 +180,14 @@ function loadQuestion(){
   q.shuffledAnswers.forEach((opt,i)=>{
     const btn=document.createElement('button'); btn.textContent=opt;
     if(answers[current]===i) btn.classList.add('selected');
-    btn.onclick=()=>{answers[current]=i; Array.from(optionsEl.children).forEach(b=>b.classList.remove('selected')); btn.classList.add('selected');};
+    btn.onclick=()=>{
+      answers[current]=i;
+      Array.from(optionsEl.children).forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+    };
     optionsEl.appendChild(btn);
   });
+  flagBtn.style.display='inline';
   flagBtn.innerHTML=flags[current]?'<i class="fas fa-flag"></i>':'<i class="far fa-flag"></i>';
   progressEl.style.width=`${((current+1)/quizData.length)*100}%`;
   nextBtn.textContent=(current===quizData.length-1)?'Review':'Next';
@@ -194,12 +199,13 @@ flagBtn.onclick=()=>{flags[current]=!flags[current]; loadQuestion();};
 
 function showReview(){
   quiz.style.display='none'; reviewDiv.style.display='block'; reviewGrid.innerHTML='';
+  flagBtn.style.display='none';
   quizData.forEach((q,i)=>{
     const box=document.createElement('div'); box.className='review-box';
     if(answers[i]!==null) box.style.backgroundColor='green';
     else box.style.backgroundColor='red';
     if(flags[i]){
-      const flagIcon=document.createElement('i'); flagIcon.className='fas fa-flag'; flagIcon.style.position='absolute'; flagIcon.style.top='5px'; flagIcon.style.right='5px'; flagIcon.style.color='red';
+      const flagIcon=document.createElement('i'); flagIcon.className='fas fa-flag'; flagIcon.style.position='absolute'; flagIcon.style.top='5px'; flagIcon.style.right='5px'; flagIcon.style.color='red'; flagIcon.style.fontSize='0.8em';
       box.appendChild(flagIcon);
     }
     box.textContent=`Q${i+1}`;
@@ -211,6 +217,7 @@ function showReview(){
 toScoreBtn.onclick=calculateScore;
 function calculateScore(){
   reviewDiv.style.display='none'; scoreScreen.style.display='block'; missedList.innerHTML='';
+  flagBtn.style.display='none';
   let score=0;
   quizData.forEach((q,i)=>{
     const correctText=q.a[q.correct];
@@ -236,7 +243,7 @@ function updateUnitCardScore(last,high){
 }
 
 closeQuiz.onclick=()=>{quizOverlay.style.display='none';};
-startBtn.onclick=()=>{startScreen.style.display='none'; quiz.style.display='block'; flagBtn.style.display='block'; loadQuestion();};
+startBtn.onclick=()=>{startScreen.style.display='none'; quiz.style.display='block'; flagBtn.style.display='inline'; loadQuestion();};
 restartBtn.onclick=()=>{openQuiz();};
 </script>
 </body>

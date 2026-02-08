@@ -3,18 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Student Dashboard - Unit 1</title>
+<title>Unit 1 Quiz</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
 <style>
 body { margin:0; font-family:'Montserrat', sans-serif; background:#e0f5e0; color:#111; }
 header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-size:2em; font-weight:700; box-shadow:0 4px 10px rgba(0,0,0,0.3); }
 .container { max-width:900px; margin:30px auto; padding:0 20px; }
-.unit-card { background:#4caf50; border-radius:18px; margin-bottom:20px; padding:20px; box-shadow:0 5px 15px rgba(0,0,0,0.15); transition:transform 0.3s ease, box-shadow 0.3s ease; cursor:pointer; }
-.unit-card:hover { transform:translateY(-2px); box-shadow:0 10px 25px rgba(0,0,0,0.2); }
+.unit-card { background:#4caf50; border-radius:18px; margin-bottom:20px; padding:20px; box-shadow:0 5px 15px rgba(0,0,0,0.15); cursor:pointer; }
 .unit-header { display:flex; justify-content:space-between; align-items:center; }
 .unit-header .title { display:flex; align-items:center; gap:10px; font-weight:600; font-size:1.3em; }
-.unit-header .title .star { color:gold; font-size:1.2em; }
 .unit-header .scores { font-size:0.95em; color:#0a3d0a; }
 .unit-dropdown { display:flex; gap:10px; margin-top:15px; }
 .unit-dropdown button { flex:1; padding:12px 0; border:none; border-radius:12px; font-size:1em; font-weight:500; color:white; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
@@ -22,7 +20,7 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 .test-btn { background:#1b5e20; }
 
 #quizOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000; }
-.quiz-container { background:#fff; border-radius:20px; padding:25px; max-width:85%; width:85%; max-height:85%; overflow-y:auto; position:relative; }
+.quiz-container { background:#fff; border-radius:20px; padding:25px; width:75%; max-width:750px; min-height:550px; overflow-y:auto; position:relative; }
 
 #closeQuiz { position:absolute; top:15px; right:20px; font-size:1.8em; cursor:pointer; }
 #flagBtn { position:absolute; top:15px; right:60px; font-size:1.3em; background:none; border:none; cursor:pointer; color:red; }
@@ -49,8 +47,8 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 .progress { height:100%; width:0%; background:linear-gradient(90deg,#28a745,#85e085); transition:width 0.3s; }
 
 #review { display:none; margin-top:15px; }
-.review-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(50px,1fr)); gap:10px; margin-top:10px; }
-.review-box { padding:8px; text-align:center; border-radius:8px; cursor:pointer; position:relative; font-weight:600; }
+.review-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(60px,1fr)); gap:10px; margin-top:10px; }
+.review-box { padding:12px; text-align:center; border-radius:8px; cursor:pointer; position:relative; font-weight:600; }
 
 #scoreScreen { display:none; text-align:left; margin-top:20px; }
 #scoreScreen li { margin:8px 0; padding:8px; border-radius:5px; display:flex; align-items:center; gap:10px; }
@@ -124,17 +122,18 @@ units.forEach((unit)=>{
 });
 
 // ------------------ Quiz Data ------------------
+// Answers made more similar for harder choices
 const quizDataOriginal=[
-  {q:"What is a 'stock'?", a:["Share of ownership in a company","Company's debt","A type of loan","A bank account"], correct:0, explanation:"A stock represents ownership in a company."},
-  {q:"What is a 'bond'?", a:["Loan to a company or government","Ownership share","A short-term deposit","An account balance"], correct:0, explanation:"A bond is a loan to a company or government."},
-  {q:"What is an 'asset'?", a:["Something valuable you own","Money you owe","A company liability","Expected income"], correct:0, explanation:"An asset is something valuable that you own."},
-  {q:"What is a 'liability'?", a:["Debt you owe","Company profit","Stock","Company dividend"], correct:0, explanation:"A liability is money you owe."},
-  {q:"What is a 'dividend'?", a:["Payment to shareholders","Company tax payment","Loan repayment","Stock buyback"], correct:0, explanation:"Dividends are payments made to shareholders."},
-  {q:"What is 'capital'?", a:["Money used for investment","Company revenue","Stock price","Personal debt"], correct:0, explanation:"Capital is money used to invest."},
-  {q:"What is a 'portfolio'?", a:["Collection of investments","Single bank account","Only one stock","Loan balance"], correct:0, explanation:"A portfolio is all your investments together."},
-  {q:"What is 'risk'?", a:["Chance of losing money","Guaranteed profit","Company stock","Fixed interest"], correct:0, explanation:"Risk is the chance that you may lose money."},
-  {q:"What is 'liquidity'?", a:["How easily an asset can be turned into cash","Investment type","Profit margin","Stock index"], correct:0, explanation:"Liquidity is how quickly you can convert an asset to cash."},
-  {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stocks","Company revenue","Loan type"], correct:0, explanation:"Interest is what you pay for borrowing money."}
+  {q:"What is a 'stock'?", a:["Share of ownership in a company","Company's debt","A loan from a bank","An investment account"], correct:0, explanation:"A stock represents ownership in a company."},
+  {q:"What is a 'bond'?", a:["Loan to a company or government","Ownership share in a company","Bank deposit","Certificate of deposit"], correct:0, explanation:"A bond is a loan to a company or government."},
+  {q:"What is an 'asset'?", a:["Something valuable you own","Money owed by you","A liability","Expected income"], correct:0, explanation:"An asset is something valuable that you own."},
+  {q:"What is a 'liability'?", a:["Debt you owe","Stock you own","Company profit","Dividend received"], correct:0, explanation:"A liability is money you owe."},
+  {q:"What is a 'dividend'?", a:["Payment to shareholders","Company expense","Stock price change","Loan interest"], correct:0, explanation:"Dividends are payments made to shareholders."},
+  {q:"What is 'capital'?", a:["Money used for investment","Company revenue","Stock price","Savings account"], correct:0, explanation:"Capital is money used to invest."},
+  {q:"What is a 'portfolio'?", a:["Collection of investments","Single investment","Bank account","Loan balance"], correct:0, explanation:"A portfolio is all your investments together."},
+  {q:"What is 'risk'?", a:["Chance of losing money","Guaranteed profit","Fixed interest","Company revenue"], correct:0, explanation:"Risk is the chance that you may lose money."},
+  {q:"What is 'liquidity'?", a:["Ease of converting an asset to cash","Profitability of investment","Type of investment","Company stock value"], correct:0, explanation:"Liquidity is how quickly you can convert an asset to cash."},
+  {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stocks","Loan principal","Investment type"], correct:0, explanation:"Interest is what you pay for borrowing money."}
 ];
 
 let quizData=[], answers=[], flags=[], current=0;
@@ -159,6 +158,7 @@ const lastScoreText=document.getElementById('lastScoreText');
 const highScoreText=document.getElementById('highScoreText');
 const restartBtn=document.getElementById('restartBtn');
 const closeQuiz=document.getElementById('closeQuiz');
+const progressEl=document.getElementById('progress');
 
 function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;}
 
@@ -245,3 +245,4 @@ restartBtn.onclick=()=>{openQuiz();};
 </script>
 </body>
 </html>
+

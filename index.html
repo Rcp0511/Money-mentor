@@ -1,10 +1,12 @@
-<html lang="en" data-theme="dark">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Unit 1 Quiz Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+
 <style>
 :root {
     --bg: #f4f7fa;
@@ -30,7 +32,7 @@
 body {
     margin:0;
     font-family:'Inter', sans-serif;
-    background:var(--bg) url('data:image/svg+xml;utf8,') repeat;
+    background:var(--bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="%23c8e6c9"/><circle cx="20" cy="20" r="1" fill="%23c8e6c9"/><circle cx="80" cy="80" r="1.5" fill="%23c8e6c9"/><circle cx="30" cy="70" r="1" fill="%23c8e6c9"/><circle cx="70" cy="30" r="1.2" fill="%23c8e6c9"/></svg>') repeat;
     color:var(--text);
     transition:all 0.4s;
 }
@@ -129,49 +131,54 @@ header {
 </head>
 <body>
 
-    
-         Go to Homepage
-    
-    Student Dashboard
-    
+<header>
+    <div class="header-left">
+        <a href="https://sites.google.com/view/money--mentor/home" class="home-btn"><i class="fas fa-home"></i> Go to Homepage</a>
+    </div>
+    <div class="header-title">Student Dashboard</div>
+    <div class="header-right">
         <button id="theme-toggle"><i class="far fa-lightbulb"></i></button>
-        Light / Dark
-    
+        <div id="theme-label">Light / Dark</div>
+    </div>
+</header>
 
+<div class="container" id="unitContainer"></div>
 
- Data does not sync across devices. Scores and progress are stored locally in your browser.
+<div class="warning-note"><i class="fas fa-info-circle"></i> Data does not sync across devices. Scores and progress are stored locally in your browser.</div>
 
-    
-        ×
-        
-            📈 Unit 1: Investing Vocab 📈
+<div id="quizOverlay">
+    <div class="quiz-container">
+        <span id="closeQuiz">×</span>
+        <div id="startScreen">
+            <h2>📈 Unit 1: Investing Vocab 📈</h2>
             <button id="startBtn">Start Quiz</button>
-        
-        
-            
-            
-            
-            
+        </div>
+        <div id="quiz">
+            <div class="question-number" id="questionNumber"></div>
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+            <div class="controls">
                 <button id="prevBtn">Previous</button>
                 <button id="nextBtn">Next</button>
-            
-            
-        
-        
-            Review Page
-            
+            </div>
+            <div class="progress-bar"><div class="progress" id="progress"></div></div>
+        </div>
+        <div id="review">
+            <h2>Review Page</h2>
+            <div class="review-grid" id="reviewGrid"></div>
             <button id="toScoreBtn">Submit Quiz</button>
-        
-        
-            Your Score
-            
-            
-            
-            
+        </div>
+        <div id="scoreScreen">
+            <h3>Your Score</h3>
+            <ul id="missedList"></ul>
+            <p id="lastScoreText"></p>
+            <p id="highScoreText"></p>
+            <p id="unitCompleteText" style="color:gold; font-weight:bold;"></p>
             <button id="restartBtn">Restart Quiz</button>
             <button id="clearDataBtn">Clear Saved Data</button>
-        
-    
+        </div>
+    </div>
+</div>
 
 <script>
 // Theme toggle + persistence
@@ -182,15 +189,15 @@ let savedTheme = localStorage.getItem('theme') || 'dark';
 html.setAttribute('data-theme', savedTheme);
 
 function updateBulb() {
-const isDark = html.getAttribute('data-theme') === 'dark';
-themeToggle.innerHTML = isDark ? '<i class="fas fa-lightbulb"></i>' : '<i class="far fa-lightbulb"></i>';
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    themeToggle.innerHTML = isDark ? '<i class="fas fa-lightbulb"></i>' : '<i class="far fa-lightbulb"></i>';
 }
 
 themeToggle.addEventListener('click', () => {
-const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-html.setAttribute('data-theme', newTheme);
-localStorage.setItem('theme', newTheme);
-updateBulb();
+    const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateBulb();
 });
 updateBulb();
 
@@ -200,78 +207,79 @@ const container = document.getElementById('unitContainer');
 const progressText = document.getElementById('progressText');
 
 function renderUnitCard() {
-container.innerHTML = '';
-let completedCount = 0;
-units.forEach(unit => {
-const card = document.createElement('div');
-card.className = 'unit-card';
-const header = document.createElement('div');
-header.className = 'unit-header';
-const titleDiv = document.createElement('div');
-titleDiv.className = 'title';
-titleDiv.textContent = unit.name;
-const unitCompleteStored = localStorage.getItem(unit.id + 'Complete') === 'true';
-if (unitCompleteStored) {
-const uc = document.createElement('span');
-uc.className = 'unit-complete';
-uc.textContent = 'Unit Complete';
-titleDiv.prepend(uc);
-const star = document.createElement('i');
-star.className = 'fas fa-star';
-star.style.color = 'gold';
-star.style.marginLeft = '10px';
-titleDiv.appendChild(star);
-completedCount++;
-}
-const lastScore = parseInt(localStorage.getItem(unit.id + 'LastScore')) || 0;
-const highScore = parseInt(localStorage.getItem(unit.id + 'HighScore')) || 0;
-const scoreDiv = document.createElement('div');
-scoreDiv.className = 'scores';
-scoreDiv.textContent = `Last Unit Test Score: ${lastScore}% | Highest Unit Test Score: ${highScore}%`;
-header.appendChild(titleDiv);
-header.appendChild(scoreDiv);
-card.appendChild(header);
-const dropdown = document.createElement('div');
-dropdown.className = 'unit-dropdown';
-const studyBtn = document.createElement('button');
-studyBtn.className = 'study-btn';
-studyBtn.innerHTML = '<i class="fas fa-book"></i> Study';
-studyBtn.onclick = (e) => {
-e.stopPropagation();
-alert(`Study ${unit.name}`);
-};
-const testBtn = document.createElement('button');
-testBtn.className = 'test-btn';
-testBtn.innerHTML = '<i class="fas fa-clipboard"></i> Unit Test';
-testBtn.onclick = (e) => {
-e.stopPropagation();
-openQuiz();
-};
-dropdown.appendChild(studyBtn);
-dropdown.appendChild(testBtn);
-card.appendChild(dropdown);
-card.addEventListener('click', (e) => {
-if (e.target.closest('button')) return;
-dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
-});
-container.appendChild(card);
-});
-progressText.textContent = `${completedCount} out of ${units.length} units completed`;
+    container.innerHTML = '';
+    let completedCount = 0;
+    units.forEach(unit => {
+        const card = document.createElement('div');
+        card.className = 'unit-card';
+        const header = document.createElement('div');
+        header.className = 'unit-header';
+        const titleDiv = document.createElement('div');
+        titleDiv.className = 'title';
+        titleDiv.textContent = unit.name;
+        const unitCompleteStored = localStorage.getItem(unit.id + 'Complete') === 'true';
+        if (unitCompleteStored) {
+            const uc = document.createElement('span');
+            uc.className = 'unit-complete';
+            uc.textContent = 'Unit Complete';
+            titleDiv.prepend(uc);
+            const star = document.createElement('i');
+            star.className = 'fas fa-star';
+            star.style.color = 'gold';
+            star.style.marginLeft = '10px';
+            titleDiv.appendChild(star);
+            completedCount++;
+        }
+        const lastScore = parseInt(localStorage.getItem(unit.id + 'LastScore')) || 0;
+        const highScore = parseInt(localStorage.getItem(unit.id + 'HighScore')) || 0;
+        const scoreDiv = document.createElement('div');
+        scoreDiv.className = 'scores';
+        scoreDiv.textContent = `Last Unit Test Score: ${lastScore}% | Highest Unit Test Score: ${highScore}%`;
+        header.appendChild(titleDiv);
+        header.appendChild(scoreDiv);
+        card.appendChild(header);
+        const dropdown = document.createElement('div');
+        dropdown.className = 'unit-dropdown';
+        const studyBtn = document.createElement('button');
+        studyBtn.className = 'study-btn';
+        studyBtn.innerHTML = '<i class="fas fa-book"></i> Study';
+        studyBtn.onclick = (e) => {
+            e.stopPropagation(); // Prevent card toggle
+            alert(`Study ${unit.name}`);
+        };
+        const testBtn = document.createElement('button');
+        testBtn.className = 'test-btn';
+        testBtn.innerHTML = '<i class="fas fa-clipboard"></i> Unit Test';
+        testBtn.onclick = (e) => {
+            e.stopPropagation(); // Prevent card toggle
+            openQuiz();
+        };
+        dropdown.appendChild(studyBtn);
+        dropdown.appendChild(testBtn);
+        card.appendChild(dropdown);
+        card.addEventListener('click', (e) => {
+            // Only toggle if not clicking a button or icon inside button
+            if (e.target.closest('button')) return;
+            dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+        });
+        container.appendChild(card);
+    });
+    progressText.textContent = `${completedCount} out of ${units.length} units completed`;
 }
 renderUnitCard();
 
 // Quiz logic
 const quizDataOriginal = [
-{q:"What is a 'stock'?", a:["Share of ownership in a company","Debt issued by a company","A bank savings account","A type of bond"], correct:0, explanation:"Stocks represent part ownership in a company and potential profits."},
-{q:"What is a 'bond'?", a:["Loan to a company or government","Share of ownership in a company","An interest-bearing account","A type of insurance"], correct:0, explanation:"Bonds are loans you give to companies or governments in exchange for interest."},
-{q:"What is an 'asset'?", a:["Something valuable you own","Debt you owe","Potential future income","An expense item"], correct:0, explanation:"Assets are valuable resources you own, either physical or financial."},
-{q:"What is a 'liability'?", a:["Debt or obligation you owe","A company's owned stock","A shareholder payment","A financial asset"], correct:0, explanation:"Liabilities are obligations or debts owed to others."},
-{q:"What is a 'dividend'?", a:["Payment to shareholders","Company retained earnings","Stock price change","Interest on a bond"], correct:0, explanation:"Dividends are profits distributed to shareholders."},
-{q:"What is 'capital'?", a:["Money used for investment","Company revenue","Loan principal","Dividend earnings"], correct:0, explanation:"Capital is money allocated for investment purposes."},
-{q:"What is a 'portfolio'?", a:["Collection of investments","Single stock holding","Bank savings account","Outstanding debt"], correct:0, explanation:"A portfolio is your complete collection of financial investments."},
-{q:"What is 'risk'?", a:["Possibility of losing money","Guaranteed investment return","Fixed interest payment","Company revenue growth"], correct:0, explanation:"Risk is the chance that an investment’s actual return will differ from expected."},
-{q:"What is 'liquidity'?", a:["Ease of converting an asset to cash","Profitability of an investment","Market demand for stocks","Long-term investment potential"], correct:0, explanation:"Liquidity indicates how quickly an asset can be converted to cash without losing value."},
-{q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stock sales","Investment principal","Dividend received"], correct:0, explanation:"Interest is the cost of borrowing money, usually expressed as a percentage."}
+  {q:"What is a 'stock'?", a:["Share of ownership in a company","Debt issued by a company","A bank savings account","A type of bond"], correct:0, explanation:"Stocks represent part ownership in a company and potential profits."},
+  {q:"What is a 'bond'?", a:["Loan to a company or government","Share of ownership in a company","An interest-bearing account","A type of insurance"], correct:0, explanation:"Bonds are loans you give to companies or governments in exchange for interest."},
+  {q:"What is an 'asset'?", a:["Something valuable you own","Debt you owe","Potential future income","An expense item"], correct:0, explanation:"Assets are valuable resources you own, either physical or financial."},
+  {q:"What is a 'liability'?", a:["Debt or obligation you owe","A company's owned stock","A shareholder payment","A financial asset"], correct:0, explanation:"Liabilities are obligations or debts owed to others."},
+  {q:"What is a 'dividend'?", a:["Payment to shareholders","Company retained earnings","Stock price change","Interest on a bond"], correct:0, explanation:"Dividends are profits distributed to shareholders."},
+  {q:"What is 'capital'?", a:["Money used for investment","Company revenue","Loan principal","Dividend earnings"], correct:0, explanation:"Capital is money allocated for investment purposes."},
+  {q:"What is a 'portfolio'?", a:["Collection of investments","Single stock holding","Bank savings account","Outstanding debt"], correct:0, explanation:"A portfolio is your complete collection of financial investments."},
+  {q:"What is 'risk'?", a:["Possibility of losing money","Guaranteed investment return","Fixed interest payment","Company revenue growth"], correct:0, explanation:"Risk is the chance that an investment’s actual return will differ from expected."},
+  {q:"What is 'liquidity'?", a:["Ease of converting an asset to cash","Profitability of an investment","Market demand for stocks","Long-term investment potential"], correct:0, explanation:"Liquidity indicates how quickly an asset can be converted to cash without losing value."},
+  {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stock sales","Investment principal","Dividend received"], correct:0, explanation:"Interest is the cost of borrowing money, usually expressed as a percentage."}
 ];
 
 let quizData = [], answers = [], current = 0;
@@ -300,99 +308,99 @@ const progressEl = document.getElementById('progress');
 function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 
 function openQuiz() {
-quizOverlay.style.display = 'flex';
-closeQuiz.style.display = 'block';
-startScreen.style.display = 'flex';
-quiz.style.display = 'none';
-reviewDiv.style.display = 'none';
-scoreScreen.style.display = 'none';
-quizData = quizDataOriginal.map(q => ({...q}));
-answers = Array(quizData.length).fill(null);
-current = 0;
+    quizOverlay.style.display = 'flex';
+    closeQuiz.style.display = 'block';
+    startScreen.style.display = 'flex';
+    quiz.style.display = 'none';
+    reviewDiv.style.display = 'none';
+    scoreScreen.style.display = 'none';
+    quizData = quizDataOriginal.map(q => ({...q}));
+    answers = Array(quizData.length).fill(null);
+    current = 0;
 }
 
 startBtn.onclick = () => {
-startScreen.style.display = 'none';
-quiz.style.display = 'block';
-loadQuestion();
+    startScreen.style.display = 'none';
+    quiz.style.display = 'block';
+    loadQuestion();
 };
 
 closeQuiz.onclick = () => {
-quizOverlay.style.display = 'none';
-closeQuiz.style.display = 'none';
+    quizOverlay.style.display = 'none';
+    closeQuiz.style.display = 'none';
 };
 
 function loadQuestion() {
-const q = quizData[current];
-questionNumberEl.textContent = `Question ${current+1} of ${quizData.length}`;
-questionEl.textContent = q.q;
-optionsEl.innerHTML = '';
-if (!q.shuffledAnswers) q.shuffledAnswers = shuffleArray([...q.a]);
-q.shuffledAnswers.forEach((opt,i)=>{
-const btn = document.createElement('button'); btn.textContent = opt;
-if(answers[current]===i) btn.classList.add('selected');
-btn.onclick = ()=>{ answers[current]=i; Array.from(optionsEl.children).forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); };
-optionsEl.appendChild(btn);
-});
-progressEl.style.width = `${((current+1)/quizData.length)*100}%`;
+    const q = quizData[current];
+    questionNumberEl.textContent = `Question ${current+1} of ${quizData.length}`;
+    questionEl.textContent = q.q;
+    optionsEl.innerHTML = '';
+    if (!q.shuffledAnswers) q.shuffledAnswers = shuffleArray([...q.a]);
+    q.shuffledAnswers.forEach((opt,i)=>{
+        const btn = document.createElement('button'); btn.textContent = opt;
+        if(answers[current]===i) btn.classList.add('selected');
+        btn.onclick = ()=>{ answers[current]=i; Array.from(optionsEl.children).forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); };
+        optionsEl.appendChild(btn);
+    });
+    progressEl.style.width = `${((current+1)/quizData.length)*100}%`;
 }
 
 nextBtn.onclick = ()=>{ if(current===quizData.length-1){showReview();} else{current++; loadQuestion();}};
 prevBtn.onclick = ()=>{ if(current>0){current--; loadQuestion();}};
 
 function showReview(){
-quiz.style.display='none'; reviewDiv.style.display='block';
-reviewGrid.innerHTML='';
-quizData.forEach((q,i)=>{
-const box = document.createElement('div'); box.className='review-box';
-box.style.background = answers[i]!==null?'#d4edda':'#ccc';
-box.textContent = `${i+1}`;
-box.onclick = ()=>{ current=i; reviewDiv.style.display='none'; quiz.style.display='block'; loadQuestion(); };
-reviewGrid.appendChild(box);
-});
+    quiz.style.display='none'; reviewDiv.style.display='block';
+    reviewGrid.innerHTML='';
+    quizData.forEach((q,i)=>{
+        const box = document.createElement('div'); box.className='review-box';
+        box.style.background = answers[i]!==null?'#d4edda':'#ccc';
+        box.textContent = `${i+1}`;
+        box.onclick = ()=>{ current=i; reviewDiv.style.display='none'; quiz.style.display='block'; loadQuestion(); };
+        reviewGrid.appendChild(box);
+    });
 }
 
 toScoreBtn.onclick = showScore;
 
 function showScore(){
-reviewDiv.style.display='none'; scoreScreen.style.display='block';
-let correctCount = 0; missedList.innerHTML = '';
-quizData.forEach((q,i)=>{
-const li = document.createElement('li');
-if(q.shuffledAnswers[answers[i]]===q.a[q.correct]){
-correctCount++; li.className='correct-score'; li.textContent=`Q${i+1}: Correct! ✅`;
-} else{
-li.className='wrong-score'; li.textContent=`Q${i+1}: Wrong ❌ - ${q.explanation}`;
-}
-missedList.appendChild(li);
-});
-const score = Math.round((correctCount/quizData.length)*100);
-lastScoreText.textContent = `Last Unit Test Score: ${score}%`;
-let highScore = parseInt(localStorage.getItem('unit1HighScore'))||0;
-if(score > highScore) {
-localStorage.setItem('unit1HighScore',score);
-highScore = score;
-}
-highScoreText.textContent = `Highest Unit Test Score: ${highScore}%`;
-localStorage.setItem('unit1LastScore',score);
-if(highScore >=90){
-localStorage.setItem('unit1Complete','true');
-unitCompleteText.textContent='Unit Complete';
-} else{
-localStorage.setItem('unit1Complete','false');
-unitCompleteText.textContent='';
-}
-renderUnitCard();
+    reviewDiv.style.display='none'; scoreScreen.style.display='block';
+    let correctCount = 0; missedList.innerHTML = '';
+    quizData.forEach((q,i)=>{
+        const li = document.createElement('li');
+        if(q.shuffledAnswers[answers[i]]===q.a[q.correct]){
+            correctCount++; li.className='correct-score'; li.textContent=`Q${i+1}: Correct! ✅`;
+        } else{
+            li.className='wrong-score'; li.textContent=`Q${i+1}: Wrong ❌ - ${q.explanation}`;
+        }
+        missedList.appendChild(li);
+    });
+    const score = Math.round((correctCount/quizData.length)*100);
+    lastScoreText.textContent = `Last Unit Test Score: ${score}%`;
+    let highScore = parseInt(localStorage.getItem('unit1HighScore'))||0;
+    if(score > highScore) {
+        localStorage.setItem('unit1HighScore',score);
+        highScore = score;
+    }
+    highScoreText.textContent = `Highest Unit Test Score: ${highScore}%`;
+    localStorage.setItem('unit1LastScore',score);
+    if(highScore >=90){
+        localStorage.setItem('unit1Complete','true');
+        unitCompleteText.textContent='Unit Complete';
+    } else{
+        localStorage.setItem('unit1Complete','false');
+        unitCompleteText.textContent='';
+    }
+    renderUnitCard();
 }
 
 restartBtn.onclick = ()=>{
-answers = Array(quizData.length).fill(null);
-current = 0;
-quiz.style.display='block'; scoreScreen.style.display='none'; loadQuestion();
+    answers = Array(quizData.length).fill(null);
+    current = 0;
+    quiz.style.display='block'; scoreScreen.style.display='none'; loadQuestion();
 };
 
 clearDataBtn.onclick = ()=>{
-localStorage.clear(); renderUnitCard(); alert('All saved data cleared.');
+    localStorage.clear(); renderUnitCard(); alert('All saved data cleared.');
 };
 </script>
 </body>

@@ -18,8 +18,6 @@
     --green-darker: #1b5e20;
     --red: #dc3545;
     --red-dark: #b02a37;
-    --note-bg: #e8f5e9;
-    --note-text: #333;
 }
 
 [data-theme="dark"] {
@@ -29,13 +27,28 @@
     --text-light: #aaa;
     --red: #ff5252;
     --red-dark: #d32f2f;
-    --note-bg: #2a2a2a;
-    --note-text: #ddd;
 }
 
-body { margin:0; font-family:'Inter', sans-serif; background:var(--bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="%23c8e6c9"/><circle cx="20" cy="20" r="1" fill="%23c8e6c9"/><circle cx="80" cy="80" r="1.5" fill="%23c8e6c9"/><circle cx="30" cy="70" r="1" fill="%23c8e6c9"/><circle cx="70" cy="30" r="1.2" fill="%23c8e6c9"/></svg>') repeat; color:var(--text); transition:all 0.4s; }
+body {
+    margin:0;
+    font-family:'Inter', sans-serif;
+    background:var(--bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="%23c8e6c9"/><circle cx="20" cy="20" r="1" fill="%23c8e6c9"/><circle cx="80" cy="80" r="1.5" fill="%23c8e6c9"/><circle cx="30" cy="70" r="1" fill="%23c8e6c9"/><circle cx="70" cy="30" r="1.2" fill="%23c8e6c9"/></svg>') repeat;
+    color:var(--text);
+    transition:all 0.4s;
+}
 
-header { background:linear-gradient(135deg, #43a047, #2e7d32); color:white; padding:20px 40px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 4px 12px rgba(0,0,0,0.2); font-family:'Poppins', sans-serif; font-size:1.8em; font-weight:600; }
+header {
+    background:linear-gradient(135deg, #43a047, #2e7d32);
+    color:white;
+    padding:20px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 4px 12px rgba(0,0,0,0.2);
+    font-family:'Poppins', sans-serif;
+    font-size:1.8em;
+    font-weight:600;
+}
 
 .header-left { display:flex; align-items:center; gap:15px; }
 .header-title { flex-grow:1; text-align:center; }
@@ -49,7 +62,17 @@ header { background:linear-gradient(135deg, #43a047, #2e7d32); color:white; padd
 
 .container { max-width:1100px; margin:40px auto; padding:30px; background:var(--card-bg); border-radius:20px; box-shadow:0 8px 20px rgba(0,0,0,0.1); }
 
-.unit-card { background:linear-gradient(145deg,#66bb6a,#388e3c); border-radius:20px; margin-bottom:30px; padding:25px 30px; box-shadow:0 8px 20px rgba(0,0,0,0.2); cursor:pointer; transition:transform 0.3s, box-shadow 0.3s; color:white; }
+.unit-card {
+    background:linear-gradient(145deg,#66bb6a,#388e3c);
+    border-radius:20px;
+    margin-bottom:30px;
+    padding:25px 30px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+    cursor:pointer;
+    transition:transform 0.3s, box-shadow 0.3s;
+    color:white;
+}
+
 .unit-card:hover { transform:translateY(-5px); box-shadow:0 12px 25px rgba(0,0,0,0.25); }
 
 .unit-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
@@ -64,7 +87,7 @@ header { background:linear-gradient(135deg, #43a047, #2e7d32); color:white; padd
 .study-btn { background:#43a047; }
 .test-btn { background:#1b5e20; }
 
-.warning-note { text-align:center; font-size:0.9em; color:var(--note-text); margin:20px auto; padding:10px; background:var(--note-bg); border-radius:10px; max-width:600px; transition:all 0.4s; }
+.warning-note { text-align:center; font-size:0.9em; color:#666; margin:20px auto; padding:10px; background:#e8f5e9; border-radius:10px; max-width:600px; }
 
 #quizOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000; }
 .quiz-container { background:var(--card-bg); border-radius:20px; width:95%; max-width:900px; min-height:80vh; position:relative; margin:20px auto; box-shadow:0 8px 25px rgba(0,0,0,0.25); overflow-y:auto; }
@@ -229,8 +252,10 @@ function renderUnitCard() {
         dropdown.appendChild(testBtn);
         card.appendChild(dropdown);
         card.addEventListener('click', (e) => {
+            // Prevent card toggle when clicking buttons
             if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
-                return; // stop bubbling so button onclick works
+                e.stopPropagation();
+                return;
             }
             dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
         });
@@ -240,7 +265,7 @@ function renderUnitCard() {
 }
 renderUnitCard();
 
-// Quiz logic (your original, unchanged except minor cleanups)
+// Quiz logic
 const quizDataOriginal = [
   {q:"What is a 'stock'?", a:["Share of ownership in a company","Debt issued by a company","A bank savings account","A type of bond"], correct:0, explanation:"Stocks represent part ownership in a company and potential profits."},
   {q:"What is a 'bond'?", a:["Loan to a company or government","Share of ownership in a company","An interest-bearing account","A type of insurance"], correct:0, explanation:"Bonds are loans you give to companies or governments in exchange for interest."},
@@ -280,6 +305,7 @@ const progressEl = document.getElementById('progress');
 function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 
 function openQuiz() {
+    console.log("openQuiz called - should show overlay now");
     quizOverlay.style.display = 'flex';
     closeQuiz.style.display = 'block';
     startScreen.style.display = 'flex';
@@ -292,17 +318,20 @@ function openQuiz() {
 }
 
 startBtn.onclick = () => {
+    console.log("Start Quiz clicked");
     startScreen.style.display = 'none';
     quiz.style.display = 'block';
     loadQuestion();
 };
 
 closeQuiz.onclick = () => {
+    console.log("Close X clicked");
     quizOverlay.style.display = 'none';
     closeQuiz.style.display = 'none';
 };
 
 function loadQuestion() {
+    console.log("Loading question", current + 1);
     const q = quizData[current];
     questionNumberEl.textContent = `Question ${current+1} of ${quizData.length}`;
     questionEl.textContent = q.q;
@@ -321,6 +350,7 @@ nextBtn.onclick = ()=>{ if(current===quizData.length-1){showReview();} else{curr
 prevBtn.onclick = ()=>{ if(current>0){current--; loadQuestion();}};
 
 function showReview(){
+    console.log("Showing review");
     quiz.style.display='none'; reviewDiv.style.display='block';
     reviewGrid.innerHTML='';
     quizData.forEach((q,i)=>{
@@ -335,6 +365,7 @@ function showReview(){
 toScoreBtn.onclick = showScore;
 
 function showScore(){
+    console.log("Showing score");
     reviewDiv.style.display='none'; scoreScreen.style.display='block';
     let correctCount = 0; missedList.innerHTML = '';
     quizData.forEach((q,i)=>{

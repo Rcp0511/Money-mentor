@@ -13,7 +13,7 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 .unit-card { background:#4caf50; border-radius:18px; margin-bottom:20px; padding:20px; box-shadow:0 5px 15px rgba(0,0,0,0.15); cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
 .unit-header { display:flex; justify-content:space-between; align-items:center; width:100%; }
 .unit-header .title { display:flex; align-items:center; gap:10px; font-weight:600; font-size:1.3em; }
-.unit-header .scores { font-size:0.95em; color:#0a3d0a; }
+.unit-header .scores { font-size:0.95em; color:#0a3d0a; margin-left:15px; }
 .unit-header .unit-complete { font-size:0.9em; color:#fff; background:#ff9800; padding:2px 8px; border-radius:6px; margin-right:10px; display:none; font-weight:600; }
 .unit-dropdown { display:flex; gap:10px; margin-top:15px; }
 .unit-dropdown button { flex:1; padding:12px 0; border:none; border-radius:12px; font-size:1em; font-weight:500; color:white; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
@@ -21,14 +21,14 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 .test-btn { background:#1b5e20; }
 
 #quizOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000; overflow-y:auto; }
-.quiz-container { background:#fff; border-radius:20px; padding:25px; width:90%; max-width:750px; min-height:550px; max-height:90vh; overflow-y:auto; position:relative; }
+.quiz-container { background:#fff; border-radius:20px; padding:25px; width:85%; max-width:750px; min-height:550px; max-height:90vh; overflow-y:auto; position:relative; transition:0.3s; }
 
 #closeQuiz { position:absolute; top:15px; right:20px; font-size:1.5em; cursor:pointer; z-index:10; }
 #flagBtn { position:absolute; top:15px; right:60px; font-size:1.1em; background:none; border:none; cursor:pointer; color:red; z-index:10; }
 
-#startScreen { text-align:center; }
-#startBtn { padding:15px 25px; font-size:1.2em; border:none; border-radius:12px; background:#28a745; color:white; cursor:pointer; margin-top:20px; }
-#startBtn:hover { background:#218838; }
+#startScreen { text-align:center; background:#28a745; border-radius:15px; padding:40px 20px; transition:0.3s; }
+#startBtn { padding:12px 20px; font-size:1.1em; border:none; border-radius:12px; background:#1b5e20; color:white; cursor:pointer; margin-top:20px; }
+#startBtn:hover { background:#145214; }
 
 #quiz { display:none; }
 .question-number { font-size:0.9em; color:#666; margin-bottom:5px; }
@@ -107,7 +107,7 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 </div>
 
 <script>
-const units=[{name:"Unit 1: Investing Vocab", mastered:false,lastScore:null,highScore:null}];
+const units=[{name:"Unit 1: Investing Vocab", highScore:0}];
 const container=document.getElementById('unitContainer');
 
 function createUnitCards() {
@@ -124,7 +124,8 @@ function createUnitCards() {
     const star=document.createElement('span'); star.className='unit-star'; star.innerHTML='⭐';
     if(unit.highScore>=90){ star.style.display='inline'; }
 
-    const scoreDiv=document.createElement('div'); scoreDiv.className='scores'; scoreDiv.textContent='Last Unit Test Score: N/A | Highest Unit Test Score: N/A';
+    const scoreDiv=document.createElement('div'); scoreDiv.className='scores';
+    scoreDiv.textContent=`Last Unit Test Score: ${unit.lastScore!==null?unit.lastScore+'%':'N/A'} | Highest Unit Test Score: ${unit.highScore!==null?unit.highScore+'%':'N/A'}`;
 
     header.appendChild(completeLabel); header.appendChild(titleDiv); header.appendChild(star); header.appendChild(scoreDiv);
     card.appendChild(header);
@@ -139,7 +140,7 @@ function createUnitCards() {
 
 createUnitCards();
 
-// ------------------ Quiz ------------------
+// Quiz Data
 const quizDataOriginal=[
   {q:"What is a 'stock'?", a:["Share of ownership in a company","Company's debt","A loan from a bank","An investment account"], correct:0, explanation:"A stock represents ownership in a company."},
   {q:"What is a 'bond'?", a:["Loan to a company or government","Ownership share in a company","Bank deposit","Certificate of deposit"], correct:0, explanation:"A bond is a loan to a company or government."},
@@ -249,9 +250,10 @@ function calculateScore(){
   });
   const percent=Math.round((score/quizData.length)*100);
   lastScoreText.textContent=`Last Unit Test Score: ${percent}%`;
-  let highScore=localStorage.getItem('unit1HighScore')||0; highScore=Math.max(highScore,percent); localStorage.setItem('unit1HighScore',highScore);
-  highScoreText.textContent=`Highest Unit Test Score: ${highScore}%`;
-  units[0].highScore=highScore;
+  units[0].lastScore=percent;
+
+  if(percent>=90){ units[0].highScore=Math.max(units[0].highScore||0, percent); }
+  highScoreText.textContent=`Highest Unit Test Score: ${units[0].highScore}%`;
   createUnitCards();
 }
 

@@ -1,6 +1,3 @@
-Okay, tested it—looks solid now. The green start screen fills the overlay without white margins around it (set the container padding to 0 and made the screen full-width/centered). When you click Start, the quiz content expands with padding for better spacing. Here's the updated full code: 
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,68 +7,360 @@ Okay, tested it—looks solid now. The green start screen fills the overlay with
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
 <style>
-body { margin:0; font-family:'Inter',sans-serif; background:#f4f7fa; color:#1c1e21; }
-header { background:#1976d2; color:white; padding:25px 0; text-align:center; font-size:2em; font-weight:700; box-shadow:0 4px 12px rgba(0,0,0,0.2);}
-.container { max-width:1000px; margin:30px auto; padding:0 20px; }
-.unit-card { background:linear-gradient(145deg,#42a5f5,#1e88e5); border-radius:16px; margin-bottom:20px; padding:18px 25px; box-shadow:0 6px 18px rgba(0,0,0,0.15); cursor:pointer; transition: transform 0.2s, box-shadow 0.2s;}
-.unit-card:hover { transform:translateY(-3px); box-shadow:0 10px 20px rgba(0,0,0,0.2);}
-.unit-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;}
-.unit-header .title { display:flex; align-items:center; gap:10px; font-weight:600; font-size:1.2em; color:white;}
-.unit-header .scores { font-size:0.95em; color:#e3f2fd;}
-.unit-complete { font-weight:700; color:#ffd700;}
-.unit-dropdown { display:none; flex-direction:row; gap:15px; margin-top:15px;}
-.unit-dropdown button { padding:12px 18px; border:none; border-radius:12px; font-size:1em; font-weight:500; color:white; cursor:pointer; display:flex; align-items:center; gap:10px; transition: transform 0.2s, opacity 0.2s;}
-.unit-dropdown button:hover { transform:translateY(-2px);}
-.study-btn { background:#43a047; }
-.test-btn { background:#1b5e20; }
+body { 
+    margin:0; 
+    font-family:'Inter',sans-serif; 
+    background:#f4f7fa url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="%23d1e7ff"/><circle cx="20" cy="20" r="1" fill="%23d1e7ff"/><circle cx="80" cy="80" r="1.5" fill="%23d1e7ff"/><circle cx="30" cy="70" r="1" fill="%23d1e7ff"/><circle cx="70" cy="30" r="1.2" fill="%23d1e7ff"/></svg>') repeat; 
+    color:#1c1e21; 
+}
+header { 
+    background:linear-gradient(135deg, #1976d2, #0d47a1); 
+    color:white; 
+    padding:35px 0; 
+    text-align:center; 
+    font-size:2.2em; 
+    font-weight:700; 
+    box-shadow:0 6px 15px rgba(0,0,0,0.25);
+    position:relative;
+}
+header::before {
+    content: '\f19c'; /* Icon for dashboard, like a chart */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size:1.2em;
+    margin-right:10px;
+}
+.container { 
+    max-width:1100px; 
+    margin:40px auto; 
+    padding:0 30px; 
+    background:rgba(255,255,255,0.9); 
+    border-radius:20px; 
+    box-shadow:0 8px 20px rgba(0,0,0,0.1); 
+}
+.unit-card { 
+    background:linear-gradient(145deg,#42a5f5,#1e88e5); 
+    border-radius:20px; 
+    margin-bottom:30px; 
+    padding:25px 30px; 
+    box-shadow:0 8px 20px rgba(0,0,0,0.2); 
+    cursor:pointer; 
+    transition: transform 0.3s, box-shadow 0.3s;
+    position:relative;
+    overflow:hidden;
+}
+.unit-card::before {
+    content: '';
+    position:absolute;
+    top:-50%; left:-50%;
+    width:200%; height:200%;
+    background:radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+    transform:rotate(45deg);
+    opacity:0.5;
+}
+.unit-card:hover { 
+    transform:translateY(-5px); 
+    box-shadow:0 12px 25px rgba(0,0,0,0.25);
+}
+.unit-header { 
+    display:flex; 
+    justify-content:space-between; 
+    align-items:center; 
+    flex-wrap:wrap;
+}
+.unit-header .title { 
+    display:flex; 
+    align-items:center; 
+    gap:12px; 
+    font-weight:600; 
+    font-size:1.3em; 
+    color:white;
+}
+.unit-header .title::before {
+    content: '\f02d'; /* Book icon for unit */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    color:gold;
+}
+.unit-header .scores { 
+    font-size:1em; 
+    color:#e3f2fd;
+    background:rgba(0,0,0,0.2);
+    padding:8px 12px;
+    border-radius:10px;
+}
+.unit-complete { 
+    font-weight:700; 
+    color:#ffd700;
+}
+.unit-dropdown { 
+    display:none; 
+    flex-direction:row; 
+    gap:20px; 
+    margin-top:20px;
+}
+.unit-dropdown button { 
+    padding:14px 20px; 
+    border:none; 
+    border-radius:14px; 
+    font-size:1.1em; 
+    font-weight:500; 
+    color:white; 
+    cursor:pointer; 
+    display:flex; 
+    align-items:center; 
+    gap:12px; 
+    transition: transform 0.2s, opacity 0.2s;
+}
+.unit-dropdown button:hover { 
+    transform:translateY(-3px);
+    opacity:0.95;
+}
+.study-btn { 
+    background:#43a047; 
+}
+.test-btn { 
+    background:#1b5e20; 
+}
 
-#quizOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000; overflow:auto;}
-.quiz-container { background:#fff; border-radius:20px; padding:0; width:95%; max-width:900px; min-height:650px; position:relative; margin:0 auto; box-shadow:0 8px 25px rgba(0,0,0,0.25); overflow-y:auto;}
-#closeQuiz { position:absolute; top:20px; right:20px; font-size:1.8em; cursor:pointer; color:#1976d2;}
-#flagBtn { position:absolute; top:20px; right:60px; font-size:1.4em; background:none; border:none; cursor:pointer; color:red; display:none;}
+#quizOverlay { 
+    display:none; 
+    position:fixed; 
+    top:0; 
+    left:0; 
+    width:100%; 
+    height:100%; 
+    background:rgba(0,0,0,0.6); 
+    justify-content:center; 
+    align-items:center; 
+    z-index:1000; 
+    overflow:auto;
+}
+.quiz-container { 
+    background:#fff; 
+    border-radius:20px; 
+    padding:0; 
+    width:95%; 
+    max-width:900px; 
+    min-height:650px; 
+    position:relative; 
+    margin:0 auto; 
+    box-shadow:0 8px 25px rgba(0,0,0,0.25); 
+    overflow-y:auto;
+}
+#closeQuiz { 
+    position:absolute; 
+    top:20px; 
+    right:20px; 
+    font-size:1.8em; 
+    cursor:pointer; 
+    color:#1976d2;
+}
+#flagBtn { 
+    position:absolute; 
+    top:20px; 
+    right:60px; 
+    font-size:1.4em; 
+    background:none; 
+    border:none; 
+    cursor:pointer; 
+    color:red; 
+    display:none;
+}
 
-#startScreen { display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; height:100%; width:100%; padding:40px; background:#43a047; border-radius:20px; color:white; box-sizing:border-box;}
-#startScreen h2 { font-size:1.6em; margin-bottom:20px;}
-#startBtn { padding:15px 25px; font-size:1.2em; border:none; border-radius:12px; background:#1b5e20; color:white; cursor:pointer;}
-#startBtn:hover { background:#155d27; }
+#startScreen { 
+    display:flex; 
+    flex-direction:column; 
+    justify-content:center; 
+    align-items:center; 
+    text-align:center; 
+    height:auto; 
+    width:60%; 
+    max-width:400px; 
+    padding:40px; 
+    background:#43a047; 
+    border-radius:20px; 
+    color:white; 
+    box-sizing:border-box; 
+    margin: auto;
+}
+#startScreen h2 { 
+    font-size:1.6em; 
+    margin-bottom:20px;
+}
+#startBtn { 
+    padding:15px 25px; 
+    font-size:1.2em; 
+    border:none; 
+    border-radius:12px; 
+    background:#1b5e20; 
+    color:white; 
+    cursor:pointer;
+}
+#startBtn:hover { 
+    background:#155d27; 
+}
 
-#quiz { display:none; padding:30px; box-sizing:border-box; }
-.question-number { font-size:0.9em; color:#555; margin-bottom:5px; }
-.question { font-size:1.3em; margin-bottom:20px; }
-.options button { display:block; width:100%; margin:8px 0; padding:14px; font-size:1em; border:2px solid #ccc; border-radius:10px; cursor:pointer; text-align:left; background:#fdfdfd; transition:0.2s;}
-.options button:hover { border-color:#1976d2; background-color:#e3f2fd; }
-.options button.selected { background-color:#d4edda; border-color:#43a047; }
+#quiz { 
+    display:none; 
+    padding:30px; 
+    box-sizing:border-box; 
+}
+.question-number { 
+    font-size:0.9em; 
+    color:#555; 
+    margin-bottom:5px; 
+}
+.question { 
+    font-size:1.3em; 
+    margin-bottom:20px; 
+}
+.options button { 
+    display:block; 
+    width:100%; 
+    margin:8px 0; 
+    padding:14px; 
+    font-size:1em; 
+    border:2px solid #ccc; 
+    border-radius:10px; 
+    cursor:pointer; 
+    text-align:left; 
+    background:#fdfdfd; 
+    transition:0.2s;
+}
+.options button:hover { 
+    border-color:#1976d2; 
+    background-color:#e3f2fd; 
+}
+.options button.selected { 
+    background-color:#d4edda; 
+    border-color:#43a047; 
+}
 
-.controls { display:flex; justify-content:space-between; margin-top:20px;}
-.controls button { padding:12px 20px; border:none; border-radius:8px; cursor:pointer;}
-#nextBtn { background:#1976d2; color:white;}
-#nextBtn:hover { background:#115293;}
-#prevBtn { background:#6c757d; color:white;}
-#prevBtn:hover { background:#5a6268;}
+.controls { 
+    display:flex; 
+    justify-content:space-between; 
+    margin-top:20px;
+}
+.controls button { 
+    padding:12px 20px; 
+    border:none; 
+    border-radius:8px; 
+    cursor:pointer;
+}
+#nextBtn { 
+    background:#1976d2; 
+    color:white;
+}
+#nextBtn:hover { 
+    background:#115293;
+}
+#prevBtn { 
+    background:#6c757d; 
+    color:white;
+}
+#prevBtn:hover { 
+    background:#5a6268;
+}
 
-.progress-bar { height:12px; background:#eee; border-radius:6px; overflow:hidden; margin-top:20px;}
-.progress { height:100%; width:0%; background:linear-gradient(90deg,#43a047,#85e085); transition:width 0.3s;}
+.progress-bar { 
+    height:12px; 
+    background:#eee; 
+    border-radius:6px; 
+    overflow:hidden; 
+    margin-top:20px;
+}
+.progress { 
+    height:100%; 
+    width:0%; 
+    background:linear-gradient(90deg,#43a047,#85e085); 
+    transition:width 0.3s;
+}
 
-#review { display:none; margin-top:15px; padding:30px; box-sizing:border-box; }
-#review h2 { text-align:center; margin-bottom:10px; font-weight:600; color:#1976d2; }
-.review-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(60px,1fr)); gap:12px; margin-top:10px;}
-.review-box { padding:12px; text-align:center; border-radius:8px; cursor:pointer; position:relative; font-weight:600;}
-.review-flag { position:absolute; top:6px; right:8px; color:red; font-size:0.9em; }
+#review { 
+    display:none; 
+    margin-top:15px; 
+    padding:30px; 
+    box-sizing:border-box; 
+}
+#review h2 { 
+    text-align:center; 
+    margin-bottom:10px; 
+    font-weight:600; 
+    color:#1976d2; 
+}
+.review-grid { 
+    display:grid; 
+    grid-template-columns:repeat(auto-fit,minmax(60px,1fr)); 
+    gap:12px; 
+    margin-top:10px;
+}
+.review-box { 
+    padding:12px; 
+    text-align:center; 
+    border-radius:8px; 
+    cursor:pointer; 
+    position:relative; 
+    font-weight:600;
+}
+.review-flag { 
+    position:absolute; 
+    top:6px; 
+    right:8px; 
+    color:red; 
+    font-size:0.9em; 
+}
 
-#scoreScreen { display:none; text-align:left; margin-top:20px; max-height:500px; overflow-y:auto; padding:30px; box-sizing:border-box; }
-#scoreScreen li { margin:8px 0; padding:8px; border-radius:5px; display:flex; flex-direction:column; gap:4px; }
-.correct-score { color:green; }
-.wrong-score { color:red; }
+#scoreScreen { 
+    display:none; 
+    text-align:left; 
+    margin-top:20px; 
+    max-height:500px; 
+    overflow-y:auto; 
+    padding:30px; 
+    box-sizing:border-box; 
+}
+#scoreScreen li { 
+    margin:8px 0; 
+    padding:8px; 
+    border-radius:5px; 
+    display:flex; 
+    flex-direction:column; 
+    gap:4px; 
+}
+.correct-score { 
+    color:green; 
+}
+.wrong-score { 
+    color:red; 
+}
 
-.restart-btn, .clear-btn { margin-top:20px; padding:14px 22px; border:none; border-radius:10px; cursor:pointer; font-weight:600;}
-.restart-btn { background:#43a047; color:white;}
-.restart-btn:hover { background:#388e3c; }
-.clear-btn { background:#dc3545; color:white;}
-.clear-btn:hover { background:#b02a37; }
+.restart-btn, .clear-btn { 
+    margin-top:20px; 
+    padding:14px 22px; 
+    border:none; 
+    border-radius:10px; 
+    cursor:pointer; 
+    font-weight:600;
+}
+.restart-btn { 
+    background:#43a047; 
+    color:white;
+}
+.restart-btn:hover { 
+    background:#388e3c; 
+}
+.clear-btn { 
+    background:#dc3545; 
+    color:white;
+}
+.clear-btn:hover { 
+    background:#b02a37; 
+}
 </style>
 </head>
 <body>
-<header>Student Dashboard</header>
+<header><i class="fas fa-chart-line"></i> Student Dashboard</header>
 <div class="container" id="unitContainer"></div>
 
 <div id="quizOverlay">
@@ -284,4 +573,3 @@ clearDataBtn.onclick = ()=>{
 </script>
 </body>
 </html>
-```

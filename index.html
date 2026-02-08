@@ -20,7 +20,7 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 .test-btn { background:#1b5e20; }
 
 #quizOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000; }
-.quiz-container { background:#fff; border-radius:20px; padding:25px; width:70%; max-width:700px; min-height:600px; overflow-y:auto; position:relative; }
+.quiz-container { background:#fff; border-radius:20px; padding:25px; width:75%; max-width:750px; min-height:550px; overflow-y:auto; position:relative; }
 
 #closeQuiz { position:absolute; top:15px; right:20px; font-size:1.8em; cursor:pointer; }
 #flagBtn { position:absolute; top:15px; right:60px; font-size:1.3em; background:none; border:none; cursor:pointer; color:red; }
@@ -48,7 +48,7 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 
 #review { display:none; margin-top:15px; }
 .review-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(60px,1fr)); gap:10px; margin-top:10px; }
-.review-box { padding:12px; text-align:center; border-radius:8px; cursor:pointer; position:relative; font-weight:600; color:white; }
+.review-box { padding:12px; text-align:center; border-radius:8px; cursor:pointer; position:relative; font-weight:600; }
 
 #scoreScreen { display:none; text-align:left; margin-top:20px; }
 #scoreScreen li { margin:8px 0; padding:8px; border-radius:5px; display:flex; align-items:center; gap:10px; }
@@ -66,7 +66,7 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 <div id="quizOverlay">
   <div class="quiz-container">
     <span id="closeQuiz">&times;</span>
-    <button id="flagBtn"><i class="far fa-flag"></i></button>
+    <button id="flagBtn"><i class="fas fa-flag"></i></button>
 
     <div id="startScreen">
       <h2>📈 Unit 1: Investing Vocab 📈</h2>
@@ -85,6 +85,11 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
     </div>
 
     <div id="review">
+      <div id="reviewLegend" style="margin-bottom:10px;">
+        <span style="color:green;font-weight:bold;">Answered</span> | 
+        <span style="color:red;font-weight:bold;">Not Answered</span> | 
+        <i class="fas fa-flag" style="color:red;"></i> Flagged
+      </div>
       <div class="review-grid" id="reviewGrid"></div>
       <button class="restart-btn" id="toScoreBtn">Submit Quiz</button>
     </div>
@@ -103,7 +108,7 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 // ------------------ Unit ------------------
 const units=[{name:"Unit 1: Investing Vocab", mastered:false,lastScore:null,highScore:null}];
 const container=document.getElementById('unitContainer');
-units.forEach(unit=>{
+units.forEach((unit)=>{
   const card=document.createElement('div'); card.className='unit-card';
   const header=document.createElement('div'); header.className='unit-header';
   const titleDiv=document.createElement('div'); titleDiv.className='title'; titleDiv.textContent=unit.name;
@@ -118,7 +123,7 @@ units.forEach(unit=>{
 
 // ------------------ Quiz Data ------------------
 const quizDataOriginal=[
-  {q:"What is a 'stock'?", a:["Share of ownership in a company","Company's debt","Loan to a company","An investment account"], correct:0, explanation:"A stock represents ownership in a company."},
+  {q:"What is a 'stock'?", a:["Share of ownership in a company","Company's debt","A loan from a bank","An investment account"], correct:0, explanation:"A stock represents ownership in a company."},
   {q:"What is a 'bond'?", a:["Loan to a company or government","Ownership share in a company","Bank deposit","Certificate of deposit"], correct:0, explanation:"A bond is a loan to a company or government."},
   {q:"What is an 'asset'?", a:["Something valuable you own","Money owed by you","A liability","Expected income"], correct:0, explanation:"An asset is something valuable that you own."},
   {q:"What is a 'liability'?", a:["Debt you owe","Stock you own","Company profit","Dividend received"], correct:0, explanation:"A liability is money you owe."},
@@ -156,7 +161,6 @@ const progressEl=document.getElementById('progress');
 
 function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a;}
 
-// ------------------ Quiz Functions ------------------
 function openQuiz(){
   quizOverlay.style.display='flex';
   startScreen.style.display='block'; quiz.style.display='none'; reviewDiv.style.display='none'; scoreScreen.style.display='none';
@@ -176,11 +180,7 @@ function loadQuestion(){
   q.shuffledAnswers.forEach((opt,i)=>{
     const btn=document.createElement('button'); btn.textContent=opt;
     if(answers[current]===i) btn.classList.add('selected');
-    btn.onclick=()=>{
-      answers[current]=i;
-      Array.from(optionsEl.children).forEach(b=>b.classList.remove('selected'));
-      btn.classList.add('selected');
-    };
+    btn.onclick=()=>{answers[current]=i; Array.from(optionsEl.children).forEach(b=>b.classList.remove('selected')); btn.classList.add('selected');};
     optionsEl.appendChild(btn);
   });
   flagBtn.innerHTML=flags[current]?'<i class="fas fa-flag"></i>':'<i class="far fa-flag"></i>';
@@ -188,7 +188,7 @@ function loadQuestion(){
   nextBtn.textContent=(current===quizData.length-1)?'Review':'Next';
 }
 
-nextBtn.onclick=()=>{if(current===quizData.length-1){showReview();}else{current++; loadQuestion();}};
+nextBtn.onclick=()=>{if(current===quizData.length-1){showReview();} else{current++; loadQuestion();}};
 prevBtn.onclick=()=>{if(current>0){current--; loadQuestion();}};
 flagBtn.onclick=()=>{flags[current]=!flags[current]; loadQuestion();};
 
@@ -218,8 +218,9 @@ function calculateScore(){
     if(userAnswer===correctText) score++;
     const li=document.createElement('li');
     li.innerHTML=`Q${i+1}: Your answer: ${userAnswer||'None'}<br>Correct: ${correctText}<br>Explanation: ${q.explanation}`;
+    if(userAnswer===correctText) li.classList.add('correct-score');
+    else li.classList.add('wrong-score');
     li.innerHTML = `${userAnswer===correctText?'✅':'❌'} ${li.innerHTML}`;
-    li.classList.add(userAnswer===correctText?'correct-score':'wrong-score');
     missedList.appendChild(li);
   });
   const percent=Math.round((score/quizData.length)*100);

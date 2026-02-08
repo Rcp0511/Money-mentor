@@ -126,16 +126,7 @@ header {
     box-shadow:0 8px 20px rgba(0,0,0,0.1);
 }
 
-.intro-image {
-    text-align:center;
-    margin-bottom:30px;
-}
-.intro-image img {
-    max-width:100%;
-    border-radius:15px;
-    box-shadow:0 4px 10px rgba(0,0,0,0.1);
-}
-
+/* ---------- UNIT CARD ---------- */
 .unit-card {
     background:linear-gradient(145deg,#66bb6a,#388e3c);
     border-radius:20px;
@@ -260,7 +251,6 @@ header {
     .quiz-container { width:100%; margin:0; border-radius:0; min-height:100vh; }
 }
 
-/* X BUTTON FIX */
 #closeQuiz {
     position:absolute;
     top:18px;
@@ -290,7 +280,6 @@ header {
 }
 #flagBtn:hover { transform:scale(1.05); }
 
-/* Start screen */
 #startScreen {
     display:flex;
     flex-direction:column;
@@ -478,10 +467,8 @@ header {
     Student Dashboard
 
     <div class="header-right">
-        <!-- moved toggle LEFT of progress -->
         <button id="theme-toggle" title="Toggle theme"><i class="far fa-lightbulb"></i></button>
 
-        <!-- progress inside green box -->
         <div class="progress-pill">
             <i class="fas fa-check-circle"></i>
             <span id="progressText">0 out of 1 units completed</span>
@@ -489,11 +476,7 @@ header {
     </div>
 </header>
 
-<div class="container" id="unitContainer">
-    <div class="intro-image">
-        <img src="https://cdn.vectorstock.com/i/1000v/43/11/little-kids-engaged-in-economic-education-vector-43554311.jpg" alt="Fun investing learning illustration">
-    </div>
-</div>
+<div class="container" id="unitContainer"></div>
 
 <div class="warning-note">
     <i class="fas fa-info-circle"></i>
@@ -577,12 +560,7 @@ const container = document.getElementById('unitContainer');
 const progressText = document.getElementById('progressText');
 
 function renderUnitCard() {
-    container.innerHTML = `
-        <div class="intro-image">
-            <img src="https://cdn.vectorstock.com/i/1000v/43/11/little-kids-engaged-in-economic-education-vector-43554311.jpg" alt="Fun investing learning illustration">
-        </div>
-    `;
-
+    container.innerHTML = '';
     let completedCount = 0;
 
     units.forEach(unit => {
@@ -703,7 +681,6 @@ function openQuiz(){
     quizOverlay.style.display='flex';
     document.body.style.overflow='hidden';
 
-    closeQuiz.style.display='block';
     startScreen.style.display='flex';
     quiz.style.display='none';
     reviewDiv.style.display='none';
@@ -726,7 +703,6 @@ function closeQuizOverlay(){
 
 closeQuiz.onclick = closeQuizOverlay;
 
-// also allow clicking outside quiz container to close (optional, feels good)
 quizOverlay.addEventListener('click', (e) => {
     if(e.target === quizOverlay) closeQuizOverlay();
 });

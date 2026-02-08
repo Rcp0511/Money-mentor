@@ -10,10 +10,11 @@
 body { margin:0; font-family:'Montserrat', sans-serif; background:#e0f5e0; color:#111; }
 header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-size:2em; font-weight:700; box-shadow:0 4px 10px rgba(0,0,0,0.3); }
 .container { max-width:900px; margin:30px auto; padding:0 20px; }
-.unit-card { background:#4caf50; border-radius:18px; margin-bottom:20px; padding:20px; box-shadow:0 5px 15px rgba(0,0,0,0.15); cursor:pointer; }
-.unit-header { display:flex; justify-content:space-between; align-items:center; }
+.unit-card { background:#4caf50; border-radius:18px; margin-bottom:20px; padding:20px; box-shadow:0 5px 15px rgba(0,0,0,0.15); cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
+.unit-header { display:flex; justify-content:space-between; align-items:center; width:100%; }
 .unit-header .title { display:flex; align-items:center; gap:10px; font-weight:600; font-size:1.3em; }
 .unit-header .scores { font-size:0.95em; color:#0a3d0a; }
+.unit-header .unit-complete { font-size:0.9em; color:#fff; background:#ff9800; padding:2px 8px; border-radius:6px; margin-right:10px; display:none; font-weight:600; }
 .unit-dropdown { display:flex; gap:10px; margin-top:15px; }
 .unit-dropdown button { flex:1; padding:12px 0; border:none; border-radius:12px; font-size:1em; font-weight:500; color:white; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; }
 .study-btn { background:#2e7d32; }
@@ -57,6 +58,7 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 
 .restart-btn { margin-top:20px; padding:12px 20px; border:none; border-radius:10px; background:#28a745; color:white; cursor:pointer; }
 .restart-btn:hover { background:#218838; }
+.unit-star { color:#ffeb3b; font-size:1.3em; display:none; margin-left:10px; }
 </style>
 </head>
 <body>
@@ -105,23 +107,39 @@ header { background:#388e3c; color:#fff; padding:25px; text-align:center; font-s
 </div>
 
 <script>
-// ------------------ Unit ------------------
 const units=[{name:"Unit 1: Investing Vocab", mastered:false,lastScore:null,highScore:null}];
 const container=document.getElementById('unitContainer');
-units.forEach((unit)=>{
-  const card=document.createElement('div'); card.className='unit-card';
-  const header=document.createElement('div'); header.className='unit-header';
-  const titleDiv=document.createElement('div'); titleDiv.className='title'; titleDiv.textContent=unit.name;
-  const scoreDiv=document.createElement('div'); scoreDiv.className='scores'; scoreDiv.textContent='Last Unit Test Score: N/A | Highest Unit Test Score: N/A';
-  header.appendChild(titleDiv); header.appendChild(scoreDiv); card.appendChild(header);
-  const dropdown=document.createElement('div'); dropdown.className='unit-dropdown';
-  const studyBtn=document.createElement('button'); studyBtn.className='study-btn'; studyBtn.innerHTML='<i class="fas fa-book"></i> Study'; studyBtn.onclick=()=>alert(`Study ${unit.name}`);
-  const testBtn=document.createElement('button'); testBtn.className='test-btn'; testBtn.innerHTML='<i class="fas fa-clipboard"></i> Unit Test'; testBtn.onclick=openQuiz;
-  dropdown.appendChild(studyBtn); dropdown.appendChild(testBtn); card.appendChild(dropdown);
-  container.appendChild(card);
-});
 
-// ------------------ Quiz Data ------------------
+function createUnitCards() {
+  container.innerHTML="";
+  units.forEach((unit)=>{
+    const card=document.createElement('div'); card.className='unit-card';
+    const header=document.createElement('div'); header.className='unit-header';
+    
+    const completeLabel=document.createElement('span'); completeLabel.className='unit-complete'; completeLabel.textContent='Unit Complete';
+    if(unit.highScore>=90){ completeLabel.style.display='inline'; }
+
+    const titleDiv=document.createElement('div'); titleDiv.className='title'; titleDiv.textContent=unit.name;
+
+    const star=document.createElement('span'); star.className='unit-star'; star.innerHTML='⭐';
+    if(unit.highScore>=90){ star.style.display='inline'; }
+
+    const scoreDiv=document.createElement('div'); scoreDiv.className='scores'; scoreDiv.textContent='Last Unit Test Score: N/A | Highest Unit Test Score: N/A';
+
+    header.appendChild(completeLabel); header.appendChild(titleDiv); header.appendChild(star); header.appendChild(scoreDiv);
+    card.appendChild(header);
+
+    const dropdown=document.createElement('div'); dropdown.className='unit-dropdown';
+    const studyBtn=document.createElement('button'); studyBtn.className='study-btn'; studyBtn.innerHTML='<i class="fas fa-book"></i> Study'; studyBtn.onclick=()=>alert(`Study ${unit.name}`);
+    const testBtn=document.createElement('button'); testBtn.className='test-btn'; testBtn.innerHTML='<i class="fas fa-clipboard"></i> Unit Test'; testBtn.onclick=openQuiz;
+    dropdown.appendChild(studyBtn); dropdown.appendChild(testBtn); card.appendChild(dropdown);
+    container.appendChild(card);
+  });
+}
+
+createUnitCards();
+
+// ------------------ Quiz ------------------
 const quizDataOriginal=[
   {q:"What is a 'stock'?", a:["Share of ownership in a company","Company's debt","A loan from a bank","An investment account"], correct:0, explanation:"A stock represents ownership in a company."},
   {q:"What is a 'bond'?", a:["Loan to a company or government","Ownership share in a company","Bank deposit","Certificate of deposit"], correct:0, explanation:"A bond is a loan to a company or government."},
@@ -137,7 +155,6 @@ const quizDataOriginal=[
 
 let quizData=[], answers=[], flags=[], current=0;
 
-// ------------------ Elements ------------------
 const quizOverlay=document.getElementById('quizOverlay');
 const startScreen=document.getElementById('startScreen');
 const startBtn=document.getElementById('startBtn');
@@ -234,12 +251,8 @@ function calculateScore(){
   lastScoreText.textContent=`Last Unit Test Score: ${percent}%`;
   let highScore=localStorage.getItem('unit1HighScore')||0; highScore=Math.max(highScore,percent); localStorage.setItem('unit1HighScore',highScore);
   highScoreText.textContent=`Highest Unit Test Score: ${highScore}%`;
-  updateUnitCardScore(percent,highScore);
-}
-
-function updateUnitCardScore(last,high){
-  const cardScores=container.children[0].querySelector('.scores');
-  cardScores.textContent=`Last Unit Test Score: ${last}% | Highest Unit Test Score: ${high}%`;
+  units[0].highScore=highScore;
+  createUnitCards();
 }
 
 closeQuiz.onclick=()=>{quizOverlay.style.display='none';};

@@ -132,6 +132,7 @@ header {
     color: var(--red);
     z-index: 10;
     line-height: 1;
+    display: none; /* hidden until overlay opens */
 }
 
 [data-theme="dark"] #closeQuiz { color: var(--red-dark); }
@@ -236,7 +237,7 @@ header {
 
 <div id="quizOverlay">
     <div class="quiz-container">
-        <span id="closeQuiz">&times;</span>
+        <span id="closeQuiz">×</span>
 
         <div id="startScreen">
             <h2>📈 Unit 1: Investing Vocab 📈</h2>
@@ -277,11 +278,11 @@ header {
 </div>
 
 <script>
-// Theme with localStorage persistence
+// Theme persistence
 const themeToggle = document.getElementById('theme-toggle');
 const html = document.documentElement;
-let savedTheme = localStorage.getItem('theme') || 'dark';
-html.setAttribute('data-theme', savedTheme);
+let currentTheme = localStorage.getItem('theme') || 'dark';
+html.setAttribute('data-theme', currentTheme);
 
 function updateBulb() {
     const isDark = html.getAttribute('data-theme') === 'dark';
@@ -289,20 +290,20 @@ function updateBulb() {
 }
 
 themeToggle.addEventListener('click', () => {
-    const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    html.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', currentTheme);
+    localStorage.setItem('theme', currentTheme);
     updateBulb();
 });
 updateBulb();
 
-// Unit card
+// Unit card rendering
 const units = [{name:"Unit 1: Investing Vocab", id:'unit1'}];
-const container = document.getElementById('unitContainer');
+const unitContainer = document.getElementById('unitContainer');
 const progressText = document.getElementById('progressText');
 
 function renderUnitCard() {
-    container.innerHTML = '';
+    unitContainer.innerHTML = '';
     let completedCount = 0;
     units.forEach(unit => {
         const card = document.createElement('div');
@@ -351,7 +352,7 @@ function renderUnitCard() {
                 dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
             }
         });
-        container.appendChild(card);
+        unitContainer.appendChild(card);
     });
     progressText.textContent = `${completedCount} out of ${units.length} units completed`;
 }
@@ -372,10 +373,11 @@ const quizDataOriginal = [
 ];
 
 let quizData = [], answers = [], current = 0;
+
 const quizOverlay = document.getElementById('quizOverlay');
 const startScreen = document.getElementById('startScreen');
 const startBtn = document.getElementById('startBtn');
-const closeQuiz = document.getElementById('closeQuiz');
+const closeQuizBtn = document.getElementById('closeQuiz');
 const quiz = document.getElementById('quiz');
 const questionNumberEl = document.getElementById('questionNumber');
 const questionEl = document.getElementById('question');
@@ -394,7 +396,13 @@ const restartBtn = document.getElementById('restartBtn');
 const clearDataBtn = document.getElementById('clearDataBtn');
 const progressEl = document.getElementById('progress');
 
-function shuffleArray(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function shuffleArray(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
 
 function openQuiz() {
     quizOverlay.style.display = 'flex';
@@ -402,7 +410,7 @@ function openQuiz() {
     quiz.style.display = 'none';
     reviewDiv.style.display = 'none';
     scoreScreen.style.display = 'none';
-    closeQuiz.style.display = 'block';
+    closeQuizBtn.style.display = 'block';
     quizData = quizDataOriginal.map(q => ({...q}));
     answers = Array(quizData.length).fill(null);
     current = 0;
@@ -414,12 +422,12 @@ startBtn.onclick = () => {
     loadQuestion();
 };
 
-closeQuiz.onclick = () => {
+closeQuizBtn.onclick = () => {
     quizOverlay.style.display = 'none';
+    closeQuizBtn.style.display = 'none';
 };
 
 function loadQuestion() {
-    if (current >= quizData.length) return;
     const q = quizData[current];
     questionNumberEl.textContent = `Question ${current + 1} of ${quizData.length}`;
     questionEl.textContent = q.q;
@@ -440,12 +448,19 @@ function loadQuestion() {
 }
 
 nextBtn.onclick = () => {
-    if (current === quizData.length - 1) showReview();
-    else { current++; loadQuestion(); }
+    if (current === quizData.length - 1) {
+        showReview();
+    } else {
+        current++;
+        loadQuestion();
+    }
 };
 
 prevBtn.onclick = () => {
-    if (current > 0) { current--; loadQuestion(); }
+    if (current > 0) {
+        current--;
+        loadQuestion();
+    }
 };
 
 function showReview() {

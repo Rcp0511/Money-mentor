@@ -57,6 +57,9 @@ body {
     transition:all 0.35s;
 }
 
+/* =======================
+   HEADER (NOW WITH PATTERN)
+   ======================= */
 header {
     background:linear-gradient(135deg, #43a047, #2e7d32);
     color:white;
@@ -70,9 +73,27 @@ header {
     font-size:1.8em;
     font-weight:600;
     gap:20px;
+    overflow:hidden;
 }
 
-.header-left { display:flex; align-items:center; gap:15px; }
+/* Pattern overlay on the green bar */
+header::after {
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    opacity:0.22;
+
+    /* subtle diagonal dot-grid pattern */
+    background-image:
+      radial-gradient(circle at 12px 12px, rgba(255,255,255,0.35) 2px, transparent 2.5px),
+      radial-gradient(circle at 36px 36px, rgba(255,255,255,0.22) 2px, transparent 2.5px);
+    background-size:48px 48px;
+    mix-blend-mode:overlay;
+}
+
+.header-left { display:flex; align-items:center; gap:15px; z-index:2; }
+.header-right { display:flex; align-items:center; gap:16px; font-size:1rem; z-index:2; }
 
 .home-btn {
     color:white;
@@ -85,13 +106,6 @@ header {
     transition:0.2s;
 }
 .home-btn:hover { opacity:0.9; transform:scale(1.05); }
-
-.header-right {
-    display:flex;
-    align-items:center;
-    gap:16px;
-    font-size:1rem;
-}
 
 #theme-toggle {
     background:rgba(255,255,255,0.15);
@@ -188,8 +202,12 @@ header {
 }
 
 .unit-complete {
-    font-weight:700;
+    font-weight:800;
     color:#ffd700;
+    background:rgba(0,0,0,0.22);
+    padding:6px 10px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.18);
 }
 
 .unit-dropdown {
@@ -204,7 +222,7 @@ header {
     border:none;
     border-radius:14px;
     font-size:1.1em;
-    font-weight:500;
+    font-weight:600;
     color:white;
     cursor:pointer;
     display:flex;
@@ -251,6 +269,7 @@ header {
     .quiz-container { width:100%; margin:0; border-radius:0; min-height:100vh; }
 }
 
+/* X ALWAYS VISIBLE */
 #closeQuiz {
     position:absolute;
     top:18px;
@@ -264,6 +283,7 @@ header {
 }
 #closeQuiz:hover { transform:scale(1.1); }
 
+/* FLAG BUTTON */
 #flagBtn {
     position:absolute;
     top:20px;
@@ -297,6 +317,7 @@ header {
 }
 
 #startScreen h2 { font-size:1.6em; margin-bottom:20px; }
+
 #startBtn {
     padding:15px 25px;
     font-size:1.2em;
@@ -305,6 +326,7 @@ header {
     background:#1b5e20;
     color:white;
     cursor:pointer;
+    font-weight:800;
 }
 #startBtn:hover { background:#155d27; }
 
@@ -327,15 +349,16 @@ header {
     color:var(--text);
 }
 
-.options button:hover {
-    border-color:var(--option-selected-border);
-    background-color:var(--option-hover-bg);
-}
-
+/* THIS is the dark mode visibility fix */
 .options button.selected {
     background-color:var(--option-selected-bg);
     border-color:var(--option-selected-border);
-    box-shadow:0 0 0 3px rgba(67,160,71,0.15);
+    box-shadow:0 0 0 3px rgba(67,160,71,0.18);
+}
+
+.options button:hover {
+    border-color:var(--option-selected-border);
+    background-color:var(--option-hover-bg);
 }
 
 .controls { display:flex; justify-content:space-between; margin-top:20px; gap:12px; }
@@ -344,7 +367,7 @@ header {
     border:none;
     border-radius:10px;
     cursor:pointer;
-    font-weight:600;
+    font-weight:700;
 }
 
 #nextBtn { background:#43a047; color:white; }
@@ -359,7 +382,7 @@ header {
 
 /* Review page */
 #review { display:none; margin-top:15px; padding:30px; box-sizing:border-box; }
-#review h2 { text-align:center; margin-bottom:10px; font-weight:700; color:var(--green); }
+#review h2 { text-align:center; margin-bottom:10px; font-weight:800; color:var(--green); }
 
 .review-grid {
     display:grid;
@@ -374,7 +397,7 @@ header {
     border-radius:10px;
     cursor:pointer;
     position:relative;
-    font-weight:700;
+    font-weight:800;
     background:#e9ecef;
     user-select:none;
     border:2px solid transparent;
@@ -394,6 +417,7 @@ header {
 }
 [data-theme="dark"] .review-box.not-answered { background:#3a3a3a; }
 
+/* Flag shows correctly now */
 .review-flag {
     position:absolute;
     top:6px;
@@ -420,7 +444,7 @@ header {
     display:flex;
     flex-direction:column;
     gap:6px;
-    font-weight:600;
+    font-weight:700;
 }
 
 .correct-score { color:#1b5e20; background:rgba(67,160,71,0.12); }
@@ -432,7 +456,7 @@ header {
     border:none;
     border-radius:12px;
     cursor:pointer;
-    font-weight:700;
+    font-weight:800;
 }
 
 .restart-btn { background:#43a047; color:white; }
@@ -464,7 +488,7 @@ header {
         </a>
     </div>
 
-    Student Dashboard
+    <div style="z-index:2;">Student Dashboard</div>
 
     <div class="header-right">
         <button id="theme-toggle" title="Toggle theme"><i class="far fa-lightbulb"></i></button>
@@ -836,8 +860,8 @@ function showScore(){
             li.className='wrong-score';
             li.innerHTML = `
                 <div>Q${i+1}: Wrong ❌</div>
-                <div style="font-weight:600; opacity:0.95;">Correct Answer: ${correctText}</div>
-                <div style="font-weight:500; opacity:0.85;">${q.explanation}</div>
+                <div style="font-weight:700; opacity:0.95;">Correct Answer: ${correctText}</div>
+                <div style="font-weight:600; opacity:0.85;">${q.explanation}</div>
             `;
         }
 

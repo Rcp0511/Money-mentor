@@ -56,7 +56,6 @@ header {
 }
 
 .header-left { display:flex; align-items:center; gap:15px; }
-.header-title { flex-grow:1; text-align:center; }
 .home-btn {
     color:white;
     text-decoration:none;
@@ -215,6 +214,8 @@ header {
 #closeQuiz { position:absolute; top:20px; right:20px; font-size:1.8em; cursor:pointer; color:var(--red); display:none; }
 [data-theme="dark"] #closeQuiz { color:var(--red-dark); }
 
+#flagBtn { position:absolute; top:20px; right:60px; font-size:1.4em; background:none; border:none; cursor:pointer; color:red; display:none; }
+
 #startScreen { display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; height:100%; width:100%; padding:40px; background:#43a047; border-radius:20px; color:white; box-sizing:border-box; margin:0; }
 #startScreen h2 { font-size:1.6em; margin-bottom:20px; }
 #startBtn { padding:15px 25px; font-size:1.2em; border:none; border-radius:12px; background:#1b5e20; color:white; cursor:pointer; }
@@ -253,6 +254,18 @@ header {
 .restart-btn:hover { background:#388e3c; }
 .clear-btn { background:#dc3545; color:white; }
 .clear-btn:hover { background:#b02a37; }
+
+.warning-note {
+    text-align:center;
+    font-size:0.9em;
+    color:var(--note-text);
+    margin:20px auto;
+    padding:10px;
+    background:var(--note-bg);
+    border-radius:10px;
+    max-width:600px;
+    transition:all 0.4s;
+}
 </style>
 </head>
 <body>
@@ -261,10 +274,11 @@ header {
     <div class="header-left">
         <a href="https://sites.google.com/view/money--mentor/home" class="home-btn"><i class="fas fa-home"></i> Go to Homepage</a>
     </div>
-    <div class="header-title">Student Dashboard</div>
+    Student Dashboard
     <div class="header-right">
         <button id="theme-toggle"><i class="far fa-lightbulb"></i></button>
         <div id="theme-label">Light / Dark</div>
+        <span id="progressText">0 out of 1 units completed</span>
     </div>
 </header>
 
@@ -337,7 +351,7 @@ themeToggle.addEventListener('click', () => {
 });
 updateBulb();
 
-// Units
+// ---------- Units ----------
 const units = [{name:"Unit 1: Investing Vocab", id: 'unit1'}];
 const container = document.getElementById('unitContainer');
 const progressText = document.getElementById('progressText');
@@ -380,7 +394,7 @@ function renderUnitCard() {
 }
 renderUnitCard();
 
-// Quiz Data & Logic (your original code)
+// ---------- Quiz Data ----------
 const quizDataOriginal = [
   {q:"What is a 'stock'?", a:["Share of ownership in a company","Debt issued by a company","A bank savings account","A type of bond"], correct:0, explanation:"Stocks represent part ownership in a company and potential profits."},
   {q:"What is a 'bond'?", a:["Loan to a company or government","Share of ownership in a company","An interest-bearing account","A type of insurance"], correct:0, explanation:"Bonds are loans you give to companies or governments in exchange for interest."},
@@ -394,6 +408,7 @@ const quizDataOriginal = [
   {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stock sales","Investment principal","Dividend received"], correct:0, explanation:"Interest is the cost of borrowing money, usually expressed as a percentage."}
 ];
 
+// ---------- Quiz Logic ----------
 let quizData=[], answers=[], flags=[], current=0;
 const quizOverlay=document.getElementById('quizOverlay');
 const startScreen=document.getElementById('startScreen');
@@ -422,10 +437,7 @@ function shuffleArray(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.r
 
 function openQuiz(){
     quizOverlay.style.display='flex';
-    startScreen.style.display='flex'; 
-    quiz.style.display='none'; 
-    reviewDiv.style.display='none'; 
-    scoreScreen.style.display='none';
+    startScreen.style.display='flex'; quiz.style.display='none'; reviewDiv.style.display='none'; scoreScreen.style.display='none';
     flagBtn.style.display='none';
     quizData=quizDataOriginal.map(q=>({...q}));
     answers=Array(quizData.length).fill(null);
@@ -490,19 +502,10 @@ function showScore(){
     const score = Math.round((correctCount/quizData.length)*100);
     lastScoreText.textContent = `Last Unit Test Score: ${score}%`;
     let highScore = parseInt(localStorage.getItem('unit1HighScore'))||0;
-    if(score > highScore) {
-        localStorage.setItem('unit1HighScore',score);
-        highScore = score;
-    }
-    highScoreText.textContent = `Highest Unit Test Score: ${highScore}%`;
+    if(score>highScore) localStorage.setItem('unit1HighScore',score);
+    highScoreText.textContent = `Highest Unit Test Score: ${Math.max(score,highScore)}%`;
     localStorage.setItem('unit1LastScore',score);
-    if(highScore >=90){ 
-        localStorage.setItem('unit1Complete','true');
-        unitCompleteText.textContent='Unit Complete';
-    } else{
-        localStorage.setItem('unit1Complete','false');
-        unitCompleteText.textContent='';
-    }
+    if(score>=90){ unitCompleteText.textContent='Unit Complete'; localStorage.setItem('unit1Complete',true); } else{ unitCompleteText.textContent=''; localStorage.setItem('unit1Complete',false); }
     renderUnitCard();
 }
 

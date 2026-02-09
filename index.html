@@ -11,7 +11,7 @@
 <style>
 :root {
     --bg: #dcfce7; 
-    --dot-color: rgba(5, 150, 105, 0.4); 
+    --dot-color: rgba(16, 185, 129, 0.4); 
     --card-bg: #ffffff;
     --dropdown-bg: #bbf7d0;
     --text: #064e3b; 
@@ -238,6 +238,12 @@ header {
 .unit-card::before {
     content: ""; position: absolute; top: 0; left: 30px; bottom: 0;
     width: 2px; background: var(--card-line); z-index: 1;
+}
+
+/* Specific Unit 1 Styling to prevent theme bleed */
+.unit-card.unit-1-green .unit-card-hero {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
 }
 
 /* Dragging styles */
@@ -586,6 +592,8 @@ header {
 function initBackground() {
     const container = document.getElementById('bg-animation-container');
     container.innerHTML = '';
+    const particleColor = localStorage.getItem('mm_primary_color') || '#10b981';
+
     for(let s=0; s<2; s++) {
         const swirl = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         swirl.setAttribute("viewBox", "0 0 100 100");
@@ -600,7 +608,9 @@ function initBackground() {
             const y = 50 + (i * 1.1) * Math.sin(angle);
             const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             dot.setAttribute("cx", x); dot.setAttribute("cy", y); dot.setAttribute("r", "1.2");
-            dot.setAttribute("fill", "var(--dot-color)"); swirl.appendChild(dot);
+            dot.setAttribute("fill", particleColor); // Use dynamic color
+            dot.classList.add('bg-particle');
+            swirl.appendChild(dot);
         }
         container.appendChild(swirl);
     }
@@ -611,9 +621,20 @@ function initBackground() {
         tri.style.left = Math.random() * 100 + "vw"; tri.style.top = Math.random() * 100 + "vh";
         tri.style.animationDelay = (Math.random() * -20) + "s";
         const poly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-        poly.setAttribute("points", "50,15 90,85 10,85"); tri.appendChild(poly);
+        poly.setAttribute("points", "50,15 90,85 10,85"); 
+        poly.setAttribute("fill", particleColor); // Use dynamic color
+        poly.classList.add('bg-particle');
+        tri.appendChild(poly);
         container.appendChild(tri);
     }
+}
+
+// Function to update background particle colors
+function updateBackgroundColors(color) {
+    const particles = document.querySelectorAll('.bg-particle');
+    particles.forEach(p => {
+        p.setAttribute('fill', color);
+    });
 }
 
 const OBFUSCATED_KEY = ""; 
@@ -697,7 +718,7 @@ const units = [
         id: "unit1",
         title: "Basic Investing Vocab",
         icon: "fa-chart-line",
-        class: "",
+        class: "unit-1-green", // Apply specific static class
         data: [
             { term: "Stock", def: "A share of ownership in a company and potential profits.", q: "What is a 'stock'?", a: ["Share of ownership in a company", "Debt issued by a company", "A bank savings account", "A type of corporate bond"], c: 0 },
             { term: "Bond", def: "A loan to a company or government for interest.", q: "What is a 'bond'?", a: ["Share of ownership in a company", "Loan to a company or government", "An interest-bearing liquid account", "A type of corporate bond"], c: 1 },
@@ -946,12 +967,30 @@ function closeSettings() { document.getElementById('settings-modal').classList.r
 function toggleTheme() { const isDark = document.documentElement.getAttribute('data-theme') === 'dark', newTheme = isDark ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', newTheme); localStorage.setItem('mm_theme', newTheme); updateThemeUI(); }
 function updateThemeUI() { const isDark = document.documentElement.getAttribute('data-theme') === 'dark', iconModal = document.getElementById('theme-icon-modal'), textModal = document.getElementById('theme-text-modal'); if (iconModal) iconModal.className = isDark ? "fas fa-sun" : "fas fa-moon"; if (textModal) textModal.innerText = isDark ? "Light Mode" : "Dark Mode"; }
 
+function hexToRgba(hex, alpha) {
+    let r = 0, g = 0, b = 0;
+    if (hex.length == 4) {
+        r = "0x" + hex[1] + hex[1]; g = "0x" + hex[2] + hex[2]; b = "0x" + hex[3] + hex[3];
+    } else if (hex.length == 7) {
+        r = "0x" + hex[1] + hex[2]; g = "0x" + hex[3] + hex[4]; b = "0x" + hex[5] + hex[6];
+    }
+    return `rgba(${+r}, ${+g}, ${+b}, ${alpha})`;
+}
+
 function setPrimaryColor(main, hover, el) {
     document.documentElement.style.setProperty('--primary', main);
     document.documentElement.style.setProperty('--primary-hover', hover);
+    
+    // Convert hex to RGBA for dot grid color
+    const dotColor = hexToRgba(main, 0.35);
+    document.documentElement.style.setProperty('--dot-color', dotColor);
+    
     localStorage.setItem('mm_primary_color', main);
     localStorage.setItem('mm_primary_hover', hover);
     
+    // Update background particles to match theme
+    updateBackgroundColors(main);
+
     // UI feedback for swatch selection
     document.querySelectorAll('.theme-swatch').forEach(s => s.classList.remove('active'));
     if (el) el.classList.add('active');

@@ -156,20 +156,12 @@
       gap: 12px;
       font-weight: 700;
       font-size: 1.25em;
-      color: white;
     }
     .unit-header .title::before {
       content: '\f02d';
       font-family: "Font Awesome 6 Free";
       font-weight: 900;
       color: gold;
-    }
-    .scores {
-      font-size: 1em;
-      color: #e8f5e9;
-      background: rgba(0,0,0,0.2);
-      padding: 8px 12px;
-      border-radius: 10px;
     }
     .unit-complete {
       font-weight: 900;
@@ -178,6 +170,13 @@
       padding: 6px 10px;
       border-radius: 12px;
       border: 1px solid rgba(255,255,255,0.18);
+    }
+    .scores {
+      font-size: 1em;
+      color: #e8f5e9;
+      background: rgba(0,0,0,0.2);
+      padding: 8px 12px;
+      border-radius: 10px;
     }
     .unit-dropdown {
       display: none;
@@ -205,7 +204,7 @@
       opacity: 0.95;
     }
     .study-btn { background: #43a047; }
-    .test-btn { background: #1b5e20; }
+    .test-btn  { background: #1b5e20; }
     #quizOverlay, #studyOverlay {
       display: none;
       position: fixed;
@@ -229,8 +228,7 @@
     }
     #closeQuiz, #closeStudy {
       position: absolute;
-      top: 18px;
-      right: 18px;
+      top: 18px; right: 18px;
       font-size: 2.1em;
       cursor: pointer;
       color: var(--red);
@@ -239,8 +237,7 @@
     #closeQuiz:hover, #closeStudy:hover { transform: scale(1.1); }
     #flagBtn {
       position: absolute;
-      top: 20px;
-      right: 70px;
+      top: 20px; right: 70px;
       font-size: 1.05em;
       background: rgba(0,0,0,0.06);
       border: none;
@@ -261,7 +258,7 @@
       background: linear-gradient(135deg, #43a047, #2e7d32);
       color: white;
     }
-    #quiz, #review, #scoreScreen { display: none; padding: 30px; }
+    #quiz, #review, #scoreScreen { display: none; padding: 30px; box-sizing: border-box; }
     .question-number { font-size: 0.9em; color: var(--text-light); margin-bottom: 5px; }
     .question { font-size: 1.3em; margin-bottom: 20px; }
     .options button {
@@ -299,11 +296,12 @@
     #nextBtn { background: #43a047; }
     #prevBtn { background: #6c757d; }
     .progress-bar { height: 12px; background: #eee; border-radius: 6px; overflow: hidden; margin-top: 20px; }
+    [data-theme="dark"] .progress-bar { background: #2b2b2b; }
     .progress { height: 100%; width: 0%; background: linear-gradient(90deg,#43a047,#85e085); transition: width 0.3s; }
-    #review h2 { text-align: center; color: var(--green); font-weight: 900; }
+    #review h2 { text-align: center; margin-bottom: 10px; font-weight: 900; color: var(--green); }
     .review-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(60px,1fr));
       gap: 12px;
       margin-top: 10px;
     }
@@ -314,13 +312,25 @@
       cursor: pointer;
       font-weight: 900;
       background: #e9ecef;
+      user-select: none;
       border: 2px solid transparent;
       transition: 0.15s;
+      position: relative;
     }
     .review-box:hover { transform: translateY(-2px); }
-    .review-box.answered { background: var(--option-selected-bg); border-color: var(--option-selected-border); }
+    [data-theme="dark"] .review-box { background: #2a2a2a; color: #e0e0e0; }
+    .review-box.answered {
+      background: var(--option-selected-bg);
+      border-color: var(--option-selected-border);
+    }
     .review-box.not-answered { background: #cfcfcf; }
-    .review-flag { position: absolute; top: 6px; right: 8px; color: var(--red); font-size: 0.95em; }
+    [data-theme="dark"] .review-box.not-answered { background: #3a3a3a; }
+    .review-flag {
+      position: absolute;
+      top: 6px; right: 8px;
+      color: var(--red);
+      font-size: 0.95em;
+    }
     #scoreScreen li {
       margin: 10px 0;
       padding: 10px 12px;
@@ -371,7 +381,10 @@
       box-shadow: 0 10px 22px rgba(0,0,0,0.18);
       transition: 0.18s;
     }
-    #globalClearBtn:hover { transform: translateY(-1px) scale(1.03); background: var(--red-dark); }
+    #globalClearBtn:hover {
+      transform: translateY(-1px) scale(1.03);
+      background: var(--red-dark);
+    }
     .flashcard {
       background: var(--card-bg);
       padding: 40px;
@@ -394,388 +407,388 @@
       border-radius: 10px;
       cursor: pointer;
       margin: 10px;
+      color: white;
     }
-    #flipBtn { background: #6c757d; color: white; }
-    #prevCard, #nextCard { background: #43a047; color: white; }
+    #flipBtn { background: #6c757d; }
+    #prevCard, #nextCard { background: #43a047; }
   </style>
 </head>
 <body>
-  <header>
-    <div class="header-left">
-      <button class="nav-btn back-btn" id="backBtn"><i class="fas fa-arrow-left"></i> Back</button>
-      <button class="nav-btn videos-btn" id="videosBtn"><i class="fas fa-video"></i> Videos</button>
-    </div>
-    <div>Student Dashboard</div>
-    <div class="header-right">
-      <button id="theme-toggle" title="Toggle theme"><i class="far fa-lightbulb"></i></button>
-      <div class="progress-pill">
-        <i class="fas fa-check-circle"></i>
-        <span id="progressText">0 out of 1 units completed</span>
-      </div>
-    </div>
-  </header>
 
-  <div class="container" id="unitContainer"></div>
-
-  <div class="warning-note">
-    <i class="fas fa-info-circle"></i>
-    Data does not sync across devices. Scores and progress are stored locally in your browser.
+<header>
+  <div class="header-left">
+    <button class="nav-btn back-btn" id="backBtn"><i class="fas fa-arrow-left"></i> Back</button>
+    <button class="nav-btn videos-btn" id="videosBtn"><i class="fas fa-video"></i> Videos</button>
   </div>
-
-  <div class="global-clear-wrap">
-    <button id="globalClearBtn"><i class="fas fa-trash"></i> Clear All Data</button>
-    <div class="global-clear-warning">
-      <b>Warning:</b> This permanently deletes your scores, unit completion, and saved progress from this browser.
+  <div>Student Dashboard</div>
+  <div class="header-right">
+    <button id="theme-toggle" title="Toggle theme"><i class="far fa-lightbulb"></i></button>
+    <div class="progress-pill">
+      <i class="fas fa-check-circle"></i>
+      <span id="progressText">0 out of 1 units completed</span>
     </div>
   </div>
+</header>
 
-  <!-- Quiz Overlay -->
-  <div id="quizOverlay">
-    <div class="quiz-container">
-      <span id="closeQuiz">×</span>
-      <button id="flagBtn" title="Flag question"><i class="far fa-flag"></i></button>
-      <div id="startScreen">
-        <h2>📈 Unit 1: Investing Vocab 📈</h2>
-        <button id="startBtn" class="restart-btn">Start Quiz</button>
+<div class="container" id="unitContainer"></div>
+
+<div class="warning-note">
+  <i class="fas fa-info-circle"></i>
+  Data does not sync across devices. Scores and progress are stored locally in your browser.
+</div>
+
+<div class="global-clear-wrap">
+  <button id="globalClearBtn"><i class="fas fa-trash"></i> Clear All Data</button>
+  <div class="global-clear-warning">
+    <b>Warning:</b> This permanently deletes your scores, unit completion, and saved progress from this browser.
+  </div>
+</div>
+
+<!-- Quiz Overlay -->
+<div id="quizOverlay">
+  <div class="quiz-container">
+    <span id="closeQuiz">×</span>
+    <button id="flagBtn" title="Flag question"><i class="far fa-flag"></i></button>
+
+    <div id="startScreen">
+      <h2>📈 Unit 1: Investing Vocab 📈</h2>
+      <button id="startBtn" class="restart-btn">Start Quiz</button>
+    </div>
+
+    <div id="quiz">
+      <div class="question-number" id="questionNumber"></div>
+      <div class="question" id="question"></div>
+      <div class="options" id="options"></div>
+      <div class="controls">
+        <button id="prevBtn">Previous</button>
+        <button id="nextBtn">Next</button>
       </div>
-      <div id="quiz">
-        <div class="question-number" id="questionNumber"></div>
-        <div class="question" id="question"></div>
-        <div class="options" id="options"></div>
-        <div class="controls">
-          <button id="prevBtn">Previous</button>
-          <button id="nextBtn">Next</button>
-        </div>
-        <div class="progress-bar"><div class="progress" id="progress"></div></div>
+      <div class="progress-bar"><div class="progress" id="progress"></div></div>
+    </div>
+
+    <div id="review">
+      <h2>Review Page</h2>
+      <div class="review-grid" id="reviewGrid"></div>
+      <button id="toScoreBtn" class="restart-btn">Submit Quiz</button>
+    </div>
+
+    <div id="scoreScreen">
+      <h3>Your Score</h3>
+      <ul id="missedList"></ul>
+      <p id="lastScoreText"></p>
+      <p id="highScoreText"></p>
+      <p id="unitCompleteText" style="color:gold; font-weight:900;"></p>
+      <button id="restartBtn" class="restart-btn">Restart Quiz</button>
+    </div>
+  </div>
+</div>
+
+<!-- Study Overlay -->
+<div id="studyOverlay">
+  <div class="study-container">
+    <span id="closeStudy">×</span>
+    <div id="study">
+      <div class="flashcard">
+        <div id="front"></div>
+        <div id="back" style="display:none;"></div>
       </div>
-      <div id="review">
-        <h2>Review Page</h2>
-        <div class="review-grid" id="reviewGrid"></div>
-        <button id="toScoreBtn" class="restart-btn">Submit Quiz</button>
-      </div>
-      <div id="scoreScreen">
-        <h3>Your Score</h3>
-        <ul id="missedList"></ul>
-        <p id="lastScoreText"></p>
-        <p id="highScoreText"></p>
-        <p id="unitCompleteText" style="color:gold; font-weight:900;"></p>
-        <button id="restartBtn" class="restart-btn">Restart Quiz</button>
+      <button id="flipBtn">Flip Card</button>
+      <div class="controls">
+        <button id="prevCard">Previous</button>
+        <button id="nextCard">Next</button>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- Study Overlay -->
-  <div id="studyOverlay">
-    <div class="study-container">
-      <span id="closeStudy">×</span>
-      <div id="study">
-        <div class="flashcard">
-          <div id="front"></div>
-          <div id="back" style="display:none;"></div>
-        </div>
-        <button id="flipBtn">Flip Card</button>
-        <div class="controls">
-          <button id="prevCard">Previous</button>
-          <button id="nextCard">Next</button>
-        </div>
-      </div>
-    </div>
-  </div>
+<script>
+// Theme toggle
+const html = document.documentElement;
+let theme = localStorage.getItem('theme') || 'dark';
+html.setAttribute('data-theme', theme);
+document.getElementById('theme-toggle').onclick = () => {
+  theme = theme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+};
 
-  <script>
-    // Theme
-    const html = document.documentElement;
-    let theme = localStorage.getItem('theme') || 'dark';
-    html.setAttribute('data-theme', theme);
-    document.getElementById('theme-toggle').onclick = () => {
-      theme = theme === 'dark' ? 'light' : 'dark';
-      html.setAttribute('data-theme', theme);
-      localStorage.setItem('theme', theme);
-    };
+// Navigation
+document.getElementById('backBtn').onclick = () => window.location.href = "https://sites.google.com/view/money--mentor/home?authuser=0";
+document.getElementById('videosBtn').onclick = () => window.location.href = "https://sites.google.com/view/money--mentor/learn/videos?authuser=0";
 
-    // Nav
-    document.getElementById('backBtn').onclick = () => window.location.href = "https://sites.google.com/view/money--mentor/home?authuser=0";
-    document.getElementById('videosBtn').onclick = () => window.location.href = "https://sites.google.com/view/money--mentor/learn/videos?authuser=0";
+// Units & scores
+const units = [{ name: "Unit 1: Investing Vocab", id: "unit1" }];
+const container = document.getElementById('unitContainer');
+const progressText = document.getElementById('progressText');
 
-    // Units
-    const units = [{ name: "Unit 1: Investing Vocab", id: "unit1" }];
-    const container = document.getElementById('unitContainer');
-    const progressText = document.getElementById('progressText');
+function getScore(key) { return parseInt(localStorage.getItem(key)) || 0; }
+function setScore(key, val) { localStorage.setItem(key, val); }
+function isComplete(id) { return getScore(id + 'HighScore') >= 90; }
 
-    function getScore(key) { return parseInt(localStorage.getItem(key)) || 0; }
-    function setScore(key, val) { localStorage.setItem(key, val); }
-
-    function isComplete(id) { return getScore(id + 'HighScore') >= 90; }
-
-    function renderUnits() {
-      container.innerHTML = '';
-      let completed = 0;
-      units.forEach(u => {
-        const card = document.createElement('div');
-        card.className = 'unit-card';
-        const header = document.createElement('div');
-        header.className = 'unit-header';
-        const title = document.createElement('div');
-        title.className = 'title';
-        title.textContent = u.name;
-        if (isComplete(u.id)) {
-          const badge = document.createElement('span');
-          badge.className = 'unit-complete';
-          badge.textContent = 'Unit Complete';
-          title.prepend(badge);
-          const star = document.createElement('i');
-          star.className = 'fas fa-star';
-          star.style.color = 'gold';
-          star.style.marginLeft = '10px';
-          title.appendChild(star);
-          completed++;
-        }
-        const scores = document.createElement('div');
-        scores.className = 'scores';
-        scores.textContent = `Last: ${getScore(u.id + 'LastScore')}% | Best: ${getScore(u.id + 'HighScore')}%`;
-        header.append(title, scores);
-        card.appendChild(header);
-        const dropdown = document.createElement('div');
-        dropdown.className = 'unit-dropdown';
-        const study = document.createElement('button');
-        study.className = 'study-btn';
-        study.innerHTML = '<i class="fas fa-book"></i> Study';
-        study.onclick = e => { e.stopPropagation(); openStudy(); };
-        const test = document.createElement('button');
-        test.className = 'test-btn';
-        test.innerHTML = '<i class="fas fa-clipboard"></i> Unit Test';
-        test.onclick = e => { e.stopPropagation(); openQuiz(); };
-        dropdown.append(study, test);
-        card.appendChild(dropdown);
-        card.onclick = () => {
-          dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
-        };
-        container.appendChild(card);
-      });
-      progressText.textContent = `${completed} out of ${units.length} units completed`;
+function renderUnits() {
+  container.innerHTML = '';
+  let completed = 0;
+  units.forEach(u => {
+    const card = document.createElement('div');
+    card.className = 'unit-card';
+    const header = document.createElement('div');
+    header.className = 'unit-header';
+    const title = document.createElement('div');
+    title.className = 'title';
+    title.textContent = u.name;
+    if (isComplete(u.id)) {
+      const badge = document.createElement('span');
+      badge.className = 'unit-complete';
+      badge.textContent = 'Unit Complete';
+      title.prepend(badge);
+      const star = document.createElement('i');
+      star.className = 'fas fa-star';
+      star.style.color = 'gold';
+      star.style.marginLeft = '10px';
+      title.appendChild(star);
+      completed++;
     }
+    const scores = document.createElement('div');
+    scores.className = 'scores';
+    scores.textContent = `Last: ${getScore(u.id + 'LastScore')}% | Best: ${getScore(u.id + 'HighScore')}%`;
+    header.append(title, scores);
+    card.appendChild(header);
+    const dropdown = document.createElement('div');
+    dropdown.className = 'unit-dropdown';
+    const studyBtn = document.createElement('button');
+    studyBtn.className = 'study-btn';
+    studyBtn.innerHTML = '<i class="fas fa-book"></i> Study';
+    studyBtn.onclick = e => { e.stopPropagation(); openStudy(); };
+    const testBtn = document.createElement('button');
+    testBtn.className = 'test-btn';
+    testBtn.innerHTML = '<i class="fas fa-clipboard"></i> Unit Test';
+    testBtn.onclick = e => { e.stopPropagation(); openQuiz(); };
+    dropdown.append(studyBtn, testBtn);
+    card.appendChild(dropdown);
+    card.onclick = () => {
+      dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+    };
+    container.appendChild(card);
+  });
+  progressText.textContent = `${completed} out of ${units.length} units completed`;
+}
+renderUnits();
+
+// Quiz data
+const quizDataOriginal = [
+  {q:"What is a 'stock'?", a:["Share of ownership in a company","Debt issued by a company","A bank savings account","A type of bond"], correct:0},
+  {q:"What is a 'bond'?", a:["Loan to a company or government","Share of ownership in a company","An interest-bearing account","A type of insurance"], correct:0},
+  {q:"What is an 'asset'?", a:["Something valuable you own","Debt you owe","Potential future income","An expense item"], correct:0},
+  {q:"What is a 'liability'?", a:["Debt or obligation you owe","A company's owned stock","A shareholder payment","A financial asset"], correct:0},
+  {q:"What is a 'dividend'?", a:["Payment to shareholders","Company retained earnings","Stock price change","Interest on a bond"], correct:0},
+  {q:"What is 'capital'?", a:["Money used for investment","Company revenue","Loan principal","Dividend earnings"], correct:0},
+  {q:"What is a 'portfolio'?", a:["Collection of investments","Single stock holding","Bank savings account","Outstanding debt"], correct:0},
+  {q:"What is 'risk'?", a:["Possibility of losing money","Guaranteed investment return","Fixed interest payment","Company revenue growth"], correct:0},
+  {q:"What is 'liquidity'?", a:["Ease of converting an asset to cash","Profitability of an investment","Market demand for stocks","Long-term investment potential"], correct:0},
+  {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stock sales","Investment principal","Dividend received"], correct:0}
+];
+
+// Quiz logic
+let quizData = [], currentQuestion = 0, answers = [], flags = [];
+
+function openQuiz() {
+  document.getElementById('quizOverlay').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  document.getElementById('startScreen').style.display = 'flex';
+  document.getElementById('quiz').style.display = 'none';
+  document.getElementById('review').style.display = 'none';
+  document.getElementById('scoreScreen').style.display = 'none';
+  document.getElementById('flagBtn').style.display = 'none';
+  quizData = quizDataOriginal.map(q => ({...q, shuffled: shuffle([...q.a])}));
+  answers = new Array(quizData.length).fill(null);
+  flags = new Array(quizData.length).fill(false);
+  currentQuestion = 0;
+  loadQuestion();
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function loadQuestion() {
+  const q = quizData[currentQuestion];
+  document.getElementById('questionNumber').textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
+  document.getElementById('question').textContent = q.q;
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  q.shuffled.forEach((text, i) => {
+    const btn = document.createElement('button');
+    btn.textContent = text;
+    if (answers[currentQuestion] === i) btn.classList.add('selected');
+    btn.onclick = () => {
+      answers[currentQuestion] = i;
+      [...opts.children].forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    };
+    opts.appendChild(btn);
+  });
+  document.getElementById('progress').style.width = `${((currentQuestion + 1) / quizData.length) * 100}%`;
+}
+
+document.getElementById('startBtn').onclick = () => {
+  document.getElementById('startScreen').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  document.getElementById('flagBtn').style.display = 'inline-flex';
+};
+
+document.getElementById('nextBtn').onclick = () => {
+  if (currentQuestion < quizData.length - 1) {
+    currentQuestion++;
+    loadQuestion();
+  } else {
+    showReview();
+  }
+};
+
+document.getElementById('prevBtn').onclick = () => {
+  if (currentQuestion > 0) {
+    currentQuestion--;
+    loadQuestion();
+  }
+};
+
+function showReview() {
+  document.getElementById('quiz').style.display = 'none';
+  document.getElementById('review').style.display = 'block';
+  const grid = document.getElementById('reviewGrid');
+  grid.innerHTML = '';
+  quizData.forEach((_, i) => {
+    const box = document.createElement('div');
+    box.className = 'review-box';
+    box.textContent = i + 1;
+    if (answers[i] !== null) box.classList.add('answered');
+    else box.classList.add('not-answered');
+    if (flags[i]) box.innerHTML += '<i class="fas fa-flag review-flag"></i>';
+    box.onclick = () => {
+      currentQuestion = i;
+      document.getElementById('review').style.display = 'none';
+      document.getElementById('quiz').style.display = 'block';
+      loadQuestion();
+    };
+    grid.appendChild(box);
+  });
+}
+
+document.getElementById('toScoreBtn').onclick = () => {
+  let correct = 0;
+  const list = document.getElementById('missedList');
+  list.innerHTML = '';
+  quizData.forEach((q, i) => {
+    const li = document.createElement('li');
+    const chosen = answers[i] === null ? null : q.shuffled[answers[i]];
+    const correctAns = q.a[q.correct];
+    if (chosen === correctAns) {
+      correct++;
+      li.className = 'correct-score';
+      li.textContent = `Q${i+1}: Correct! ✅`;
+    } else {
+      li.className = 'wrong-score';
+      li.innerHTML = `Q${i+1}: Wrong ❌<br><strong>Correct:</strong> ${correctAns}`;
+    }
+    list.appendChild(li);
+  });
+  const score = Math.round((correct / quizData.length) * 100);
+  setScore('unit1LastScore', score);
+  const high = Math.max(getScore('unit1HighScore'), score);
+  setScore('unit1HighScore', high);
+  document.getElementById('lastScoreText').textContent = `Last Score: ${score}%`;
+  document.getElementById('highScoreText').textContent = `High Score: ${high}%`;
+  document.getElementById('unitCompleteText').textContent = high >= 90 ? '⭐ Unit Complete!' : '';
+  document.getElementById('review').style.display = 'none';
+  document.getElementById('scoreScreen').style.display = 'block';
+  renderUnits();
+};
+
+document.getElementById('restartBtn').onclick = () => {
+  answers.fill(null);
+  flags.fill(false);
+  currentQuestion = 0;
+  document.getElementById('scoreScreen').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  loadQuestion();
+};
+
+// Study logic
+let cards = [], cardIndex = 0, flipped = false;
+
+function openStudy() {
+  document.getElementById('studyOverlay').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  cards = quizDataOriginal.map(q => {
+    const term = q.q.match(/'([^']+)'/)?.[1] || q.q.split(' ')[2] || q.q;
+    return {
+      term,
+      correct: q.a[q.correct],
+      wrong: q.a.filter((_, i) => i !== q.correct)
+    };
+  });
+  shuffle(cards);
+  cardIndex = 0;
+  flipped = false;
+  showCard();
+}
+
+function showCard() {
+  const c = cards[cardIndex];
+  document.getElementById('front').textContent = c.term;
+  document.getElementById('back').innerHTML = `
+    <strong>Correct Definition:</strong> ${c.correct}<br><br>
+    <strong>Similar / Incorrect:</strong><br>${c.wrong.map(w => `• ${w}`).join('<br>')}
+  `;
+  document.getElementById('back').style.display = flipped ? 'block' : 'none';
+}
+
+document.getElementById('flipBtn').onclick = () => {
+  flipped = !flipped;
+  showCard();
+};
+
+document.getElementById('prevCard').onclick = () => {
+  if (cardIndex > 0) {
+    cardIndex--;
+    flipped = false;
+    showCard();
+  }
+};
+
+document.getElementById('nextCard').onclick = () => {
+  if (cardIndex < cards.length - 1) {
+    cardIndex++;
+    flipped = false;
+    showCard();
+  }
+};
+
+// Close overlays
+document.getElementById('closeQuiz').onclick = () => {
+  document.getElementById('quizOverlay').style.display = 'none';
+  document.body.style.overflow = '';
+};
+
+document.getElementById('closeStudy').onclick = () => {
+  document.getElementById('studyOverlay').style.display = 'none';
+  document.body.style.overflow = '';
+};
+
+// Clear data
+document.getElementById('globalClearBtn').onclick = () => {
+  if (confirm("Clear all saved scores and progress?")) {
+    const theme = localStorage.getItem('theme');
+    localStorage.clear();
+    if (theme) localStorage.setItem('theme', theme);
     renderUnits();
-
-    // Quiz Data
-    const quizDataOriginal = [
-      {q:"What is a 'stock'?", a:["Share of ownership in a company","Debt issued by a company","A bank savings account","A type of bond"], correct:0},
-      {q:"What is a 'bond'?", a:["Loan to a company or government","Share of ownership in a company","An interest-bearing account","A type of insurance"], correct:0},
-      {q:"What is an 'asset'?", a:["Something valuable you own","Debt you owe","Potential future income","An expense item"], correct:0},
-      {q:"What is a 'liability'?", a:["Debt or obligation you owe","A company's owned stock","A shareholder payment","A financial asset"], correct:0},
-      {q:"What is a 'dividend'?", a:["Payment to shareholders","Company retained earnings","Stock price change","Interest on a bond"], correct:0},
-      {q:"What is 'capital'?", a:["Money used for investment","Company revenue","Loan principal","Dividend earnings"], correct:0},
-      {q:"What is a 'portfolio'?", a:["Collection of investments","Single stock holding","Bank savings account","Outstanding debt"], correct:0},
-      {q:"What is 'risk'?", a:["Possibility of losing money","Guaranteed investment return","Fixed interest payment","Company revenue growth"], correct:0},
-      {q:"What is 'liquidity'?", a:["Ease of converting an asset to cash","Profitability of an investment","Market demand for stocks","Long-term investment potential"], correct:0},
-      {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stock sales","Investment principal","Dividend received"], correct:0}
-    ];
-
-    // Quiz Logic
-    let quizData, currentQuestion, answers, flags;
-
-    function openQuiz() {
-      document.getElementById('quizOverlay').style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-      document.getElementById('startScreen').style.display = 'flex';
-      document.getElementById('quiz').style.display = 'none';
-      document.getElementById('review').style.display = 'none';
-      document.getElementById('scoreScreen').style.display = 'none';
-      document.getElementById('flagBtn').style.display = 'none';
-      quizData = quizDataOriginal.map(q => ({...q, shuffled: shuffle([...q.a])}));
-      answers = new Array(quizData.length).fill(null);
-      flags = new Array(quizData.length).fill(false);
-      currentQuestion = 0;
-      loadQuestion();
-    }
-
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
-    }
-
-    function loadQuestion() {
-      const q = quizData[currentQuestion];
-      document.getElementById('questionNumber').textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
-      document.getElementById('question').textContent = q.q;
-      const opts = document.getElementById('options');
-      opts.innerHTML = '';
-      q.shuffled.forEach((text, i) => {
-        const btn = document.createElement('button');
-        btn.textContent = text;
-        if (answers[currentQuestion] === i) btn.classList.add('selected');
-        btn.onclick = () => {
-          answers[currentQuestion] = i;
-          [...opts.children].forEach(b => b.classList.remove('selected'));
-          btn.classList.add('selected');
-        };
-        opts.appendChild(btn);
-      });
-      document.getElementById('progress').style.width = `${((currentQuestion + 1) / quizData.length) * 100}%`;
-    }
-
-    document.getElementById('startBtn').onclick = () => {
-      document.getElementById('startScreen').style.display = 'none';
-      document.getElementById('quiz').style.display = 'block';
-      document.getElementById('flagBtn').style.display = 'inline-flex';
-    };
-
-    document.getElementById('nextBtn').onclick = () => {
-      if (currentQuestion < quizData.length - 1) {
-        currentQuestion++;
-        loadQuestion();
-      } else {
-        showReview();
-      }
-    };
-
-    document.getElementById('prevBtn').onclick = () => {
-      if (currentQuestion > 0) {
-        currentQuestion--;
-        loadQuestion();
-      }
-    };
-
-    function showReview() {
-      document.getElementById('quiz').style.display = 'none';
-      document.getElementById('review').style.display = 'block';
-      const grid = document.getElementById('reviewGrid');
-      grid.innerHTML = '';
-      quizData.forEach((_, i) => {
-        const box = document.createElement('div');
-        box.className = 'review-box';
-        box.textContent = i + 1;
-        if (answers[i] !== null) box.classList.add('answered');
-        else box.classList.add('not-answered');
-        if (flags[i]) {
-          const flag = document.createElement('i');
-          flag.className = 'fas fa-flag review-flag';
-          box.appendChild(flag);
-        }
-        box.onclick = () => {
-          currentQuestion = i;
-          document.getElementById('review').style.display = 'none';
-          document.getElementById('quiz').style.display = 'block';
-          loadQuestion();
-        };
-        grid.appendChild(box);
-      });
-    }
-
-    document.getElementById('toScoreBtn').onclick = () => {
-      let correct = 0;
-      const list = document.getElementById('missedList');
-      list.innerHTML = '';
-      quizData.forEach((q, i) => {
-        const li = document.createElement('li');
-        const chosen = answers[i] === null ? null : q.shuffled[answers[i]];
-        const correctAns = q.a[q.correct];
-        if (chosen === correctAns) {
-          correct++;
-          li.className = 'correct-score';
-          li.textContent = `Q${i+1}: Correct! ✅`;
-        } else {
-          li.className = 'wrong-score';
-          li.innerHTML = `Q${i+1}: Wrong ❌<br><strong>Correct:</strong> ${correctAns}`;
-        }
-        list.appendChild(li);
-      });
-      const score = Math.round((correct / quizData.length) * 100);
-      setScore('unit1LastScore', score);
-      const high = Math.max(getScore('unit1HighScore'), score);
-      setScore('unit1HighScore', high);
-      document.getElementById('lastScoreText').textContent = `Last Score: ${score}%`;
-      document.getElementById('highScoreText').textContent = `High Score: ${high}%`;
-      document.getElementById('unitCompleteText').textContent = high >= 90 ? '⭐ Unit Complete!' : '';
-      document.getElementById('review').style.display = 'none';
-      document.getElementById('scoreScreen').style.display = 'block';
-      renderUnits();
-    };
-
-    document.getElementById('restartBtn').onclick = () => {
-      answers.fill(null);
-      flags.fill(false);
-      currentQuestion = 0;
-      document.getElementById('scoreScreen').style.display = 'none';
-      document.getElementById('quiz').style.display = 'block';
-      loadQuestion();
-    };
-
-    // Study Mode
-    let cards = [];
-    let cardIndex = 0;
-    let flipped = false;
-
-    function openStudy() {
-      document.getElementById('studyOverlay').style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-      cards = quizDataOriginal.map(q => {
-        const term = q.q.match(/'([^']+)'/)?.[1] || q.q.split(' ')[2];
-        return {
-          term,
-          correct: q.a[q.correct],
-          wrong: q.a.filter((_, i) => i !== q.correct)
-        };
-      });
-      shuffle(cards);
-      cardIndex = 0;
-      flipped = false;
-      showCard();
-    }
-
-    function showCard() {
-      const c = cards[cardIndex];
-      document.getElementById('front').textContent = c.term;
-      document.getElementById('back').innerHTML = `
-        <strong>Correct Definition:</strong> ${c.correct}<br><br>
-        <strong>Similar Definitions:</strong><br>${c.wrong.map(w => `• ${w}`).join('<br>')}
-      `;
-      document.getElementById('back').style.display = flipped ? 'block' : 'none';
-    }
-
-    document.getElementById('flipBtn').onclick = () => {
-      flipped = !flipped;
-      showCard();
-    };
-
-    document.getElementById('prevCard').onclick = () => {
-      if (cardIndex > 0) {
-        cardIndex--;
-        flipped = false;
-        showCard();
-      }
-    };
-
-    document.getElementById('nextCard').onclick = () => {
-      if (cardIndex < cards.length - 1) {
-        cardIndex++;
-        flipped = false;
-        showCard();
-      }
-    };
-
-    // Close overlays
-    document.getElementById('closeQuiz').onclick = () => {
-      document.getElementById('quizOverlay').style.display = 'none';
-      document.body.style.overflow = '';
-    };
-    document.getElementById('closeStudy').onclick = () => {
-      document.getElementById('studyOverlay').style.display = 'none';
-      document.body.style.overflow = '';
-    };
-
-    // Clear data
-    document.getElementById('globalClearBtn').onclick = () => {
-      if (confirm("Clear all saved scores and progress?")) {
-        const theme = localStorage.getItem('theme');
-        localStorage.clear();
-        if (theme) localStorage.setItem('theme', theme);
-        renderUnits();
-        alert("Data cleared.");
-      }
-    };
-  </script>
+    alert("Data cleared.");
+  }
+};
+</script>
 </body>
 </html>

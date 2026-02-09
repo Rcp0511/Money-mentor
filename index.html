@@ -196,12 +196,12 @@ header::after {
 }
 .unit-dropdown {
     display:none;
-    flex-direction:column;          /* Changed to column so buttons stack full-width */
-    gap:16px;                       /* Slightly more breathing room */
+    flex-direction:column;
+    gap:16px;
     margin-top:24px;
 }
 .unit-dropdown button {
-    padding:16px 24px;              /* Increased vertical padding for better touch/click area */
+    padding:16px 24px;
     border:none;
     border-radius:14px;
     font-size:1.15em;
@@ -210,10 +210,10 @@ header::after {
     cursor:pointer;
     display:flex;
     align-items:center;
-    justify-content:center;         /* Center text/icon */
+    justify-content:center;
     gap:12px;
     transition: transform 0.2s, opacity 0.2s;
-    width:100%;                     /* Full width of the dropdown/container */
+    width:100%;
 }
 .unit-dropdown button:hover {
     transform:translateY(-3px);
@@ -222,7 +222,7 @@ header::after {
 .study-btn { background:#43a047; }
 .test-btn { background:#1b5e20; }
 /* ---------- QUIZ OVERLAY ---------- */
-#quizOverlay {
+#quizOverlay, #studyOverlay {
     display:none;
     position:fixed;
     top:0; left:0;
@@ -233,7 +233,7 @@ header::after {
     z-index:1000;
     overflow:auto;
 }
-.quiz-container {
+.quiz-container, .study-container {
     background:var(--card-bg);
     border-radius:20px;
     padding:0;
@@ -246,10 +246,10 @@ header::after {
     overflow-y:auto;
 }
 @media (max-width: 600px) {
-    .quiz-container { width:100%; margin:0; border-radius:0; min-height:100vh; }
+    .quiz-container, .study-container { width:100%; margin:0; border-radius:0; min-height:100vh; }
 }
 /* X ALWAYS VISIBLE */
-#closeQuiz {
+#closeQuiz, #closeStudy {
     position:absolute;
     top:18px;
     right:18px;
@@ -260,7 +260,7 @@ header::after {
     z-index:9999;
     user-select:none;
 }
-#closeQuiz:hover { transform:scale(1.1); }
+#closeQuiz:hover, #closeStudy:hover { transform:scale(1.1); }
 /* FLAG BUTTON */
 #flagBtn {
     position:absolute;
@@ -466,6 +466,62 @@ header::after {
 [data-theme="dark"] .global-clear-warning {
     border:1px solid rgba(255,255,255,0.08);
 }
+/* ---------- STUDY FLASHCARD STYLES ---------- */
+#study {
+    padding:30px;
+    box-sizing:border-box;
+    text-align:center;
+}
+.flashcard {
+    background:var(--card-bg);
+    padding:25px;
+    border-radius:14px;
+    margin-bottom:25px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+    transition:0.3s;
+    min-height:200px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+}
+.flashcard:hover {
+    box-shadow:0 6px 16px rgba(0,0,0,0.15);
+}
+#front {
+    font-size:1.6em;
+    font-weight:700;
+    color:var(--green);
+}
+#back {
+    font-size:1.1em;
+    color:var(--text);
+    margin-top:20px;
+}
+#back strong {
+    display:block;
+    margin-bottom:10px;
+    color:var(--green-dark);
+}
+#back ul {
+    list-style-type:disc;
+    padding-left:20px;
+    text-align:left;
+    margin:0 auto;
+    max-width:600px;
+}
+#flipBtn {
+    padding:12px 20px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:800;
+    background:#6c757d;
+    color:white;
+    margin-bottom:20px;
+}
+#flipBtn:hover {
+    background:#5a6268;
+}
 </style>
 </head>
 <body>
@@ -536,6 +592,22 @@ header::after {
             <p id="highScoreText"></p>
             <p id="unitCompleteText" style="color:gold; font-weight:900;"></p>
             <button class="restart-btn" id="restartBtn">Restart Quiz</button>
+        </div>
+    </div>
+</div>
+<div id="studyOverlay">
+    <div class="study-container">
+        <span id="closeStudy" title="Close study">×</span>
+        <div id="study">
+            <div class="flashcard">
+                <div id="front"></div>
+                <div id="back" style="display:none;"></div>
+            </div>
+            <button id="flipBtn">Flip Card</button>
+            <div class="controls">
+                <button id="prevCard">Previous</button>
+                <button id="nextCard">Next</button>
+            </div>
         </div>
     </div>
 </div>
@@ -632,7 +704,7 @@ function renderUnitCard(){
         studyBtn.innerHTML = '<i class="fas fa-book"></i> Study';
         studyBtn.onclick = (e) => {
             e.stopPropagation();
-            alert("Study mode not added yet. (You can add it next.)");
+            openStudy(unit.id);
         };
         const testBtn = document.createElement("button");
         testBtn.className = "test-btn";
@@ -653,7 +725,7 @@ function renderUnitCard(){
 }
 renderUnitCard();
 /* =========================================================
-   QUIZ DATA + LOGIC (unchanged)
+   QUIZ DATA
    ========================================================= */
 const quizDataOriginal = [
   {q:"What is a 'stock'?", a:["Share of ownership in a company","Debt issued by a company","A bank savings account","A type of bond"], correct:0, explanation:"Stocks represent part ownership in a company and potential profits."},
@@ -667,6 +739,9 @@ const quizDataOriginal = [
   {q:"What is 'liquidity'?", a:["Ease of converting an asset to cash","Profitability of an investment","Market demand for stocks","Long-term investment potential"], correct:0, explanation:"Liquidity indicates how quickly an asset can be converted to cash without losing value."},
   {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stock sales","Investment principal","Dividend received"], correct:0, explanation:"Interest is the cost of borrowing money, usually expressed as a percentage."}
 ];
+/* =========================================================
+   QUIZ LOGIC
+   ========================================================= */
 let quizData = [];
 let answers = [];
 let flags = [];
@@ -855,6 +930,68 @@ restartBtn.onclick = ()=>{
     quiz.style.display="block";
     flagBtn.style.display="inline-flex";
     loadQuestion();
+};
+/* =========================================================
+   STUDY FLASHCARD LOGIC
+   ========================================================= */
+let flashcards = [];
+let currentCard = 0;
+let isFlipped = false;
+const studyOverlay = document.getElementById("studyOverlay");
+const closeStudy = document.getElementById("closeStudy");
+const frontEl = document.getElementById("front");
+const backEl = document.getElementById("back");
+const flipBtn = document.getElementById("flipBtn");
+const prevCard = document.getElementById("prevCard");
+const nextCard = document.getElementById("nextCard");
+function openStudy(unitId){
+    studyOverlay.style.display = "flex";
+    document.body.style.overflow = "hidden";
+    flashcards = shuffleArray(quizDataOriginal.map(q => {
+        const termMatch = q.q.match(/'([^']+)'/);
+        const term = termMatch ? termMatch[1] : '';
+        const correctDef = q.a[q.correct];
+        const similarDefs = q.a.filter((_, i) => i !== q.correct);
+        return {term, correctDef, similarDefs};
+    }));
+    currentCard = 0;
+    isFlipped = false;
+    loadCard();
+}
+function closeStudyOverlay(){
+    studyOverlay.style.display = "none";
+    document.body.style.overflow = "";
+}
+closeStudy.onclick = closeStudyOverlay;
+studyOverlay.addEventListener("click", (e) => {
+    if(e.target === studyOverlay) closeStudyOverlay();
+});
+function loadCard(){
+    frontEl.textContent = flashcards[currentCard].term;
+    backEl.innerHTML = `
+        <strong>Correct Definition:</strong> ${flashcards[currentCard].correctDef}<br><br>
+        <strong>Similar but Different Definitions:</strong>
+        <ul>${flashcards[currentCard].similarDefs.map(d => `<li>${d}</li>`).join('')}</ul>
+    `;
+    backEl.style.display = isFlipped ? "block" : "none";
+}
+flipBtn.onclick = () => {
+    isFlipped = !isFlipped;
+    backEl.style.display = isFlipped ? "block" : "none";
+};
+prevCard.onclick = () => {
+    if(currentCard > 0){
+        currentCard--;
+        isFlipped = false;
+        loadCard();
+    }
+};
+nextCard.onclick = () => {
+    if(currentCard < flashcards.length - 1){
+        currentCard++;
+        isFlipped = false;
+        loadCard();
+    }
 };
 /* =========================================================
    GLOBAL CLEAR ALL DATA (BUT KEEP THEME)

@@ -6,7 +6,6 @@
 <title>Money Mentor | Learning Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
-<!-- Added SortableJS for drag and drop -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 <style>
 :root {
@@ -240,41 +239,37 @@ header {
     width: 2px; background: var(--card-line); z-index: 1;
 }
 
-/* Specific Unit 1 Styling */
-.unit-card.unit-1-green .unit-card-hero {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: white;
+/* Updated Floating Tooltip Styles */
+#floating-tooltip {
+    position: fixed;
+    width: 280px;
+    background: var(--card-bg);
+    border: 2px solid var(--primary);
+    border-radius: 16px;
+    padding: 1.2rem;
+    z-index: 3000;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.2s ease, transform 0.2s var(--ease-out-expo);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
 }
 
-/* Specific Unit 2 Styling */
-.unit-card.unit-2-blue .unit-card-hero {
-    background: linear-gradient(135deg, #7dd3fc 0%, #0ea5e9 100%);
-    color: #0c4a6e;
+#floating-tooltip.active {
+    opacity: 1;
+    transform: scale(1);
 }
 
-/* Specific Unit 3 Styling - Yellow */
-.unit-card.unit-3-yellow .unit-card-hero {
-    background: linear-gradient(135deg, #fde047 0%, #eab308 100%);
-    color: #854d0e;
-}
-
-.unit-card.unit-3-yellow .unit-term-count {
-    background: rgba(133, 77, 14, 0.15);
-    color: #854d0e;
-}
-
-.unit-card.unit-3-yellow .unit-info p {
-    color: #854d0e;
-}
+/* Specific Unit Hero Styling */
+.unit-card.unit-1-green .unit-card-hero { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; }
+.unit-card.unit-2-blue .unit-card-hero { background: linear-gradient(135deg, #7dd3fc 0%, #0ea5e9 100%); color: #0c4a6e; }
+.unit-card.unit-3-yellow .unit-card-hero { background: linear-gradient(135deg, #fde047 0%, #eab308 100%); color: #854d0e; }
+.unit-card.unit-3-yellow .unit-term-count { background: rgba(133, 77, 14, 0.15); color: #854d0e; }
+.unit-card.unit-3-yellow .unit-info p { color: #854d0e; }
 
 /* Dragging styles */
-.sortable-ghost {
-    opacity: 0.4;
-    background: var(--primary) !important;
-}
-.sortable-drag {
-    cursor: grabbing;
-}
+.sortable-ghost { opacity: 0.4; background: var(--primary) !important; }
+.sortable-drag { cursor: grabbing; }
 .drag-handle {
     position: absolute;
     left: 10px;
@@ -286,9 +281,7 @@ header {
     z-index: 10;
     font-size: 1.2rem;
 }
-.unit-card.unit-3-yellow .drag-handle {
-    color: #854d0e;
-}
+.unit-card.unit-3-yellow .drag-handle { color: #854d0e; }
 
 .unit-card-hero {
     padding: 2.5rem; padding-left: 5rem;
@@ -337,15 +330,8 @@ header {
     background: var(--card-bg);
 }
 
-.flashcard-stage { 
-    perspective: 2000px; height: 480px; width: 95%;
-    max-width: 800px; margin: 1rem auto; position: relative;
-}
-.flashcard {
-    width: 100%; height: 100%; position: absolute;
-    transition: transform 0.6s var(--ease-in-out-back), opacity 0.4s ease;
-    transform-style: preserve-3d; cursor: pointer;
-}
+.flashcard-stage { perspective: 2000px; height: 480px; width: 95%; max-width: 800px; margin: 1rem auto; position: relative; }
+.flashcard { width: 100%; height: 100%; position: absolute; transition: transform 0.6s var(--ease-in-out-back), opacity 0.4s ease; transform-style: preserve-3d; cursor: pointer; }
 .flashcard:hover { transform: translateY(-5px); }
 .flashcard.flipped { transform: rotateY(180deg); }
 
@@ -359,11 +345,7 @@ header {
 
 .q-box { max-width: 750px; margin: 2rem auto; padding: 1.5rem; }
 .options-list { display: flex; flex-direction: column; gap: 12px; margin: 1.5rem 0; }
-.option-btn {
-    background: var(--card-bg); border: 2px solid var(--border); padding: 1.2rem;
-    border-radius: 16px; color: var(--text); font-weight: 600; text-align: left; cursor: pointer;
-    font-size: 1rem;
-}
+.option-btn { background: var(--card-bg); border: 2px solid var(--border); padding: 1.2rem; border-radius: 16px; color: var(--text); font-weight: 600; text-align: left; cursor: pointer; font-size: 1rem; }
 .option-btn.selected { border-color: var(--primary); background: rgba(16, 185, 129, 0.1); }
 .option-btn:hover { border-color: var(--primary); background: var(--bg); }
 
@@ -382,44 +364,17 @@ header {
 
 .action-trigger { font-size: 1.6rem; cursor: pointer; color: var(--text-light); transition: all 0.2s ease; }
 .action-trigger.active { color: var(--accent); transform: scale(1.25); }
-
 .status-pill { padding: 0.5rem 1.2rem; border-radius: 25px; font-size: 0.9rem; font-weight: 700; background: var(--border); color: var(--text); }
 
-.chat-container {
-    position: fixed; bottom: 30px; right: 30px; z-index: 2000;
-    font-family: 'Inter', sans-serif;
-    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
-}
-.chat-container.hidden-during-test {
-    opacity: 0; transform: translateY(20px); visibility: hidden; pointer-events: none;
-}
-.chat-bubble {
-    width: 80px; height: 80px; border-radius: 50%;
-    background: var(--primary); color: white;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-    cursor: pointer; font-size: 2.2rem;
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    border: 4px solid rgba(255,255,255,0.2);
-}
+.chat-container { position: fixed; bottom: 30px; right: 30px; z-index: 2000; font-family: 'Inter', sans-serif; transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s; }
+.chat-container.hidden-during-test { opacity: 0; transform: translateY(20px); visibility: hidden; pointer-events: none; }
+.chat-bubble { width: 80px; height: 80px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 30px rgba(0,0,0,0.3); cursor: pointer; font-size: 2.2rem; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); border: 4px solid rgba(255,255,255,0.2); }
 .chat-bubble:hover { transform: scale(1.1); background: var(--primary-hover); }
-.chat-bubble::after {
-    content: "ASK ME!"; position: absolute; top: -30px; background: var(--accent);
-    color: white; font-size: 0.65rem; font-weight: 800; padding: 3px 8px;
-    border-radius: 10px; white-space: nowrap; animation: bounceText 2s infinite;
-}
+.chat-bubble::after { content: "ASK ME!"; position: absolute; top: -30px; background: var(--accent); color: white; font-size: 0.65rem; font-weight: 800; padding: 3px 8px; border-radius: 10px; white-space: nowrap; animation: bounceText 2s infinite; }
 
-@keyframes bounceText {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-}
+@keyframes bounceText { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-.chat-window {
-    display: none; position: absolute; bottom: 95px; right: 0;
-    width: 380px; height: 550px; background: var(--card-bg);
-    border-radius: 24px; border: 1px solid var(--border);
-    flex-direction: column; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-}
+.chat-window { display: none; position: absolute; bottom: 95px; right: 0; width: 380px; height: 550px; background: var(--card-bg); border-radius: 24px; border: 1px solid var(--border); flex-direction: column; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
 .chat-window.active { display: flex; }
 .chat-header { padding: 1.2rem; background: var(--primary); color: white; display: flex; justify-content: space-between; align-items: center; }
 .chat-messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; scroll-behavior: smooth; }
@@ -439,50 +394,17 @@ header {
 .slide-out-right { animation: slideOutRight 0.6s var(--ease-out-expo) forwards; }
 .slide-in-left { animation: slideInLeft 0.6s var(--ease-out-expo) forwards; }
 
-/* Tutorial Styles */
-#tutorial-overlay {
-    position: fixed; inset: 0; z-index: 10000; display: none;
-    pointer-events: none;
-}
+#tutorial-overlay { position: fixed; inset: 0; z-index: 10000; display: none; pointer-events: none; }
 #tutorial-overlay.active { display: block; pointer-events: auto; }
-.tutorial-dimmer {
-    position: absolute; inset: 0; background: rgba(0,0,0,0.8);
-    clip-path: polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%);
-    transition: clip-path 0.4s var(--ease-out-expo);
-}
-.tutorial-box {
-    position: absolute; background: white; color: #1e293b;
-    padding: 1.5rem; border-radius: 20px; width: 320px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5); z-index: 10002;
-    transition: all 0.4s var(--ease-out-expo);
-}
+.tutorial-dimmer { position: absolute; inset: 0; background: rgba(0,0,0,0.8); clip-path: polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%); transition: clip-path 0.4s var(--ease-out-expo); }
+.tutorial-box { position: absolute; background: white; color: #1e293b; padding: 1.5rem; border-radius: 20px; width: 320px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); z-index: 10002; transition: all 0.4s var(--ease-out-expo); }
 [data-theme="dark"] .tutorial-box { background: #1e293b; color: #f1f5f9; border: 1px solid #334155; }
 .tutorial-box h3 { margin: 0 0 10px; font-family: 'Poppins', sans-serif; color: var(--primary); }
 .tutorial-box p { margin: 0 0 15px; font-size: 0.9rem; line-height: 1.5; }
 
-.tutorial-skip-btn {
-    position: fixed; bottom: 30px; left: 30px; 
-    z-index: 10003; 
-    background: var(--primary);
-    color: white;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    padding: 0.75rem 1.5rem;
-    border-radius: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    border: none;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.tutorial-skip-btn:hover {
-    background: var(--primary-hover);
-    transform: translateY(-2px);
-}
-.tutorial-skip-btn:active {
-    transform: scale(0.95);
-}
+.tutorial-skip-btn { position: fixed; bottom: 30px; left: 30px; z-index: 10003; background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.3); padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; }
+.tutorial-skip-btn:hover { background: var(--primary-hover); transform: translateY(-2px); }
+.tutorial-skip-btn:active { transform: scale(0.95); }
 
 @media (max-width: 768px) {
     .flashcard-stage { height: 400px; width: 95%; }
@@ -497,7 +419,12 @@ header {
 
 <div id="bg-animation-container"></div>
 
-<!-- Tutorial Elements -->
+<!-- New Floating Tooltip Element -->
+<div id="floating-tooltip">
+    <div style="font-size:0.7rem; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Unit Overview</div>
+    <div id="tooltip-text" style="font-size:0.85rem; line-height:1.5; color:var(--text-light); font-weight:500;"></div>
+</div>
+
 <div id="tutorial-overlay">
     <div class="tutorial-dimmer" id="tut-dimmer"></div>
     <button class="tutorial-skip-btn" onclick="endTutorial()">
@@ -672,9 +599,7 @@ function initBackground() {
 
 function updateBackgroundColors(color) {
     const particles = document.querySelectorAll('.bg-particle');
-    particles.forEach(p => {
-        p.setAttribute('fill', color);
-    });
+    particles.forEach(p => { p.setAttribute('fill', color); });
 }
 
 const OBFUSCATED_KEY = ""; 
@@ -727,52 +652,16 @@ const HELP_GUIDE = `
 
 const videoResources = {
     unit1: [
-        {
-            title: "How the Stock Market Works Today",
-            date: "Nov 3, 2022",
-            creator: "TED-Ed",
-            url: "https://youtu.be/p7HKvqRI_Bo",
-            citation: "TED-Ed. (2022, November 3). How the Stock Market Works Today [Video]. YouTube. https://www.youtube.com/watch?v=p7HKvqRI_Bo"
-        },
-        {
-            title: "The Basics of Investing (Stocks, Bonds, & Funds)",
-            date: "Sept 18, 2023",
-            creator: "Professor Dave Explains",
-            url: "https://youtu.be/qIw-yFC-HNU",
-            citation: "Professor Dave Explains. (2023, September 18). The Basics of Investing (Stocks, Bonds, Mutual Funds, and Types of Interest) [Video]. YouTube. https://www.youtube.com/watch?v=qIw-yFC-HNU"
-        }
+        { title: "How the Stock Market Works Today", date: "Nov 3, 2022", creator: "TED-Ed", url: "https://youtu.be/p7HKvqRI_Bo", citation: "TED-Ed. (2022, November 3). How the Stock Market Works Today [Video]. YouTube. https://www.youtube.com/watch?v=p7HKvqRI_Bo" },
+        { title: "The Basics of Investing (Stocks, Bonds, & Funds)", date: "Sept 18, 2023", creator: "Professor Dave Explains", url: "https://youtu.be/qIw-yFC-HNU", citation: "Professor Dave Explains. (2023, September 18). The Basics of Investing (Stocks, Bonds, Mutual Funds, and Types of Interest) [Video]. YouTube. https://www.youtube.com/watch?v=qIw-yFC-HNU" }
     ],
     unit2: [
-        {
-            title: "How Do Banks Work?",
-            date: "May 20, 2020",
-            creator: "St. Louis Fed",
-            url: "https://youtu.be/fTTGALaRZoc?si=FxPBY3DXpJNP72fF",
-            citation: "St. Louis Fed. (2020, May 20). How Do Banks Work? [Video]. YouTube. https://youtu.be/fTTGALaRZoc?si=FxPBY3DXpJNP72fF"
-        },
-        {
-            title: "Credit Cards vs Debit Cards",
-            date: "Aug 12, 2021",
-            creator: "Gateway Bank FSB",
-            url: "https://youtu.be/sm0FzHMInig",
-            citation: "Gateway Bank FSB. (2021, August 12). Credit Cards vs Debit Cards (And When to Use Them) [Video]. YouTube. https://www.youtube.com/watch?v=sm0FzHMInig"
-        }
+        { title: "How Do Banks Work?", date: "May 20, 2020", creator: "St. Louis Fed", url: "https://youtu.be/fTTGALaRZoc?si=FxPBY3DXpJNP72fF", citation: "St. Louis Fed. (2020, May 20). How Do Banks Work? [Video]. YouTube. https://youtu.be/fTTGALaRZoc?si=FxPBY3DXpJNP72fF" },
+        { title: "Credit Cards vs Debit Cards", date: "Aug 12, 2021", creator: "Gateway Bank FSB", url: "https://youtu.be/sm0FzHMInig", citation: "Gateway Bank FSB. (2021, August 12). Credit Cards vs Debit Cards (And When to Use Them) [Video]. YouTube. https://www.youtube.com/watch?v=sm0FzHMInig" }
     ],
     unit3: [
-        {
-            title: "Bull Markets and Bear Markets Explained",
-            date: "Jan 12, 2022",
-            creator: "Investopedia",
-            url: "https://youtu.be/H7FfP8W4M20",
-            citation: "Investopedia. (2022, January 12). Bull Markets vs Bear Markets [Video]. YouTube. https://www.youtube.com/watch?v=H7FfP8W4M20"
-        },
-        {
-            title: "What are ETFs and How Do They Work?",
-            date: "April 5, 2023",
-            creator: "Fidelity Investments",
-            url: "https://youtu.be/W87n1n_q6-U",
-            citation: "Fidelity Investments. (2023, April 5). Understanding ETFs [Video]. YouTube. https://www.youtube.com/watch?v=W87n1n_q6-U"
-        }
+        { title: "Bull Markets and Bear Markets Explained", date: "Jan 12, 2022", creator: "Investopedia", url: "https://youtu.be/H7FfP8W4M20", citation: "Investopedia. (2022, January 12). Bull Markets vs Bear Markets [Video]. YouTube. https://www.youtube.com/watch?v=H7FfP8W4M20" },
+        { title: "What are ETFs and How Do They Work?", date: "April 5, 2023", creator: "Fidelity Investments", url: "https://youtu.be/W87n1n_q6-U", citation: "Fidelity Investments. (2023, April 5). Understanding ETFs [Video]. YouTube. https://www.youtube.com/watch?v=W87n1n_q6-U" }
     ]
 };
 
@@ -781,7 +670,8 @@ const units = [
         id: "unit1",
         title: "Basic Investing Vocab",
         icon: "fa-chart-line",
-        class: "unit-1-green", 
+        class: "unit-1-green",
+        overview: "Learn definitions for the essential building blocks of the stock market. You'll review terms like Stocks and Bonds, Assets vs Liabilities, and what defines a Portfolio.",
         data: [
             { term: "Stock", def: "A share of ownership in a company and potential profits.", q: "What is a 'stock'?", a: ["Share of ownership in a company", "Debt issued by a company", "A bank savings account", "A type of corporate bond"], c: 0 },
             { term: "Bond", def: "A loan to a company or government for interest.", q: "What is a 'bond'?", a: ["Share of ownership in a company", "Loan to a company or government", "An interest-bearing liquid account", "A type of corporate bond"], c: 1 },
@@ -800,6 +690,7 @@ const units = [
         title: "Banking & Payments",
         icon: "fa-piggy-bank",
         class: "unit-2-blue",
+        overview: "Review the differences between Credit and Debit cards. Study concepts like Financial Goals and Emergency Funds to prepare for unexpected costs.",
         data: [
             { term: "Credit Card", def: "Lets you borrow money now and pay later.", q: "What is a credit card?", a: ["Lets you borrow money now and pay later", "A card that requires you to pay the full amount immediately", "A card only for online payments", "A card that automatically transfers money for subscriptions"], c: 0 },
             { term: "Debit Card", def: "Charges your bank account immediately for purchases.", q: "How does a debit card work?", a: ["A card that stores points and rewards", "A card that tracks spending but cannot pay", "Charges your bank account immediately for purchases", "A card that lets you borrow money from the bank"], c: 2 },
@@ -823,6 +714,7 @@ const units = [
         title: "Advanced Investing Concepts",
         icon: "fa-gem",
         class: "unit-3-yellow",
+        overview: "Study professional terminology. Learn the definitions of Bull and Bear markets, understand what ETFs and Index Funds are, and identify concepts like Market Cap and IPOs.",
         data: [
             { term: "Bull Market", def: "A market condition where prices of stocks are generally rising.", q: "What is a 'Bull Market'?", a: ["Market where prices are generally rising", "Market where prices are generally falling", "A market only for farm commodities", "A market with no trading activity"], c: 0 },
             { term: "Bear Market", def: "A market condition where prices of stocks are generally falling.", q: "What is a 'Bear Market'?", a: ["Market where prices are rising quickly", "Market where prices are generally falling", "A market restricted to professional traders", "A market that only trades on weekends"], c: 1 },
@@ -852,6 +744,47 @@ function shuffleArray(array) {
     return newArr;
 }
 
+// --- TOOLTIP LOGIC ---
+const tooltip = document.getElementById('floating-tooltip');
+const tooltipText = document.getElementById('tooltip-text');
+
+document.addEventListener('mousemove', (e) => {
+    if (tooltip.classList.contains('active')) {
+        const x = e.clientX + 20;
+        const y = e.clientY + 20;
+        
+        // Boundaries check
+        const width = tooltip.offsetWidth;
+        const height = tooltip.offsetHeight;
+        
+        let finalX = x;
+        let finalY = y;
+        
+        if (x + width > window.innerWidth) finalX = e.clientX - width - 20;
+        if (y + height > window.innerHeight) finalY = e.clientY - height - 20;
+        
+        tooltip.style.left = `${finalX}px`;
+        tooltip.style.top = `${finalY}px`;
+    }
+});
+
+function handleCardMouseEnter(unitId) {
+    const unit = units.find(u => u.id === unitId);
+    // Hide if dropdown is active for this card
+    const drop = document.getElementById(`drop-${unitId}`);
+    if (drop && drop.classList.contains('active')) return;
+
+    if (unit) {
+        tooltipText.innerText = unit.overview;
+        tooltip.classList.add('active');
+        document.documentElement.style.setProperty('--primary-temp', getComputedStyle(document.getElementById(`card-${unitId}`)).getPropertyValue('--primary'));
+    }
+}
+
+function handleCardMouseLeave() {
+    tooltip.classList.remove('active');
+}
+
 function renderDashboard() {
     const grid = document.getElementById('dashboard-grid'); grid.innerHTML = '';
     const savedOrder = JSON.parse(localStorage.getItem('mm_unit_order') || '[]');
@@ -871,9 +804,14 @@ function renderDashboard() {
         card.className = `unit-card ${unit.class}`; 
         card.setAttribute('data-id', unit.id);
         card.id = `card-${unit.id}`; 
+        
+        card.onmouseenter = () => handleCardMouseEnter(unit.id);
+        card.onmouseleave = handleCardMouseLeave;
+        
         card.onclick = (e) => {
             if(e.target.closest('.btn') || e.target.closest('.drag-handle')) return;
             toggleUnit(unit.id);
+            handleCardMouseLeave(); // Hide tooltip when clicking to expand
         };
         card.innerHTML = `
             <div class="drag-handle" id="handle-${unit.id}"><i class="fas fa-grip-vertical"></i></div>
@@ -1055,11 +993,8 @@ function updateThemeUI() { const isDark = document.documentElement.getAttribute(
 
 function hexToRgba(hex, alpha) {
     let r = 0, g = 0, b = 0;
-    if (hex.length == 4) {
-        r = "0x" + hex[1] + hex[1]; g = "0x" + hex[2] + hex[2]; b = "0x" + hex[3] + hex[3];
-    } else if (hex.length == 7) {
-        r = "0x" + hex[1] + hex[2]; g = "0x" + hex[3] + hex[4]; b = "0x" + hex[5] + hex[6];
-    }
+    if (hex.length == 4) { r = "0x" + hex[1] + hex[1]; g = "0x" + hex[2] + hex[2]; b = "0x" + hex[3] + hex[3]; } 
+    else if (hex.length == 7) { r = "0x" + hex[1] + hex[2]; g = "0x" + hex[3] + hex[4]; b = "0x" + hex[5] + hex[6]; }
     return `rgba(${+r}, ${+g}, ${+b}, ${alpha})`;
 }
 
@@ -1097,70 +1032,27 @@ const tutorialSteps = [
 
 let currentTutStep = 0;
 
-function startTutorial() {
-    currentTutStep = 0;
-    document.getElementById('tutorial-overlay').classList.add('active');
-    showStep();
-}
-
-function nextTutorialStep() {
-    currentTutStep++;
-    if (currentTutStep >= tutorialSteps.length) {
-        endTutorial();
-    } else {
-        showStep();
-    }
-}
-
+function startTutorial() { currentTutStep = 0; document.getElementById('tutorial-overlay').classList.add('active'); showStep(); }
+function nextTutorialStep() { currentTutStep++; if (currentTutStep >= tutorialSteps.length) { endTutorial(); } else { showStep(); } }
 function showStep() {
-    const step = tutorialSteps[currentTutStep];
-    const box = document.getElementById('tut-box');
-    const dimmer = document.getElementById('tut-dimmer');
-    const title = document.getElementById('tut-title');
-    const text = document.getElementById('tut-text');
-    const counter = document.getElementById('tut-step-count');
-    const nextBtn = document.getElementById('tut-next-btn');
-
-    title.innerText = step.title;
-    text.innerText = step.text;
-    counter.innerText = `${currentTutStep + 1} / ${tutorialSteps.length}`;
-    nextBtn.innerText = currentTutStep === tutorialSteps.length - 1 ? "Finish" : "Next";
-
+    const step = tutorialSteps[currentTutStep], box = document.getElementById('tut-box'), dimmer = document.getElementById('tut-dimmer'), title = document.getElementById('tut-title'), text = document.getElementById('tut-text'), counter = document.getElementById('tut-step-count'), nextBtn = document.getElementById('tut-next-btn');
+    title.innerText = step.title; text.innerText = step.text; counter.innerText = `${currentTutStep + 1} / ${tutorialSteps.length}`; nextBtn.innerText = currentTutStep === tutorialSteps.length - 1 ? "Finish" : "Next";
     if (step.action) step.action();
-
     if (step.target) {
         const el = document.querySelector(step.target);
         if (el) {
-            const rect = el.getBoundingClientRect();
-            const padding = 10;
+            const rect = el.getBoundingClientRect(), padding = 10;
             dimmer.style.clipPath = `polygon(0% 0%, 0% 100%, ${rect.left - padding}px 100%, ${rect.left - padding}px ${rect.top - padding}px, ${rect.right + padding}px ${rect.top - padding}px, ${rect.right + padding}px ${rect.bottom + padding}px, ${rect.left - padding}px ${rect.bottom + padding}px, ${rect.left - padding}px 100%, 100% 100%, 100% 0%)`;
             const boxRect = box.getBoundingClientRect();
-            let top = rect.bottom + 20;
-            let left = rect.left + (rect.width / 2) - (boxRect.width / 2);
+            let top = rect.bottom + 20, left = rect.left + (rect.width / 2) - (boxRect.width / 2);
             if (top + boxRect.height > window.innerHeight) top = rect.top - boxRect.height - 20;
-            if (left < 10) left = 10;
-            if (left + boxRect.width > window.innerWidth - 10) left = window.innerWidth - boxRect.width - 10;
-            box.style.top = top + "px";
-            box.style.left = left + "px";
-            box.style.transform = "none";
+            if (left < 10) left = 10; if (left + boxRect.width > window.innerWidth - 10) left = window.innerWidth - boxRect.width - 10;
+            box.style.top = top + "px"; box.style.left = left + "px"; box.style.transform = "none";
         }
-    } else {
-        dimmer.style.clipPath = `polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%)`;
-        box.style.top = "50%"; box.style.left = "50%"; box.style.transform = "translate(-50%, -50%)";
-    }
+    } else { dimmer.style.clipPath = `polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%)`; box.style.top = "50%"; box.style.left = "50%"; box.style.transform = "translate(-50%, -50%)"; }
 }
-
-function endTutorial() {
-    document.getElementById('tutorial-overlay').classList.remove('active');
-    localStorage.setItem('mm_tut_complete', 'true');
-    const drops = document.querySelectorAll('.unit-dropdown');
-    drops.forEach(d => d.classList.remove('active'));
-}
-
-function resetTutorial() {
-    localStorage.removeItem('mm_tut_complete');
-    startTutorial();
-}
+function endTutorial() { document.getElementById('tutorial-overlay').classList.remove('active'); localStorage.setItem('mm_tut_complete', 'true'); const drops = document.querySelectorAll('.unit-dropdown'); drops.forEach(d => d.classList.remove('active')); }
+function resetTutorial() { localStorage.removeItem('mm_tut_complete'); startTutorial(); }
 
 window.onload = () => {
     initBackground();
@@ -1171,9 +1063,7 @@ window.onload = () => {
     if (savedMain && savedHover) {
         setPrimaryColor(savedMain, savedHover);
         document.querySelectorAll('.theme-swatch').forEach(s => {
-            if (s.style.backgroundColor === savedMain || s.getAttribute('style').includes(savedMain)) {
-                s.classList.add('active');
-            }
+            if (s.style.backgroundColor === savedMain || s.getAttribute('style').includes(savedMain)) { s.classList.add('active'); }
         });
     }
     updateThemeUI();
@@ -1183,9 +1073,7 @@ window.onload = () => {
         style.innerHTML = '.chat-bubble::after { display: none !important; }';
         document.head.appendChild(style);
     }
-    if (!localStorage.getItem('mm_tut_complete')) {
-        setTimeout(startTutorial, 1000);
-    }
+    if (!localStorage.getItem('mm_tut_complete')) { setTimeout(startTutorial, 1000); }
 };
 </script>
 </body>

@@ -9,18 +9,18 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
 <style>
 :root {
-    --bg: #dcfce7; 
-    --dot-color: rgba(16, 185, 129, 0.4); 
+    --bg: #dcfce7;
+    --dot-color: rgba(16, 185, 129, 0.4);
     --card-bg: #ffffff;
     --dropdown-bg: #bbf7d0;
-    --text: #064e3b; 
+    --text: #064e3b;
     --text-light: #374151;
     --primary: #10b981;
     --primary-hover: #059669;
     --secondary: #1e293b;
     --accent: #d97706;
     --danger: #dc2626;
-    --border: #86efac; 
+    --border: #86efac;
     --card-line: rgba(16, 185, 129, 0.3);
     --test-btn-bg: #1e293b;
     --test-btn-border: transparent;
@@ -28,10 +28,9 @@
     --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
     --ease-in-out-back: cubic-bezier(0.68, -0.6, 0.32, 1.6);
 }
-
 [data-theme="dark"] {
     --bg: #0f172a;
-    --dot-color: rgba(16, 185, 129, 0.35); 
+    --dot-color: rgba(16, 185, 129, 0.35);
     --card-bg: #1e293b;
     --dropdown-bg: #1e293b;
     --text: #f1f5f9;
@@ -41,18 +40,15 @@
     --test-btn-bg: #334155;
     --test-btn-border: #475569;
 }
-
 * { box-sizing: border-box; }
-
 body, .unit-card, .btn, .unit-dropdown, .dot, .option-btn, .overlay {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s var(--ease-out-expo), box-shadow 0.2s ease;
 }
-
 body {
     margin: 0;
     font-family: 'Inter', sans-serif;
     background-color: var(--bg);
-    background-image: 
+    background-image:
         radial-gradient(var(--dot-color) 3px, transparent 3px),
         radial-gradient(var(--dot-color) 2px, transparent 2px),
         radial-gradient(var(--dot-color) 1.5px, transparent 1.5px);
@@ -63,12 +59,10 @@ body {
     min-height: 100vh;
     animation: backgroundFloat 60s linear infinite;
 }
-
 @keyframes backgroundFloat {
     0% { background-position: 0 0, 40px 60px, 110px 180px; }
     100% { background-position: 500px 500px, 440px 560px, 610px 680px; }
 }
-
 #bg-animation-container {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -76,31 +70,26 @@ body {
     pointer-events: none;
     overflow: hidden;
 }
-
 .swirl-pattern {
     position: absolute;
     width: 600px; height: 600px;
     opacity: 0.15;
     animation: rotateSwirl 45s linear infinite;
 }
-
 .floating-triangle {
     position: absolute;
     fill: var(--dot-color);
     opacity: 0.4;
     animation: triangleFloat 25s infinite alternate ease-in-out;
 }
-
 @keyframes rotateSwirl {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
-
 @keyframes triangleFloat {
     0% { transform: translate(0, 0) rotate(0deg); }
     100% { transform: translate(150px, 200px) rotate(360deg); }
 }
-
 header {
     background: linear-gradient(135deg, var(--primary), var(--primary-hover));
     color: white;
@@ -113,16 +102,13 @@ header {
     z-index: 100;
     box-shadow: 0 4px 15px rgba(0,0,0,0.15);
 }
-
 .logo {
     font-family: 'Poppins', sans-serif;
     font-weight: 800;
     font-size: 1.25rem;
     letter-spacing: -0.5px;
 }
-
 .header-tools { display: flex; align-items: center; gap: 0.75rem; position: relative; }
-
 .btn {
     border: none;
     border-radius: 12px;
@@ -136,7 +122,6 @@ header {
     text-decoration: none;
     position: relative;
 }
-
 .btn:active { transform: scale(0.96); }
 .btn-primary { background: var(--primary); color: white; }
 .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
@@ -144,7 +129,6 @@ header {
 .btn-outline:hover { background: rgba(255,255,255,0.15); transform: translateY(-1px); }
 .btn-ghost { background: transparent; color: var(--text); }
 .header-tools .btn-ghost { color: white; }
-
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -157,7 +141,6 @@ header {
     padding: 20px;
 }
 .modal-overlay.active { display: flex; }
-
 .modal-content {
     background: var(--card-bg);
     width: 100%;
@@ -168,7 +151,6 @@ header {
     overflow: hidden;
     position: relative;
 }
-
 .modal-header {
     padding: 1.5rem;
     border-bottom: 1px solid var(--border);
@@ -176,11 +158,9 @@ header {
     justify-content: space-between;
     align-items: center;
 }
-
 .modal-body {
     padding: 1.5rem;
 }
-
 .settings-section-title {
     font-size: 0.75rem;
     text-transform: uppercase;
@@ -190,7 +170,6 @@ header {
     margin-bottom: 0.75rem;
     padding-left: 0.5rem;
 }
-
 .theme-swatch-container {
     display: flex;
     gap: 10px;
@@ -200,7 +179,6 @@ header {
     border-radius: 16px;
     justify-content: space-around;
 }
-
 .theme-swatch {
     width: 32px;
     height: 32px;
@@ -209,10 +187,8 @@ header {
     border: 2px solid transparent;
     transition: transform 0.2s ease, border-color 0.2s ease;
 }
-
 .theme-swatch:hover { transform: scale(1.15); }
 .theme-swatch.active { border-color: white; box-shadow: 0 0 0 2px var(--text); }
-
 .settings-option {
     display: flex; align-items: center; justify-content: space-between;
     padding: 1rem; background: var(--bg); border-radius: 16px;
@@ -224,21 +200,18 @@ header {
 .settings-option.danger i { color: var(--danger); }
 .settings-option.gold { background: rgba(217, 119, 6, 0.1); color: var(--accent); border-color: rgba(217, 119, 6, 0.2); }
 .settings-option.gold i { color: var(--accent); }
-
 .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; position: relative; z-index: 10;}
 .unit-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
-
 .unit-card {
     background: var(--card-bg); border-radius: 24px; border: 1px solid var(--border);
     overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
-    cursor: pointer; position: relative; backdrop-filter: blur(8px); 
+    cursor: pointer; position: relative; backdrop-filter: blur(8px);
 }
 .unit-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
 .unit-card::before {
     content: ""; position: absolute; top: 0; left: 30px; bottom: 0;
     width: 2px; background: var(--card-line); z-index: 1;
 }
-
 /* Updated Floating Tooltip Styles */
 #floating-tooltip {
     position: fixed;
@@ -254,19 +227,16 @@ header {
     transition: opacity 0.2s ease, transform 0.2s var(--ease-out-expo);
     box-shadow: 0 15px 35px rgba(0,0,0,0.3);
 }
-
 #floating-tooltip.active {
     opacity: 1;
     transform: scale(1);
 }
-
 /* Specific Unit Hero Styling */
 .unit-card.unit-1-green .unit-card-hero { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; }
 .unit-card.unit-2-blue .unit-card-hero { background: linear-gradient(135deg, #7dd3fc 0%, #0ea5e9 100%); color: #0c4a6e; }
 .unit-card.unit-3-yellow .unit-card-hero { background: linear-gradient(135deg, #fde047 0%, #eab308 100%); color: #854d0e; }
 .unit-card.unit-3-yellow .unit-term-count { background: rgba(133, 77, 14, 0.15); color: #854d0e; }
 .unit-card.unit-3-yellow .unit-info p { color: #854d0e; }
-
 /* Dragging styles */
 .sortable-ghost { opacity: 0.4; background: var(--primary) !important; }
 .sortable-drag { cursor: grabbing; }
@@ -282,59 +252,50 @@ header {
     font-size: 1.2rem;
 }
 .unit-card.unit-3-yellow .drag-handle { color: #854d0e; }
-
 .unit-card-hero {
     padding: 2.5rem; padding-left: 5rem;
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
     color: white; position: relative; z-index: 2; overflow: hidden;
 }
-
 .unit-card-hero::after {
     content: ""; position: absolute; top: 0; right: 0; bottom: 0; left: 0;
     background-image: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.08) 20px, rgba(255,255,255,0.08) 40px);
     pointer-events: none;
 }
-
 .unit-term-count {
     position: absolute; top: 1.5rem; right: 1.5rem; font-size: 0.75rem; font-weight: 800;
     background: rgba(0, 0, 0, 0.25); padding: 6px 12px; border-radius: 20px;
     letter-spacing: 0.5px; text-transform: uppercase; backdrop-filter: blur(4px); color: white;
 }
-
 .mastery-ribbon {
     position: absolute; top: -5px; left: 45px; font-size: 2.2rem;
     color: #fcd34d; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3)); z-index: 10;
 }
-
 .unit-dropdown {
     max-height: 0; overflow: hidden; padding: 0 1.5rem 0 5rem;
     background: var(--dropdown-bg); display: flex; gap: 1rem;
     flex-wrap: wrap; opacity: 0; transform: translateY(-10px);
     transition: all 0.5s var(--ease-out-expo);
 }
-.unit-dropdown.active { 
+.unit-dropdown.active {
     max-height: 500px; padding: 1.5rem 1.5rem 1.5rem 5rem;
     opacity: 1; transform: translateY(0);
 }
-
 .overlay {
     display: none; position: fixed; inset: 0; background: var(--bg);
     z-index: 1000; flex-direction: column;
     background-image: radial-gradient(var(--dot-color) 3px, transparent 3px), radial-gradient(var(--dot-color) 2px, transparent 2px);
     background-size: 140px 140px, 190px 190px;
 }
-
 .overlay-header {
     padding: 1rem 2rem; border-bottom: 2px solid var(--border);
     display: flex; justify-content: space-between; align-items: center;
     background: var(--card-bg);
 }
-
 .flashcard-stage { perspective: 2000px; height: 480px; width: 95%; max-width: 800px; margin: 1rem auto; position: relative; }
 .flashcard { width: 100%; height: 100%; position: absolute; transition: transform 0.6s var(--ease-in-out-back), opacity 0.4s ease; transform-style: preserve-3d; cursor: pointer; }
 .flashcard:hover { transform: translateY(-5px); }
 .flashcard.flipped { transform: rotateY(180deg); }
-
 .card-face {
     position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -342,13 +303,11 @@ header {
     background: var(--card-bg); text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.15);
 }
 .card-back { transform: rotateY(180deg); background: var(--bg); border-style: dashed; }
-
 .q-box { max-width: 750px; margin: 2rem auto; padding: 1.5rem; }
 .options-list { display: flex; flex-direction: column; gap: 12px; margin: 1.5rem 0; }
 .option-btn { background: var(--card-bg); border: 2px solid var(--border); padding: 1.2rem; border-radius: 16px; color: var(--text); font-weight: 600; text-align: left; cursor: pointer; font-size: 1rem; }
 .option-btn.selected { border-color: var(--primary); background: rgba(16, 185, 129, 0.1); }
 .option-btn:hover { border-color: var(--primary); background: var(--bg); }
-
 .review-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1.5rem; justify-content: center; }
 .dot {
     width: 42px; height: 42px; border-radius: 10px; border: 2px solid var(--border);
@@ -358,22 +317,17 @@ header {
 .dot.current { border-color: var(--primary); color: var(--primary); transform: scale(1.1); box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
 .dot.answered { background: var(--primary); color: white; border-color: var(--primary); }
 .dot.marked { border-color: var(--accent); border-style: dashed; background: rgba(217, 119, 6, 0.15); }
-
 .progress-container { width: 100%; height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; margin: 1.5rem 0; }
 .progress-bar { height: 100%; background: var(--primary); transition: width 0.3s ease; }
-
 .action-trigger { font-size: 1.6rem; cursor: pointer; color: var(--text-light); transition: all 0.2s ease; }
 .action-trigger.active { color: var(--accent); transform: scale(1.25); }
 .status-pill { padding: 0.5rem 1.2rem; border-radius: 25px; font-size: 0.9rem; font-weight: 700; background: var(--border); color: var(--text); }
-
 .chat-container { position: fixed; bottom: 30px; right: 30px; z-index: 2000; font-family: 'Inter', sans-serif; transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s; }
 .chat-container.hidden-during-test { opacity: 0; transform: translateY(20px); visibility: hidden; pointer-events: none; }
 .chat-bubble { width: 80px; height: 80px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 30px rgba(0,0,0,0.3); cursor: pointer; font-size: 2.2rem; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); border: 4px solid rgba(255,255,255,0.2); }
 .chat-bubble:hover { transform: scale(1.1); background: var(--primary-hover); }
 .chat-bubble::after { content: "ASK ME!"; position: absolute; top: -30px; background: var(--accent); color: white; font-size: 0.65rem; font-weight: 800; padding: 3px 8px; border-radius: 10px; white-space: nowrap; animation: bounceText 2s infinite; }
-
 @keyframes bounceText { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-
 .chat-window { display: none; position: absolute; bottom: 95px; right: 0; width: 380px; height: 550px; background: var(--card-bg); border-radius: 24px; border: 1px solid var(--border); flex-direction: column; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
 .chat-window.active { display: flex; }
 .chat-header { padding: 1.2rem; background: var(--primary); color: white; display: flex; justify-content: space-between; align-items: center; }
@@ -383,17 +337,14 @@ header {
 .user-msg { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
 .chat-input-area { padding: 12px; border-top: 1px solid var(--border); display: flex; gap: 8px; background: var(--card-bg); }
 .chat-input { flex: 1; border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; background: var(--bg); color: var(--text); outline: none; font-family: inherit; }
-
 @keyframes slideOutLeft { to { transform: translateX(-150%) rotateY(-20deg); opacity: 0; } }
 @keyframes slideInRight { from { transform: translateX(150%) rotateY(20deg); opacity: 0; } to { transform: translateX(0) rotateY(0); opacity: 1; } }
 @keyframes slideOutRight { to { transform: translateX(150%) rotateY(20deg); opacity: 0; } }
 @keyframes slideInLeft { from { transform: translateX(-150%) rotateY(-20deg); opacity: 0; } to { transform: translateX(0) rotateY(0); opacity: 1; } }
-
 .slide-out-left { animation: slideOutLeft 0.6s var(--ease-out-expo) forwards; }
 .slide-in-right { animation: slideInRight 0.6s var(--ease-out-expo) forwards; }
 .slide-out-right { animation: slideOutRight 0.6s var(--ease-out-expo) forwards; }
 .slide-in-left { animation: slideInLeft 0.6s var(--ease-out-expo) forwards; }
-
 #tutorial-overlay { position: fixed; inset: 0; z-index: 10000; display: none; pointer-events: none; }
 #tutorial-overlay.active { display: block; pointer-events: auto; }
 .tutorial-dimmer { position: absolute; inset: 0; background: rgba(0,0,0,0.8); clip-path: polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%); transition: clip-path 0.4s var(--ease-out-expo); }
@@ -401,11 +352,9 @@ header {
 [data-theme="dark"] .tutorial-box { background: #1e293b; color: #f1f5f9; border: 1px solid #334155; }
 .tutorial-box h3 { margin: 0 0 10px; font-family: 'Poppins', sans-serif; color: var(--primary); }
 .tutorial-box p { margin: 0 0 15px; font-size: 0.9rem; line-height: 1.5; }
-
 .tutorial-skip-btn { position: fixed; bottom: 30px; left: 30px; z-index: 10003; background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.3); padding: 0.75rem 1.5rem; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; }
 .tutorial-skip-btn:hover { background: var(--primary-hover); transform: translateY(-2px); }
 .tutorial-skip-btn:active { transform: scale(0.95); }
-
 @media (max-width: 768px) {
     .flashcard-stage { height: 400px; width: 95%; }
     .card-face { padding: 2rem; }
@@ -416,15 +365,12 @@ header {
 </style>
 </head>
 <body>
-
 <div id="bg-animation-container"></div>
-
 <!-- New Floating Tooltip Element -->
 <div id="floating-tooltip">
     <div style="font-size:0.7rem; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Unit Overview</div>
     <div id="tooltip-text" style="font-size:0.85rem; line-height:1.5; color:var(--text-light); font-weight:500;"></div>
 </div>
-
 <div id="tutorial-overlay">
     <div class="tutorial-dimmer" id="tut-dimmer"></div>
     <button class="tutorial-skip-btn" onclick="endTutorial()">
@@ -439,7 +385,6 @@ header {
         </div>
     </div>
 </div>
-
 <header>
     <div class="header-tools">
         <a href="https://sites.google.com/view/money--mentor/home" class="btn btn-ghost" style="color:white"><i class="fas fa-chevron-left"></i> Home</a>
@@ -454,11 +399,9 @@ header {
         </div>
     </div>
 </header>
-
 <div class="container">
     <div class="unit-grid" id="dashboard-grid"></div>
 </div>
-
 <div id="settings-modal" class="modal-overlay" onclick="handleOutsideClick(event)">
     <div class="modal-content">
         <div id="main-settings-view">
@@ -476,7 +419,6 @@ header {
                     <div class="theme-swatch" style="background:#a855f7;" onclick="setPrimaryColor('#a855f7', '#9333ea', this)" title="Purple"></div>
                     <div class="theme-swatch" style="background:#eab308;" onclick="setPrimaryColor('#eab308', '#ca8a04', this)" title="Yellow"></div>
                 </div>
-
                 <div class="settings-section-title">General</div>
                 <div class="settings-option gold" onclick="resetTutorial(); closeSettings();">
                     <div style="display:flex; align-items:center; gap:12px;">
@@ -515,7 +457,6 @@ header {
         </div>
     </div>
 </div>
-
 <div id="app-overlay" class="overlay">
     <div class="overlay-header">
         <button class="btn btn-ghost" onclick="closeOverlay()">
@@ -530,7 +471,6 @@ header {
         <div class="content-max" id="overlay-content"></div>
     </div>
 </div>
-
 <div class="chat-container" id="botContainer">
     <div class="chat-window" id="chatWindow">
         <div class="chat-header">
@@ -554,14 +494,12 @@ header {
         <i class="fas fa-comment-dots"></i>
     </div>
 </div>
-
 <script>
 // --- BACKGROUND INITIALIZATION ---
 function initBackground() {
     const container = document.getElementById('bg-animation-container');
     container.innerHTML = '';
     const particleColor = localStorage.getItem('mm_primary_color') || '#10b981';
-
     for(let s=0; s<2; s++) {
         const swirl = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         swirl.setAttribute("viewBox", "0 0 100 100");
@@ -589,22 +527,19 @@ function initBackground() {
         tri.style.left = Math.random() * 100 + "vw"; tri.style.top = Math.random() * 100 + "vh";
         tri.style.animationDelay = (Math.random() * -20) + "s";
         const poly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-        poly.setAttribute("points", "50,15 90,85 10,85"); 
+        poly.setAttribute("points", "50,15 90,85 10,85");
         poly.setAttribute("fill", particleColor);
         poly.classList.add('bg-particle');
         tri.appendChild(poly);
         container.appendChild(tri);
     }
 }
-
 function updateBackgroundColors(color) {
     const particles = document.querySelectorAll('.bg-particle');
     particles.forEach(p => { p.setAttribute('fill', color); });
 }
-
-const OBFUSCATED_KEY = ""; 
+const OBFUSCATED_KEY = "";
 function getCleanKey() { return OBFUSCATED_KEY; }
-
 const financeDictionary = {
     "hi": "Hello! I'm Money Bot. Ready to learn about finances today?",
     "hello": "Hi there! I'm your Money Mentor assistant. Ask me anything about the terms on this site!",
@@ -638,7 +573,6 @@ const financeDictionary = {
     "ipo": "The first time a company sells its stock to the public.",
     "diversification": "Spreading investments across multiple assets to reduce risk."
 };
-
 const HELP_GUIDE = `
 <div class="help-card">
     <span class="help-title">AI Overview</span>
@@ -649,7 +583,6 @@ const HELP_GUIDE = `
     <div class="help-row"><i class="fas fa-star help-icon"></i><div class="help-text"><b>Starring:</b> Save difficult terms to your Starred folder for focused study.</div></div>
     <div class="help-row"><i class="fas fa-clipboard help-icon"></i><div class="help-text"><b>Test:</b> Score 90% or higher to earn a Golden Ribbon.</div></div>
 </div>`;
-
 const videoResources = {
     unit1: [
         { title: "How the Stock Market Works Today", date: "Nov 3, 2022", creator: "TED-Ed", url: "https://youtu.be/p7HKvqRI_Bo", citation: "TED-Ed. (2022, November 3). How the Stock Market Works Today [Video]. YouTube. https://www.youtube.com/watch?v=p7HKvqRI_Bo" },
@@ -660,11 +593,22 @@ const videoResources = {
         { title: "Credit Cards vs Debit Cards", date: "Aug 12, 2021", creator: "Gateway Bank FSB", url: "https://youtu.be/sm0FzHMInig", citation: "Gateway Bank FSB. (2021, August 12). Credit Cards vs Debit Cards (And When to Use Them) [Video]. YouTube. https://www.youtube.com/watch?v=sm0FzHMInig" }
     ],
     unit3: [
-        { title: "Bull Markets and Bear Markets Explained", date: "Jan 12, 2022", creator: "Investopedia", url: "https://youtu.be/H7FfP8W4M20", citation: "Investopedia. (2022, January 12). Bull Markets vs Bear Markets [Video]. YouTube. https://www.youtube.com/watch?v=H7FfP8W4M20" },
-        { title: "What are ETFs and How Do They Work?", date: "April 5, 2023", creator: "Fidelity Investments", url: "https://youtu.be/W87n1n_q6-U", citation: "Fidelity Investments. (2023, April 5). Understanding ETFs [Video]. YouTube. https://www.youtube.com/watch?v=W87n1n_q6-U" }
+        {
+            title: "WTF Is an ETF?",
+            date: "March 7, 2016",
+            creator: "Bloomberg Originals",
+            url: "https://youtu.be/OwpFBi-jZVg",
+            citation: "Bloomberg Originals. (2016, March 7). WTF Is an ETF? [Video]. YouTube. https://www.youtube.com/watch?v=OwpFBi-jZVg"
+        },
+        {
+            title: "Bull vs Bear Markets: What's The Difference?",
+            date: "October 15, 2024",
+            creator: "The Plain Bagel",
+            url: "https://youtu.be/UzoZxKmLOAI",
+            citation: "The Plain Bagel. (2024, October 15). Bull vs Bear Markets: What's The Difference? [Video]. YouTube. https://www.youtube.com/watch?v=UzoZxKmLOAI"
+        }
     ]
 };
-
 const units = [
     {
         id: "unit1",
@@ -734,57 +678,49 @@ const units = [
         ]
     }
 ];
-
 let currentUnit = null, activeStudySet = [], currentIdx = 0, userAnswers = [], markedQuestions = [], isQuizMode = false, isAnimating = false;
-let scores = JSON.parse(localStorage.getItem('mm_scores') || '{}'), starredTerms = JSON.parse(localStorage.getItem('mm_starred') || '[]'); 
-
+let scores = JSON.parse(localStorage.getItem('mm_scores') || '{}'), starredTerms = JSON.parse(localStorage.getItem('mm_starred') || '[]');
 function shuffleArray(array) {
     const newArr = [...array];
     for (let i = newArr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [newArr[i], newArr[j]] = [newArr[j], newArr[i]]; }
     return newArr;
 }
-
 // --- TOOLTIP LOGIC ---
 const tooltip = document.getElementById('floating-tooltip');
 const tooltipText = document.getElementById('tooltip-text');
-
 document.addEventListener('mousemove', (e) => {
     if (tooltip.classList.contains('active')) {
         const x = e.clientX + 20;
         const y = e.clientY + 20;
-        
+       
         // Boundaries check
         const width = tooltip.offsetWidth;
         const height = tooltip.offsetHeight;
-        
+       
         let finalX = x;
         let finalY = y;
-        
+       
         if (x + width > window.innerWidth) finalX = e.clientX - width - 20;
         if (y + height > window.innerHeight) finalY = e.clientY - height - 20;
-        
+       
         tooltip.style.left = `${finalX}px`;
         tooltip.style.top = `${finalY}px`;
     }
 });
-
 function handleCardMouseEnter(unitId) {
     const unit = units.find(u => u.id === unitId);
     // Hide if dropdown is active for this card
     const drop = document.getElementById(`drop-${unitId}`);
     if (drop && drop.classList.contains('active')) return;
-
     if (unit) {
         tooltipText.innerText = unit.overview;
         tooltip.classList.add('active');
         document.documentElement.style.setProperty('--primary-temp', getComputedStyle(document.getElementById(`card-${unitId}`)).getPropertyValue('--primary'));
     }
 }
-
 function handleCardMouseLeave() {
     tooltip.classList.remove('active');
 }
-
 function renderDashboard() {
     const grid = document.getElementById('dashboard-grid'); grid.innerHTML = '';
     const savedOrder = JSON.parse(localStorage.getItem('mm_unit_order') || '[]');
@@ -800,14 +736,14 @@ function renderDashboard() {
     sortedUnits.forEach(unit => {
         const highScore = scores[unit.id] || 0; const isMastered = highScore >= 90;
         if(isMastered) completedCount++;
-        const card = document.createElement('div'); 
-        card.className = `unit-card ${unit.class}`; 
+        const card = document.createElement('div');
+        card.className = `unit-card ${unit.class}`;
         card.setAttribute('data-id', unit.id);
-        card.id = `card-${unit.id}`; 
-        
+        card.id = `card-${unit.id}`;
+       
         card.onmouseenter = () => handleCardMouseEnter(unit.id);
         card.onmouseleave = handleCardMouseLeave;
-        
+       
         card.onclick = (e) => {
             if(e.target.closest('.btn') || e.target.closest('.drag-handle')) return;
             toggleUnit(unit.id);
@@ -842,12 +778,10 @@ function renderDashboard() {
         }
     });
 }
-
 function toggleUnit(id) {
     const drops = document.querySelectorAll('.unit-dropdown');
     drops.forEach(d => d.id === `drop-${id}` ? d.classList.toggle('active') : d.classList.remove('active'));
 }
-
 function openVideos(unitId, event) {
     event.stopPropagation(); document.getElementById('app-overlay').style.display = 'flex';
     document.getElementById('overlay-title').innerText = "Unit Lessons";
@@ -873,9 +807,7 @@ function openVideos(unitId, event) {
     }
     document.getElementById('overlay-content').innerHTML = videosHtml;
 }
-
 function openStudy(unitId, event) { if(event) event.stopPropagation(); currentUnit = units.find(u => u.id === unitId); activeStudySet = [...currentUnit.data]; isQuizMode = false; currentIdx = 0; launchStudyUI(); }
-
 function openStudyStarred(unitId, event) {
     if(event) event.stopPropagation(); currentUnit = units.find(u => u.id === unitId); activeStudySet = currentUnit.data.filter(d => starredTerms.includes(d.term));
     if(activeStudySet.length === 0) {
@@ -886,7 +818,6 @@ function openStudyStarred(unitId, event) {
     }
     isQuizMode = false; currentIdx = 0; launchStudyUI();
 }
-
 function launchStudyUI() {
     document.getElementById('app-overlay').style.display = 'flex'; document.getElementById('overlay-title').innerText = `${currentUnit.title} | Flashcards`;
     document.getElementById('action-btn-container').style.visibility = 'visible';
@@ -894,37 +825,30 @@ function launchStudyUI() {
     content.innerHTML = `<div style="width:100%; margin: 0 auto; padding-top: 1rem;"><div style="display:flex; justify-content:center; align-items:center; gap:1.5rem; margin-bottom:1rem;"><div style="color:var(--text); font-weight:700;" id="card-counter">Card 1 of ${activeStudySet.length}</div></div><div class="flashcard-stage" id="stage"><div class="flashcard" id="card-obj" onclick="this.classList.toggle('flipped')"></div></div><div style="max-width:800px; margin: 2rem auto 0; display:flex; justify-content:space-between; align-items:center;"><button class="btn btn-outline" style="color:var(--text); border-color:var(--border)" onclick="moveCard(-1)"><i class="fas fa-arrow-left"></i></button><div class="status-pill">Tap to flip</div><button class="btn btn-outline" style="color:var(--text); border-color:var(--border)" onclick="moveCard(1)"><i class="fas fa-arrow-right"></i></button></div></div>`;
     updateFlashcardContent(document.getElementById('card-obj'), activeStudySet[currentIdx]);
 }
-
 function updateFlashcardContent(cardEl, data) {
     updateActionState();
     cardEl.innerHTML = `<div class="card-face"><div style="font-size: 2.5rem; font-weight: 800; color: var(--primary);">${data.term}</div><div style="margin-top: 3rem; font-size: 0.9rem; font-weight:700; opacity: 0.4; color: var(--text-light); letter-spacing:2px">TAP TO FLIP</div></div><div class="card-face card-back"><div style="font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 2rem; opacity:0.7">DEFINITION</div><div style="font-size: 1.8rem; font-weight: 600; line-height: 1.6; color: var(--text); padding: 0 1rem;">${data.def}</div></div>`;
 }
-
 function moveCard(step) {
     if(isAnimating) return; let nextIdx = currentIdx + step; if(nextIdx < 0 || nextIdx >= activeStudySet.length) return; isAnimating = true;
     const oldCard = document.getElementById('card-obj'), stage = document.getElementById('stage'), newCard = document.createElement('div');
     newCard.className = `flashcard ${step > 0 ? 'slide-in-right' : 'slide-in-left'}`; newCard.onclick = function() { this.classList.toggle('flipped'); };
     currentIdx = nextIdx; updateFlashcardContent(newCard, activeStudySet[currentIdx]); stage.appendChild(newCard);
-    oldCard.classList.add(step > 0 ? 'slide-out-left' : 'slide-out-right'); oldCard.id = ""; 
+    oldCard.classList.add(step > 0 ? 'slide-out-left' : 'slide-out-right'); oldCard.id = "";
     document.getElementById('card-counter').innerText = `Card ${currentIdx + 1} of ${activeStudySet.length}`;
     setTimeout(() => { oldCard.remove(); newCard.classList.remove('slide-in-right', 'slide-in-left'); newCard.id = 'card-obj'; isAnimating = false; }, 600);
 }
-
 function openQuiz(unitId, event) { event.stopPropagation(); currentUnit = units.find(u => u.id === unitId); activeStudySet = shuffleArray([...currentUnit.data]); userAnswers = new Array(activeStudySet.length).fill(null); markedQuestions = new Array(activeStudySet.length).fill(false); currentIdx = 0; isQuizMode = true; document.getElementById('botContainer').classList.add('hidden-during-test'); document.getElementById('app-overlay').style.display = 'flex'; renderQuizStart(); }
-
 function renderQuizStart() {
     document.getElementById('overlay-title').innerText = `${currentUnit.title} | Test`; document.getElementById('action-btn-container').style.visibility = 'hidden';
     document.getElementById('overlay-content').innerHTML = `<div class="q-box" style="text-align:center; padding: 4rem 2rem;"><div style="font-size: 4rem; margin-bottom: 1.5rem;">📝</div><h1 style="font-family:Poppins; color:var(--text)">Ready for the test?</h1><p style="color:var(--text-light); font-weight:600; margin-bottom: 2rem;">Flag questions you're unsure about to review them before submitting.</p><button class="btn btn-primary" style="width:100%; padding: 1.2rem;" onclick="startQuiz()">Begin Assessment</button></div>`;
 }
-
 function startQuiz() { document.getElementById('action-btn-container').style.visibility = 'visible'; renderQuestion(); }
-
 function renderQuestion() {
     const item = activeStudySet[currentIdx], progress = ((currentIdx + 1) / activeStudySet.length) * 100; updateActionState();
     let optionsHtml = item.a.map((opt, i) => `<button class="option-btn ${userAnswers[currentIdx] === i ? 'selected' : ''}" onclick="selectOption(${i})">${opt}</button>`).join(''), dotsHtml = activeStudySet.map((_, i) => `<div class="dot ${i === currentIdx ? 'current' : ''} ${userAnswers[i] !== null ? 'answered' : ''} ${markedQuestions[i] ? 'marked' : ''}" onclick="jumpTo(${i})">${markedQuestions[i] ? '<i class="fas fa-bookmark" style="font-size:0.6rem; position:absolute; top:2px; right:2px; color:var(--accent)"></i>' : ''}${i+1}</div>`).join('');
     document.getElementById('overlay-content').innerHTML = `<div class="q-box"><span class="status-pill">Question ${currentIdx + 1} of ${activeStudySet.length}</span><div class="progress-container"><div class="progress-bar" style="width:${progress}%"></div></div><h2 style="margin: 1.5rem 0; font-size: 1.4rem; color:var(--text); line-height:1.4">${item.q}</h2><div class="options-list">${optionsHtml}</div><div class="review-grid">${dotsHtml}</div><div style="display:flex; justify-content:space-between; margin-top:2rem;"><button class="btn btn-outline" style="color:var(--text); border-color:var(--border)" onclick="prevQ()">Back</button><button class="btn btn-primary" onclick="confirmOrNext()">${currentIdx === activeStudySet.length - 1 ? 'Finish' : 'Next'}</button></div></div>`;
 }
-
 function selectOption(idx) { userAnswers[currentIdx] = idx; renderQuestion(); }
 function confirmOrNext() { if(currentIdx < activeStudySet.length - 1) { currentIdx++; renderQuestion(); } else { renderSubmitConfirmation(); } }
 function renderSubmitConfirmation() {
@@ -933,41 +857,33 @@ function renderSubmitConfirmation() {
 }
 function prevQ() { if(currentIdx > 0) { currentIdx--; renderQuestion(); } }
 function jumpTo(idx) { currentIdx = idx; renderQuestion(); }
-
 function handleAction() {
-    if(isQuizMode) { markedQuestions[currentIdx] = !markedQuestions[currentIdx]; renderQuestion(); } 
+    if(isQuizMode) { markedQuestions[currentIdx] = !markedQuestions[currentIdx]; renderQuestion(); }
     else { const term = activeStudySet[currentIdx].term; if (starredTerms.includes(term)) { starredTerms = starredTerms.filter(t => t !== term); } else { starredTerms.push(term); } localStorage.setItem('mm_starred', JSON.stringify(starredTerms)); updateActionState(); }
 }
-
 function updateActionState() {
     const btn = document.getElementById('global-action-btn'); if(!btn || !activeStudySet[currentIdx]) return;
-    if(isQuizMode) { btn.className = markedQuestions[currentIdx] ? "fas fa-bookmark action-trigger active" : "fas fa-bookmark action-trigger"; } 
+    if(isQuizMode) { btn.className = markedQuestions[currentIdx] ? "fas fa-bookmark action-trigger active" : "fas fa-bookmark action-trigger"; }
     else { const term = activeStudySet[currentIdx].term; btn.className = starredTerms.includes(term) ? "fas fa-star action-trigger active" : "fas fa-star action-trigger"; }
 }
-
 function finishQuiz() {
     let correct = activeStudySet.reduce((acc, item, i) => userAnswers[i] === item.c ? acc + 1 : acc, 0); const score = Math.round((correct / activeStudySet.length) * 100);
     if(!scores[currentUnit.id] || score > scores[currentUnit.id]) { scores[currentUnit.id] = score; localStorage.setItem('mm_scores', JSON.stringify(scores)); }
     renderResults(score, correct);
 }
-
 function renderResults(score, correct) {
     document.getElementById('action-btn-container').style.visibility = 'hidden';
     document.getElementById('overlay-content').innerHTML = `<div class="q-box" style="text-align:center;"><div style="font-size: 4rem; margin-bottom: 1rem;">${score >= 90 ? '🏆' : '🥈'}</div><h1 style="margin:0; color:var(--text); font-family:Poppins">${score}%</h1><p style="color:var(--text-light); font-weight:700; margin-bottom: 2rem;">${correct} of ${activeStudySet.length} correct</p><button class="btn btn-primary" style="width:100%; margin-top:2rem; padding:1rem" onclick="closeOverlay()">Close</button></div>`;
     renderDashboard();
 }
-
 function closeOverlay() { document.getElementById('app-overlay').style.display = 'none'; isQuizMode = false; document.getElementById('botContainer').classList.remove('hidden-during-test'); renderDashboard(); }
-
 // --- MONEY BOT LOGIC ---
 let badgeRemoved = localStorage.getItem('mm_badge_removed') === 'true';
-
 function toggleChat() {
     const chatWin = document.getElementById('chatWindow'); chatWin.classList.toggle('active');
     if (!badgeRemoved) { badgeRemoved = true; localStorage.setItem('mm_badge_removed', 'true'); const style = document.createElement('style'); style.innerHTML = '.chat-bubble::after { display: none !important; }'; document.head.appendChild(style); }
     if (chatWin.classList.contains('active') && document.getElementById('chatMessages').children.length === 0) { appendMessage("👋 I'm Money Bot! I know over 200 concepts like 'Inflation' and 'Stocks'. Ask me anything!", 'bot'); }
 }
-
 async function sendMessage() {
     const input = document.getElementById('chatInput'), msg = input.value.trim(); if (!msg) return; appendMessage(msg, 'user'); input.value = ''; const lowMsg = msg.toLowerCase();
     if (lowMsg === "how" || lowMsg === "help" || lowMsg.includes("how do i use")) { appendMessage(HELP_GUIDE, 'bot', true); return; }
@@ -983,21 +899,17 @@ async function sendMessage() {
         const data = await response.json(); indicator.style.display = 'none'; appendMessage(data.candidates?.[0]?.content?.parts?.[0]?.text || "Try asking another way!", 'bot');
     } catch { indicator.style.display = 'none'; appendMessage("Error connecting to cloud.", 'bot'); }
 }
-
 function appendMessage(text, role, isHtml = false) { const chatMessages = document.getElementById('chatMessages'), div = document.createElement('div'); div.className = `message ${role}-msg`; if(isHtml) div.innerHTML = text; else div.innerText = text; chatMessages.appendChild(div); chatMessages.scrollTop = chatMessages.scrollHeight; }
-
 function openSettings() { document.getElementById('settings-modal').classList.add('active'); hideResetConfirm(); }
 function closeSettings() { document.getElementById('settings-modal').classList.remove('active'); }
 function toggleTheme() { const isDark = document.documentElement.getAttribute('data-theme') === 'dark', newTheme = isDark ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', newTheme); localStorage.setItem('mm_theme', newTheme); updateThemeUI(); }
 function updateThemeUI() { const isDark = document.documentElement.getAttribute('data-theme') === 'dark', iconModal = document.getElementById('theme-icon-modal'), textModal = document.getElementById('theme-text-modal'); if (iconModal) iconModal.className = isDark ? "fas fa-sun" : "fas fa-moon"; if (textModal) textModal.innerText = isDark ? "Light Mode" : "Dark Mode"; }
-
 function hexToRgba(hex, alpha) {
     let r = 0, g = 0, b = 0;
-    if (hex.length == 4) { r = "0x" + hex[1] + hex[1]; g = "0x" + hex[2] + hex[2]; b = "0x" + hex[3] + hex[3]; } 
+    if (hex.length == 4) { r = "0x" + hex[1] + hex[1]; g = "0x" + hex[2] + hex[2]; b = "0x" + hex[3] + hex[3]; }
     else if (hex.length == 7) { r = "0x" + hex[1] + hex[2]; g = "0x" + hex[3] + hex[4]; b = "0x" + hex[5] + hex[6]; }
     return `rgba(${+r}, ${+g}, ${+b}, ${alpha})`;
 }
-
 function setPrimaryColor(main, hover, el) {
     document.documentElement.style.setProperty('--primary', main);
     document.documentElement.style.setProperty('--primary-hover', hover);
@@ -1009,12 +921,10 @@ function setPrimaryColor(main, hover, el) {
     document.querySelectorAll('.theme-swatch').forEach(s => s.classList.remove('active'));
     if (el) el.classList.add('active');
 }
-
 function showResetConfirm() { document.getElementById('main-settings-view').style.display = 'none'; document.getElementById('reset-confirm-view').style.display = 'block'; }
 function hideResetConfirm() { document.getElementById('main-settings-view').style.display = 'block'; document.getElementById('reset-confirm-view').style.display = 'none'; }
 function resetProgress() { localStorage.clear(); location.reload(); }
 function handleOutsideClick(event) { if (event.target.classList.contains('modal-overlay')) { closeSettings(); } }
-
 // --- TUTORIAL SYSTEM ---
 const tutorialSteps = [
     { target: null, title: "Welcome to Money Mentor!", text: "This is your personal finance student dashboard. Let's take a quick tour to help you master your money skills!" },
@@ -1029,9 +939,7 @@ const tutorialSteps = [
     { target: "#chatBubble", title: "Money Bot AI", text: "Ask it specifically for definitions like 'What is a stock?' or type 'Help' and it will explain how to use different parts of the site.", action: () => { toggleUnit('unit1'); } },
     { target: null, title: "Ready to Start?", text: "You're all set! Good luck on your journey to financial mastery." }
 ];
-
 let currentTutStep = 0;
-
 function startTutorial() { currentTutStep = 0; document.getElementById('tutorial-overlay').classList.add('active'); showStep(); }
 function nextTutorialStep() { currentTutStep++; if (currentTutStep >= tutorialSteps.length) { endTutorial(); } else { showStep(); } }
 function showStep() {
@@ -1053,7 +961,6 @@ function showStep() {
 }
 function endTutorial() { document.getElementById('tutorial-overlay').classList.remove('active'); localStorage.setItem('mm_tut_complete', 'true'); const drops = document.querySelectorAll('.unit-dropdown'); drops.forEach(d => d.classList.remove('active')); }
 function resetTutorial() { localStorage.removeItem('mm_tut_complete'); startTutorial(); }
-
 window.onload = () => {
     initBackground();
     const savedTheme = localStorage.getItem('mm_theme') || 'dark';

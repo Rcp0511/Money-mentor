@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
 <style>
-/* CSS VARIABLES & THEMES */
 :root {
     --bg: #f4f7fa;
     --card-bg: white;
@@ -39,17 +38,14 @@
     --option-selected-bg: #1f3a22;
     --option-selected-border: #66bb6a;
 }
-
-/* BASE STYLES */
 body {
     margin:0;
     font-family:'Inter', sans-serif;
+    /* This restored the star/dot background pattern */
     background:var(--bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><circle cx="60" cy="60" r="2" fill="%23c8e6c9"/><circle cx="25" cy="25" r="1.2" fill="%23c8e6c9"/><circle cx="95" cy="95" r="1.5" fill="%23c8e6c9"/><circle cx="35" cy="85" r="1" fill="%23c8e6c9"/><circle cx="85" cy="35" r="1.2" fill="%23c8e6c9"/></svg>') repeat;
     color:var(--text);
     transition:all 0.35s;
 }
-
-/* HEADER STYLING */
 header {
     background:linear-gradient(135deg, #43a047, #2e7d32);
     color:white;
@@ -79,7 +75,6 @@ header::after {
 }
 .header-left { display:flex; align-items:center; gap:12px; z-index:2; }
 .header-right { display:flex; align-items:center; gap:14px; font-size:1rem; z-index:2; }
-
 .nav-btn {
     border:none; cursor:pointer; font-weight:800; border-radius:14px;
     padding:10px 14px; display:flex; align-items:center; gap:10px;
@@ -99,13 +94,17 @@ header::after {
     border:1px solid rgba(255,255,255,0.15);
 }
 
-/* UNIT CARDS */
 .container { max-width:1100px; margin:34px auto 90px auto; padding:30px; }
 .unit-card {
     background:linear-gradient(145deg,#66bb6a,#388e3c);
     border-radius:20px; margin-bottom:30px; padding:25px 30px;
     box-shadow:0 8px 20px rgba(0,0,0,0.2); cursor:pointer;
     transition: transform 0.3s, box-shadow 0.3s; position:relative; overflow:hidden; color:white;
+}
+.unit-card::before {
+    content: ''; position:absolute; top:-50%; left:-50%; width:200%; height:200%;
+    background:radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+    transform:rotate(45deg); opacity:0.5;
 }
 .unit-card:hover { transform:translateY(-5px); box-shadow:0 12px 25px rgba(0,0,0,0.25); }
 .unit-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
@@ -122,7 +121,6 @@ header::after {
 .study-btn { background:#43a047; }
 .test-btn { background:#1b5e20; }
 
-/* OVERLAYS */
 #quizOverlay, #studyOverlay {
     display:none; position:fixed; top:0; left:0; width:100%; height:100%;
     background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000; overflow:auto;
@@ -131,7 +129,6 @@ header::after {
     background:var(--card-bg); border-radius:20px; width:95%; max-width:900px;
     min-height:80vh; position:relative; margin:20px auto; box-shadow:0 8px 25px rgba(0,0,0,0.25);
 }
-
 .close-x {
     position:absolute; top:18px; right:18px; font-size:2.1em;
     cursor:pointer; color:var(--red); z-index:9999;
@@ -178,7 +175,6 @@ header::after {
 #front { font-size:1.8em; font-weight:700; color:var(--green); }
 #back { font-size:1.2em; margin-top:20px; display:none; }
 
-/* FOOTER STUFF */
 .warning-note { text-align:center; font-size:0.9em; padding:10px; background:var(--note-bg); border-radius:10px; margin:20px; }
 .global-clear-wrap { position:fixed; right:20px; bottom:18px; z-index:2000; display:flex; flex-direction:column; align-items:flex-end; }
 #globalClearBtn { background:var(--red); color:white; border:none; border-radius:14px; padding:12px 16px; font-weight:900; cursor:pointer; }
@@ -190,14 +186,10 @@ header::after {
 
 <header>
     <div class="header-left">
-        <button class="nav-btn back-btn" onclick="window.location.href='https://sites.google.com/view/money--mentor/home'">
-            <i class="fas fa-arrow-left"></i> Back
-        </button>
-        <button class="nav-btn videos-btn" onclick="window.location.href='https://sites.google.com/view/money--mentor/learn/videos'">
-            <i class="fas fa-video"></i> Videos
-        </button>
+        <button class="nav-btn back-btn" id="backBtn"><i class="fas fa-arrow-left"></i> Back</button>
+        <button class="nav-btn videos-btn" id="videosBtn"><i class="fas fa-video"></i> Videos</button>
     </div>
-    <div>Student Dashboard</div>
+    <div style="z-index:2;">Student Dashboard</div>
     <div class="header-right">
         <button id="theme-toggle"><i class="fas fa-lightbulb"></i></button>
         <div class="progress-pill">
@@ -281,13 +273,13 @@ window.onload = function() {
       {q:"What is a 'liability'?", a:["Debt or obligation you owe","A company's owned stock","A shareholder payment","A financial asset"], correct:0, explanation:"Liabilities are obligations or debts owed to others."},
       {q:"What is a 'dividend'?", a:["Payment to shareholders","Company retained earnings","Stock price change","Interest on a bond"], correct:0, explanation:"Dividends are profits distributed to shareholders."},
       {q:"What is 'capital'?", a:["Money used for investment","Company revenue","Loan principal","Dividend earnings"], correct:0, explanation:"Capital is money allocated for investment purposes."},
-      {q:"What is 'portfolio'?", a:["Collection of investments","Single stock holding","Bank savings account","Outstanding debt"], correct:0, explanation:"A portfolio is your complete collection of financial investments."},
+      {q:"What is a 'portfolio'?", a:["Collection of investments","Single stock holding","Bank savings account","Outstanding debt"], correct:0, explanation:"A portfolio is your complete collection of financial investments."},
       {q:"What is 'risk'?", a:["Possibility of losing money","Guaranteed investment return","Fixed interest payment","Company revenue growth"], correct:0, explanation:"Risk is the chance that an investment’s actual return will differ from expected."},
       {q:"What is 'liquidity'?", a:["Ease of converting an asset to cash","Profitability of an investment","Market demand for stocks","Long-term investment potential"], correct:0, explanation:"Liquidity indicates how quickly an asset can be converted to cash without losing value."},
       {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stock sales","Investment principal","Dividend received"], correct:0, explanation:"Interest is the cost of borrowing money, usually expressed as a percentage."}
     ];
 
-    /* THEME LOGIC */
+    /* THEME */
     const themeBtn = document.getElementById('theme-toggle');
     themeBtn.onclick = () => {
         const current = document.documentElement.getAttribute('data-theme');
@@ -296,10 +288,14 @@ window.onload = function() {
         localStorage.setItem('theme', next);
     };
 
-    /* UNIT RENDERING */
+    /* NAV */
+    document.getElementById("backBtn").onclick = () => location.href="https://sites.google.com/view/money--mentor/home";
+    document.getElementById("videosBtn").onclick = () => location.href="https://sites.google.com/view/money--mentor/learn/videos";
+
+    /* UNITS */
     const unitContainer = document.getElementById("unitContainer");
     function renderUnitCard() {
-        const highScore = localStorage.getItem("unit1HighScore") || 0;
+        const highScore = parseInt(localStorage.getItem("unit1HighScore")) || 0;
         const isComplete = highScore >= 90;
         
         unitContainer.innerHTML = `
@@ -330,7 +326,7 @@ window.onload = function() {
         document.getElementById("progressText").innerText = `${isComplete ? 1 : 0} out of 1 units completed`;
     }
 
-    /* QUIZ LOGIC */
+    /* QUIZ */
     let quizData = [];
     let answers = [];
     let flags = [];
@@ -423,12 +419,12 @@ window.onload = function() {
         });
         const score = Math.round((correct / quizData.length) * 100);
         document.getElementById("lastScoreText").innerText = `You scored ${score}%`;
-        const high = Math.max(score, localStorage.getItem("unit1HighScore") || 0);
-        localStorage.setItem("unit1HighScore", high);
+        const oldHigh = parseInt(localStorage.getItem("unit1HighScore")) || 0;
+        localStorage.setItem("unit1HighScore", Math.max(score, oldHigh));
         renderUnitCard();
     };
 
-    /* STUDY LOGIC */
+    /* STUDY */
     let studyIdx = 0;
     function openStudy() {
         document.getElementById("studyOverlay").style.display = "flex";
@@ -449,7 +445,7 @@ window.onload = function() {
     document.getElementById("studyNextBtn").onclick = () => { studyIdx = (studyIdx + 1) % quizDataOriginal.length; showCard(); };
     document.getElementById("studyPrevBtn").onclick = () => { studyIdx = (studyIdx - 1 + quizDataOriginal.length) % quizDataOriginal.length; showCard(); };
 
-    /* CLOSING */
+    /* CLOSE */
     document.getElementById("closeQuiz").onclick = () => document.getElementById("quizOverlay").style.display = "none";
     document.getElementById("closeStudy").onclick = () => document.getElementById("studyOverlay").style.display = "none";
     document.getElementById("restartBtn").onclick = openQuiz;

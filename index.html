@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
 <style>
-/* CSS VARIABLES */
+/* CSS VARIABLES & THEMES */
 :root {
     --bg: #f4f7fa;
     --card-bg: white;
@@ -15,8 +15,13 @@
     --text-light: #555;
     --green: #43a047;
     --green-dark: #2e7d32;
+    --green-darker: #1b5e20;
     --red: #dc3545;
+    --red-dark: #b02a37;
     --note-bg: #e8f5e9;
+    --note-text: #333;
+    --option-border: #ccc;
+    --option-hover-bg: #e8f5e9;
     --option-selected-bg: #d4edda;
     --option-selected-border: #43a047;
 }
@@ -26,7 +31,11 @@
     --text: #e0e0e0;
     --text-light: #aaa;
     --red: #ff5252;
+    --red-dark: #d32f2f;
     --note-bg: #2a2a2a;
+    --note-text: #ddd;
+    --option-border: #444;
+    --option-hover-bg: #243524;
     --option-selected-bg: #1f3a22;
     --option-selected-border: #66bb6a;
 }
@@ -35,12 +44,12 @@
 body {
     margin:0;
     font-family:'Inter', sans-serif;
-    background:var(--bg);
+    background:var(--bg) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120"><circle cx="60" cy="60" r="2" fill="%23c8e6c9"/><circle cx="25" cy="25" r="1.2" fill="%23c8e6c9"/><circle cx="95" cy="95" r="1.5" fill="%23c8e6c9"/><circle cx="35" cy="85" r="1" fill="%23c8e6c9"/><circle cx="85" cy="35" r="1.2" fill="%23c8e6c9"/></svg>') repeat;
     color:var(--text);
     transition:all 0.35s;
 }
 
-/* HEADER */
+/* HEADER STYLING */
 header {
     background:linear-gradient(135deg, #43a047, #2e7d32);
     color:white;
@@ -49,274 +58,407 @@ header {
     justify-content:space-between;
     align-items:center;
     box-shadow:0 4px 12px rgba(0,0,0,0.2);
+    position:relative;
     font-family: 'Poppins', sans-serif;
     font-size:1.6em;
     font-weight:600;
+    gap:20px;
+    overflow:hidden;
 }
-.header-left, .header-right { display:flex; align-items:center; gap:15px; }
+header::after {
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    opacity:0.22;
+    background-image:
+      radial-gradient(circle at 14px 14px, rgba(255,255,255,0.35) 2px, transparent 2.6px),
+      radial-gradient(circle at 42px 42px, rgba(255,255,255,0.22) 2px, transparent 2.6px);
+    background-size:56px 56px;
+    mix-blend-mode:overlay;
+}
+.header-left { display:flex; align-items:center; gap:12px; z-index:2; }
+.header-right { display:flex; align-items:center; gap:14px; font-size:1rem; z-index:2; }
+
 .nav-btn {
-    border:none; cursor:pointer; font-weight:700; border-radius:12px;
-    padding:8px 14px; display:flex; align-items:center; gap:8px; font-size:0.9rem;
+    border:none; cursor:pointer; font-weight:800; border-radius:14px;
+    padding:10px 14px; display:flex; align-items:center; gap:10px;
+    transition:0.18s; font-size:0.95rem;
 }
-.back-btn { background:#0f3d1f; color:white; }
-.videos-btn { background:rgba(255,255,255,0.2); color:white; }
+.nav-btn:hover { transform:translateY(-1px) scale(1.03); }
+.back-btn { background:#0f3d1f; color:white; box-shadow:0 8px 18px rgba(0,0,0,0.18); }
+.videos-btn { background:rgba(255,255,255,0.18); color:white; border:1px solid rgba(255,255,255,0.18); }
+
+#theme-toggle {
+    background:rgba(255,255,255,0.15); border:none; color:white;
+    font-size:1.25rem; cursor:pointer; padding:10px 12px; border-radius:12px; transition:0.2s;
+}
+.progress-pill {
+    background:rgba(0,0,0,0.22); padding:10px 14px; border-radius:14px;
+    font-weight:600; font-size:0.95rem; display:flex; align-items:center; gap:10px;
+    border:1px solid rgba(255,255,255,0.15);
+}
 
 /* UNIT CARDS */
-.container { max-width:1100px; margin:40px auto; padding:20px; }
+.container { max-width:1100px; margin:34px auto 90px auto; padding:30px; }
 .unit-card {
     background:linear-gradient(145deg,#66bb6a,#388e3c);
-    border-radius:20px; padding:25px; margin-bottom:25px;
-    color:white; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,0.2);
-    position:relative; overflow:hidden;
+    border-radius:20px; margin-bottom:30px; padding:25px 30px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.2); cursor:pointer;
+    transition: transform 0.3s, box-shadow 0.3s; position:relative; overflow:hidden; color:white;
 }
-.unit-header { display:flex; justify-content:space-between; align-items:center; }
-.unit-title { font-size:1.4em; font-weight:700; display:flex; align-items:center; gap:10px; }
-.unit-dropdown { display:none; flex-direction:column; gap:15px; margin-top:20px; }
+.unit-card:hover { transform:translateY(-5px); box-shadow:0 12px 25px rgba(0,0,0,0.25); }
+.unit-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+.unit-header .title { display:flex; align-items:center; gap:12px; font-weight:700; font-size:1.25em; }
+.unit-header .scores { font-size:1em; color:#e8f5e9; background:rgba(0,0,0,0.2); padding:8px 12px; border-radius:10px; }
+.unit-complete { font-weight:900; color:#ffd700; background:rgba(0,0,0,0.22); padding:6px 10px; border-radius:12px; border:1px solid rgba(255,255,255,0.18); }
+
+.unit-dropdown { display:none; flex-direction:column; gap:16px; margin-top:24px; }
 .unit-dropdown button {
-    padding:15px; border:none; border-radius:12px; font-size:1.1em;
+    padding:16px 24px; border:none; border-radius:14px; font-size:1.15em;
     font-weight:700; color:white; cursor:pointer; display:flex;
-    align-items:center; justify-content:center; gap:10px;
+    align-items:center; justify-content:center; gap:12px; transition: 0.2s; width:100%;
 }
 .study-btn { background:#43a047; }
 .test-btn { background:#1b5e20; }
 
-/* OVERLAYS (QUIZ & STUDY) */
-.overlay {
+/* OVERLAYS */
+#quizOverlay, #studyOverlay {
     display:none; position:fixed; top:0; left:0; width:100%; height:100%;
-    background:rgba(0,0,0,0.7); z-index:1000; justify-content:center; align-items:center;
+    background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000; overflow:auto;
 }
-.overlay-content {
-    background:var(--card-bg); width:95%; max-width:800px; padding:30px;
-    border-radius:20px; position:relative; max-height:90vh; overflow-y:auto;
-    box-shadow:0 10px 30px rgba(0,0,0,0.3);
-}
-.close-btn {
-    position:absolute; top:15px; right:20px; font-size:2em; cursor:pointer; color:var(--red);
-    line-height:1; z-index:10;
+.quiz-container, .study-container {
+    background:var(--card-bg); border-radius:20px; width:95%; max-width:900px;
+    min-height:80vh; position:relative; margin:20px auto; box-shadow:0 8px 25px rgba(0,0,0,0.25);
 }
 
-/* STUDY FLASHCARDS */
-.flashcard {
-    background:var(--bg); padding:40px 20px; border-radius:15px;
-    text-align:center; margin-bottom:20px; min-height:150px;
-    display:flex; flex-direction:column; justify-content:center;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+.close-x {
+    position:absolute; top:18px; right:18px; font-size:2.1em;
+    cursor:pointer; color:var(--red); z-index:9999;
 }
-#front { font-size:1.8em; font-weight:800; color:var(--green); }
-#back { font-size:1.2em; color:var(--text); display:none; }
-.study-controls { display:flex; justify-content:space-between; gap:10px; margin-top:20px; }
-.control-btn {
-    padding:12px 20px; border:none; border-radius:10px; cursor:pointer;
-    font-weight:700; flex:1; font-size:1em; color:white;
-}
-#flipBtn { background:#555; width:100%; margin-bottom:15px; }
-#studyPrevBtn { background:#6c757d; }
-#studyNextBtn { background:#43a047; }
 
 /* QUIZ STYLES */
-.options button {
-    width:100%; padding:15px; margin:8px 0; border:2px solid #ccc;
-    border-radius:10px; background:var(--card-bg); color:var(--text);
-    cursor:pointer; text-align:left; font-size:1em;
+#quiz, #review, #scoreScreen, #study { padding:30px; box-sizing:border-box; }
+#startScreen {
+    display:flex; flex-direction:column; justify-content:center; align-items:center;
+    text-align:center; height:100%; min-height:80vh; width:100%; padding:40px;
+    background:linear-gradient(135deg, #43a047, #2e7d32); border-radius:20px; color:white;
 }
-.options button.selected { background:var(--option-selected-bg); border-color:var(--option-selected-border); }
+.options button {
+    display:block; width:100%; margin:8px 0; padding:14px;
+    border:2px solid var(--option-border); border-radius:10px;
+    cursor:pointer; text-align:left; background:var(--card-bg); color:var(--text); transition:0.2s;
+}
+.options button.selected { background-color:var(--option-selected-bg); border-color:var(--option-selected-border); }
 
-/* UTILS */
+.controls { display:flex; justify-content:space-between; margin-top:20px; gap:12px; }
+.controls button { padding:12px 20px; border:none; border-radius:10px; cursor:pointer; font-weight:800; color:white; }
+.btn-next { background:#43a047; }
+.btn-prev { background:#6c757d; }
+
+.progress-bar { height:12px; background:#eee; border-radius:6px; overflow:hidden; margin-top:20px; }
+.progress { height:100%; width:0%; background:linear-gradient(90deg,#43a047,#85e085); transition:width 0.3s; }
+
+/* REVIEW GRID */
+.review-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(60px,1fr)); gap:12px; margin-top:10px; }
+.review-box {
+    padding:14px; text-align:center; border-radius:10px; cursor:pointer;
+    font-weight:900; background:#e9ecef; position:relative;
+}
+[data-theme="dark"] .review-box { background:#2a2a2a; }
+.review-box.answered { background:var(--option-selected-bg); border-color:var(--option-selected-border); }
+.review-flag { position:absolute; top:6px; right:8px; color:var(--red); font-size:0.95em; }
+
+/* FLASHCARDS */
+.flashcard {
+    background:var(--card-bg); padding:25px; border-radius:14px;
+    margin-bottom:25px; box-shadow:0 4px 12px rgba(0,0,0,0.1);
+    min-height:200px; display:flex; flex-direction:column; justify-content:center; text-align:center;
+}
+#front { font-size:1.8em; font-weight:700; color:var(--green); }
+#back { font-size:1.2em; margin-top:20px; display:none; }
+
+/* FOOTER STUFF */
+.warning-note { text-align:center; font-size:0.9em; padding:10px; background:var(--note-bg); border-radius:10px; margin:20px; }
+.global-clear-wrap { position:fixed; right:20px; bottom:18px; z-index:2000; display:flex; flex-direction:column; align-items:flex-end; }
+#globalClearBtn { background:var(--red); color:white; border:none; border-radius:14px; padding:12px 16px; font-weight:900; cursor:pointer; }
+
 .hidden { display:none !important; }
-.flex { display:flex !important; }
 </style>
 </head>
 <body>
 
 <header>
     <div class="header-left">
-        <button class="nav-btn back-btn" onclick="location.href='https://sites.google.com/view/money--mentor/home'">Back</button>
+        <button class="nav-btn back-btn" onclick="window.location.href='https://sites.google.com/view/money--mentor/home'">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <button class="nav-btn videos-btn" onclick="window.location.href='https://sites.google.com/view/money--mentor/learn/videos'">
+            <i class="fas fa-video"></i> Videos
+        </button>
     </div>
     <div>Student Dashboard</div>
     <div class="header-right">
-        <button class="nav-btn" id="themeBtn">Theme</button>
+        <button id="theme-toggle"><i class="fas fa-lightbulb"></i></button>
+        <div class="progress-pill">
+            <i class="fas fa-check-circle"></i>
+            <span id="progressText">0 out of 1 units completed</span>
+        </div>
     </div>
 </header>
 
-<div class="container" id="unitContainer">
-    </div>
+<div class="container" id="unitContainer"></div>
 
-<div id="studyOverlay" class="overlay">
-    <div class="overlay-content">
-        <span class="close-btn" id="closeStudy">&times;</span>
-        <h2 style="text-align:center; color:var(--green);">Flashcards</h2>
-        <div class="flashcard">
-            <div id="front">Term</div>
-            <div id="back">Definition</div>
+<div class="warning-note">
+    <i class="fas fa-info-circle"></i> Data stored locally in your browser.
+</div>
+
+<div class="global-clear-wrap">
+    <button id="globalClearBtn"><i class="fas fa-trash"></i> Clear All Data</button>
+</div>
+
+<div id="quizOverlay">
+    <div class="quiz-container">
+        <span class="close-x" id="closeQuiz">×</span>
+        <button id="flagBtn" style="position:absolute; top:20px; right:70px; display:none; background:none; border:none; color:var(--red); cursor:pointer; font-size:1.2em;"><i class="far fa-flag"></i></button>
+        
+        <div id="startScreen">
+            <h2>📈 Unit 1: Investing Vocab 📈</h2>
+            <button id="startBtn" style="padding:15px 30px; font-size:1.2em; border-radius:12px; border:none; background:#1b5e20; color:white; cursor:pointer; font-weight:bold;">Start Quiz</button>
         </div>
-        <button class="control-btn" id="flipBtn">Flip Card</button>
-        <div class="study-controls">
-            <button class="control-btn" id="studyPrevBtn">Previous</button>
-            <button class="control-btn" id="studyNextBtn">Next</button>
+
+        <div id="quiz" class="hidden">
+            <div id="questionNumber" class="question-number"></div>
+            <div id="question" style="font-size:1.4em; margin-bottom:20px; font-weight:600;"></div>
+            <div id="options" class="options"></div>
+            <div class="controls">
+                <button id="quizPrevBtn" class="btn-prev">Previous</button>
+                <button id="quizNextBtn" class="btn-next">Next</button>
+            </div>
+            <div class="progress-bar"><div id="progress" class="progress"></div></div>
+        </div>
+
+        <div id="review" class="hidden">
+            <h2>Review Page</h2>
+            <div class="review-grid" id="reviewGrid"></div>
+            <button id="toScoreBtn" style="margin-top:20px; padding:15px; width:100%; background:var(--green); color:white; border:none; border-radius:12px; font-weight:bold; cursor:pointer;">Submit Quiz</button>
+        </div>
+
+        <div id="scoreScreen" class="hidden">
+            <h3>Your Results</h3>
+            <ul id="missedList" style="list-style:none; padding:0;"></ul>
+            <p id="lastScoreText" style="font-weight:bold;"></p>
+            <button id="restartBtn" style="padding:12px 20px; background:var(--green); color:white; border:none; border-radius:10px; cursor:pointer;">Restart Quiz</button>
         </div>
     </div>
 </div>
 
-<div id="quizOverlay" class="overlay">
-    <div class="overlay-content">
-        <span class="close-btn" id="closeQuiz">&times;</span>
-        <div id="startScreen" style="text-align:center;">
-            <h2>Unit 1 Quiz</h2>
-            <button class="control-btn" style="background:var(--green);" id="startQuizBtn">Start</button>
-        </div>
-        <div id="quizInterface" class="hidden">
-            <h3 id="qText">Question?</h3>
-            <div class="options" id="optionsBox"></div>
-            <div class="study-controls">
-                <button class="control-btn" id="quizPrevBtn" style="background:#777;">Prev</button>
-                <button class="control-btn" id="quizNextBtn" style="background:var(--green);">Next</button>
+<div id="studyOverlay">
+    <div class="study-container">
+        <span class="close-x" id="closeStudy">×</span>
+        <div id="study">
+            <h2 style="text-align:center; color:var(--green);">Flashcards</h2>
+            <div class="flashcard">
+                <div id="front">Term</div>
+                <div id="back">Definition</div>
             </div>
-        </div>
-        <div id="scoreScreen" class="hidden" style="text-align:center;">
-            <h2>Quiz Complete!</h2>
-            <p id="finalScore">Score: 0%</p>
-            <button class="control-btn" style="background:#777;" onclick="location.reload()">Close</button>
+            <button id="flipBtn" style="width:100%; padding:15px; background:#555; color:white; border:none; border-radius:12px; cursor:pointer; font-weight:bold; margin-bottom:15px;">Flip Card</button>
+            <div class="controls">
+                <button id="studyPrevBtn" class="btn-prev">Previous</button>
+                <button id="studyNextBtn" class="btn-next">Next</button>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
 window.onload = function() {
-    console.log("System Starting...");
-
-    // DATA
-    const quizData = [
-      {q:"What is a 'stock'?", a:["Share of ownership in a company","Debt issued by a company","A bank savings account","A type of bond"], correct:0, explanation:"Stocks represent part ownership."},
-      {q:"What is a 'bond'?", a:["Loan to a company or government","Share of ownership in a company","An interest-bearing account","A type of insurance"], correct:0, explanation:"Bonds are loans you give to companies."},
-      {q:"What is an 'asset'?", a:["Something valuable you own","Debt you owe","Potential future income","An expense item"], correct:0, explanation:"Assets are valuable resources you own."},
-      {q:"What is a 'liability'?", a:["Debt or obligation you owe","A company's owned stock","A shareholder payment","A financial asset"], correct:0, explanation:"Liabilities are debts owed to others."},
+    /* DATA */
+    const quizDataOriginal = [
+      {q:"What is a 'stock'?", a:["Share of ownership in a company","Debt issued by a company","A bank savings account","A type of bond"], correct:0, explanation:"Stocks represent part ownership in a company and potential profits."},
+      {q:"What is a 'bond'?", a:["Loan to a company or government","Share of ownership in a company","An interest-bearing account","A type of insurance"], correct:0, explanation:"Bonds are loans you give to companies or governments in exchange for interest."},
+      {q:"What is an 'asset'?", a:["Something valuable you own","Debt you owe","Potential future income","An expense item"], correct:0, explanation:"Assets are valuable resources you own, either physical or financial."},
+      {q:"What is a 'liability'?", a:["Debt or obligation you owe","A company's owned stock","A shareholder payment","A financial asset"], correct:0, explanation:"Liabilities are obligations or debts owed to others."},
       {q:"What is a 'dividend'?", a:["Payment to shareholders","Company retained earnings","Stock price change","Interest on a bond"], correct:0, explanation:"Dividends are profits distributed to shareholders."},
-      {q:"What is 'liquidity'?", a:["Ease of converting an asset to cash","Profitability of an investment","Market demand","Long-term potential"], correct:0, explanation:"Liquidity is how fast you can get cash."}
+      {q:"What is 'capital'?", a:["Money used for investment","Company revenue","Loan principal","Dividend earnings"], correct:0, explanation:"Capital is money allocated for investment purposes."},
+      {q:"What is 'portfolio'?", a:["Collection of investments","Single stock holding","Bank savings account","Outstanding debt"], correct:0, explanation:"A portfolio is your complete collection of financial investments."},
+      {q:"What is 'risk'?", a:["Possibility of losing money","Guaranteed investment return","Fixed interest payment","Company revenue growth"], correct:0, explanation:"Risk is the chance that an investment’s actual return will differ from expected."},
+      {q:"What is 'liquidity'?", a:["Ease of converting an asset to cash","Profitability of an investment","Market demand for stocks","Long-term investment potential"], correct:0, explanation:"Liquidity indicates how quickly an asset can be converted to cash without losing value."},
+      {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stock sales","Investment principal","Dividend received"], correct:0, explanation:"Interest is the cost of borrowing money, usually expressed as a percentage."}
     ];
 
-    // DOM ELEMENTS
+    /* THEME LOGIC */
+    const themeBtn = document.getElementById('theme-toggle');
+    themeBtn.onclick = () => {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+    };
+
+    /* UNIT RENDERING */
     const unitContainer = document.getElementById("unitContainer");
-    const studyOverlay = document.getElementById("studyOverlay");
-    const quizOverlay = document.getElementById("quizOverlay");
-    
-    // RENDER UNIT CARD
-    const card = document.createElement("div");
-    card.className = "unit-card";
-    card.innerHTML = `
-        <div class="unit-header">
-            <div class="unit-title"><i class="fas fa-book"></i> Unit 1: Investing Vocab</div>
-        </div>
-        <div class="unit-dropdown" id="dropdown1">
-            <button class="study-btn" id="btnStudy">Study Flashcards</button>
-            <button class="test-btn" id="btnTest">Take Quiz</button>
-        </div>
-    `;
-    unitContainer.appendChild(card);
-
-    // TOGGLE DROPDOWN
-    card.onclick = function(e) {
-        // Prevent closing if clicking buttons
-        if(e.target.tagName === 'BUTTON') return;
-        const dd = document.getElementById("dropdown1");
-        dd.style.display = (dd.style.display === "flex") ? "none" : "flex";
-    };
-
-    // STUDY LOGIC
-    let studyIndex = 0;
-    let isFlipped = false;
-    
-    document.getElementById("btnStudy").onclick = function() {
-        studyOverlay.style.display = "flex";
-        loadFlashcard(0);
-    };
-
-    document.getElementById("closeStudy").onclick = function() {
-        studyOverlay.style.display = "none";
-    };
-
-    function loadFlashcard(index) {
-        studyIndex = index;
-        if(studyIndex < 0) studyIndex = quizData.length - 1;
-        if(studyIndex >= quizData.length) studyIndex = 0;
+    function renderUnitCard() {
+        const highScore = localStorage.getItem("unit1HighScore") || 0;
+        const isComplete = highScore >= 90;
         
-        isFlipped = false;
-        const item = quizData[studyIndex];
-        // Extract term from quotes if possible, else use full question
-        const termMatch = item.q.match(/'([^']+)'/);
-        const term = termMatch ? termMatch[1] : item.q;
-        
-        document.getElementById("front").innerText = term;
-        document.getElementById("back").innerHTML = `
-            <strong>${item.a[item.correct]}</strong><br><br>
-            <small style='opacity:0.7'>${item.explanation}</small>
+        unitContainer.innerHTML = `
+            <div class="unit-card" id="unit1Card">
+                <div class="unit-header">
+                    <div class="title">
+                        ${isComplete ? '<span class="unit-complete">Unit Complete</span>' : ''}
+                        Unit 1: Investing Vocab 
+                        ${isComplete ? '<i class="fas fa-star" style="color:gold; margin-left:10px;"></i>' : ''}
+                    </div>
+                    <div class="scores">High Score: ${highScore}%</div>
+                </div>
+                <div class="unit-dropdown" id="unit1DD">
+                    <button class="study-btn" id="openStudyBtn"><i class="fas fa-book"></i> Study Flashcards</button>
+                    <button class="test-btn" id="openQuizBtn"><i class="fas fa-clipboard"></i> Take Unit Test</button>
+                </div>
+            </div>
         `;
         
-        document.getElementById("front").style.display = "block";
-        document.getElementById("back").style.display = "none";
+        document.getElementById("unit1Card").onclick = (e) => {
+            if(e.target.tagName === 'BUTTON') return;
+            const dd = document.getElementById("unit1DD");
+            dd.style.display = dd.style.display === "flex" ? "none" : "flex";
+        };
+
+        document.getElementById("openStudyBtn").onclick = openStudy;
+        document.getElementById("openQuizBtn").onclick = openQuiz;
+        document.getElementById("progressText").innerText = `${isComplete ? 1 : 0} out of 1 units completed`;
     }
 
-    document.getElementById("flipBtn").onclick = function() {
-        isFlipped = !isFlipped;
-        document.getElementById("front").style.display = isFlipped ? "none" : "block";
-        document.getElementById("back").style.display = isFlipped ? "block" : "none";
-    };
+    /* QUIZ LOGIC */
+    let quizData = [];
+    let answers = [];
+    let flags = [];
+    let currentIdx = 0;
 
-    document.getElementById("studyNextBtn").onclick = () => loadFlashcard(studyIndex + 1);
-    document.getElementById("studyPrevBtn").onclick = () => loadFlashcard(studyIndex - 1);
-
-    // QUIZ LOGIC
-    let quizIndex = 0;
-    let score = 0;
-    
-    document.getElementById("btnTest").onclick = function() {
-        quizOverlay.style.display = "flex";
-    };
-    
-    document.getElementById("closeQuiz").onclick = function() {
-        quizOverlay.style.display = "none";
-    };
-    
-    document.getElementById("startQuizBtn").onclick = function() {
-        document.getElementById("startScreen").classList.add("hidden");
-        document.getElementById("quizInterface").classList.remove("hidden");
-        loadQuizQuestion(0);
-    };
-
-    function loadQuizQuestion(index) {
-        quizIndex = index;
-        if(quizIndex >= quizData.length) {
-            // End Quiz
-            document.getElementById("quizInterface").classList.add("hidden");
-            document.getElementById("scoreScreen").classList.remove("hidden");
-            document.getElementById("finalScore").innerText = "You scored: " + Math.round((score / quizData.length)*100) + "%";
-            return;
-        }
-
-        const q = quizData[quizIndex];
-        document.getElementById("qText").innerText = q.q;
-        const optBox = document.getElementById("optionsBox");
-        optBox.innerHTML = "";
+    function openQuiz() {
+        document.getElementById("quizOverlay").style.display = "flex";
+        document.getElementById("startScreen").classList.remove("hidden");
+        document.getElementById("quiz").classList.add("hidden");
+        document.getElementById("review").classList.add("hidden");
+        document.getElementById("scoreScreen").classList.add("hidden");
         
-        q.a.forEach((ans, i) => {
-            const btn = document.createElement("button");
-            btn.innerText = ans;
-            btn.onclick = function() {
-                // Simple immediate scoring for stability
-                if(i === q.correct) score++;
-                loadQuizQuestion(quizIndex + 1);
+        quizData = [...quizDataOriginal].sort(() => Math.random() - 0.5);
+        answers = Array(quizData.length).fill(null);
+        flags = Array(quizData.length).fill(false);
+        currentIdx = 0;
+    }
+
+    document.getElementById("startBtn").onclick = () => {
+        document.getElementById("startScreen").classList.add("hidden");
+        document.getElementById("quiz").classList.remove("hidden");
+        document.getElementById("flagBtn").style.display = "block";
+        loadQuestion();
+    };
+
+    function loadQuestion() {
+        const q = quizData[currentIdx];
+        document.getElementById("questionNumber").innerText = `Question ${currentIdx + 1} of ${quizData.length}`;
+        document.getElementById("question").innerText = q.q;
+        const opts = document.getElementById("options");
+        opts.innerHTML = "";
+        
+        q.a.forEach((opt, i) => {
+            const b = document.createElement("button");
+            b.innerText = opt;
+            if(answers[currentIdx] === i) b.classList.add("selected");
+            b.onclick = () => {
+                answers[currentIdx] = i;
+                loadQuestion();
             };
-            optBox.appendChild(btn);
+            opts.appendChild(b);
+        });
+        document.getElementById("progress").style.width = `${((currentIdx+1)/quizData.length)*100}%`;
+        document.getElementById("flagBtn").innerHTML = flags[currentIdx] ? '<i class="fas fa-flag"></i>' : '<i class="far fa-flag"></i>';
+    }
+
+    document.getElementById("quizNextBtn").onclick = () => {
+        if(currentIdx < quizData.length - 1) {
+            currentIdx++;
+            loadQuestion();
+        } else {
+            showReview();
+        }
+    };
+    document.getElementById("quizPrevBtn").onclick = () => { if(currentIdx > 0) { currentIdx--; loadQuestion(); } };
+    document.getElementById("flagBtn").onclick = () => { flags[currentIdx] = !flags[currentIdx]; loadQuestion(); };
+
+    function showReview() {
+        document.getElementById("quiz").classList.add("hidden");
+        document.getElementById("review").classList.remove("hidden");
+        document.getElementById("flagBtn").style.display = "none";
+        const grid = document.getElementById("reviewGrid");
+        grid.innerHTML = "";
+        quizData.forEach((_, i) => {
+            const box = document.createElement("div");
+            box.className = `review-box ${answers[i] !== null ? 'answered' : ''}`;
+            box.innerText = i + 1;
+            if(flags[i]) box.innerHTML += ' <i class="fas fa-flag review-flag"></i>';
+            box.onclick = () => { currentIdx = i; document.getElementById("review").classList.add("hidden"); document.getElementById("quiz").classList.remove("hidden"); document.getElementById("flagBtn").style.display = "block"; loadQuestion(); };
+            grid.appendChild(box);
         });
     }
 
-    // THEME LOGIC
-    document.getElementById("themeBtn").onclick = function() {
-        const current = document.documentElement.getAttribute("data-theme");
-        document.documentElement.setAttribute("data-theme", current === "dark" ? "light" : "dark");
+    document.getElementById("toScoreBtn").onclick = () => {
+        document.getElementById("review").classList.add("hidden");
+        document.getElementById("scoreScreen").classList.remove("hidden");
+        let correct = 0;
+        const list = document.getElementById("missedList");
+        list.innerHTML = "";
+        quizData.forEach((q, i) => {
+            const isCorrect = q.a[answers[i]] === q.a[q.correct];
+            if(isCorrect) correct++;
+            const li = document.createElement("li");
+            li.style.padding = "10px";
+            li.style.margin = "5px 0";
+            li.style.borderRadius = "8px";
+            li.style.background = isCorrect ? "rgba(67,160,71,0.1)" : "rgba(220,53,69,0.1)";
+            li.innerHTML = `<strong>Q${i+1}:</strong> ${isCorrect ? 'Correct ✅' : 'Wrong ❌'}<br><small>${q.explanation}</small>`;
+            list.appendChild(li);
+        });
+        const score = Math.round((correct / quizData.length) * 100);
+        document.getElementById("lastScoreText").innerText = `You scored ${score}%`;
+        const high = Math.max(score, localStorage.getItem("unit1HighScore") || 0);
+        localStorage.setItem("unit1HighScore", high);
+        renderUnitCard();
     };
 
-    // Initialize Theme
-    document.documentElement.setAttribute("data-theme", "dark");
+    /* STUDY LOGIC */
+    let studyIdx = 0;
+    function openStudy() {
+        document.getElementById("studyOverlay").style.display = "flex";
+        studyIdx = 0;
+        showCard();
+    }
+    function showCard() {
+        const q = quizDataOriginal[studyIdx];
+        const term = q.q.match(/'([^']+)'/)?.[1] || q.q;
+        document.getElementById("front").innerText = term;
+        document.getElementById("back").innerText = q.a[q.correct];
+        document.getElementById("back").style.display = "none";
+    }
+    document.getElementById("flipBtn").onclick = () => {
+        const b = document.getElementById("back");
+        b.style.display = b.style.display === "none" ? "block" : "none";
+    };
+    document.getElementById("studyNextBtn").onclick = () => { studyIdx = (studyIdx + 1) % quizDataOriginal.length; showCard(); };
+    document.getElementById("studyPrevBtn").onclick = () => { studyIdx = (studyIdx - 1 + quizDataOriginal.length) % quizDataOriginal.length; showCard(); };
+
+    /* CLOSING */
+    document.getElementById("closeQuiz").onclick = () => document.getElementById("quizOverlay").style.display = "none";
+    document.getElementById("closeStudy").onclick = () => document.getElementById("studyOverlay").style.display = "none";
+    document.getElementById("restartBtn").onclick = openQuiz;
+
+    document.getElementById("globalClearBtn").onclick = () => {
+        if(confirm("Delete all scores?")) { localStorage.clear(); location.reload(); }
+    };
+
+    renderUnitCard();
 };
 </script>
 </body>

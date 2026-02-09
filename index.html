@@ -214,6 +214,13 @@ header {
     flex-direction: column;
 }
 
+.overlay {
+    background-image: 
+        radial-gradient(var(--dot-color) 3px, transparent 3px),
+        radial-gradient(var(--dot-color) 2px, transparent 2px);
+    background-size: 140px 140px, 190px 190px;
+}
+
 .overlay-header {
     padding: 1rem 2rem;
     border-bottom: 2px solid var(--border);
@@ -236,6 +243,7 @@ header {
     transition: transform 0.6s var(--ease-in-out-back), opacity 0.4s ease;
     transform-style: preserve-3d; cursor: pointer;
 }
+.flashcard:hover { transform: translateY(-5px); }
 .flashcard.flipped { transform: rotateY(180deg); }
 
 .card-face {
@@ -254,18 +262,35 @@ header {
     font-size: 1rem;
 }
 .option-btn.selected { border-color: var(--primary); background: rgba(16, 185, 129, 0.1); }
+.option-btn:hover { border-color: var(--primary); background: var(--bg); }
+
+.review-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1.5rem; justify-content: center; }
+.dot {
+    width: 42px; height: 42px; border-radius: 10px; border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
+    font-weight: 700; cursor: pointer; color: var(--text-light);
+    position: relative;
+}
+.dot.current { border-color: var(--primary); color: var(--primary); transform: scale(1.1); box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
+.dot.answered { background: var(--primary); color: white; border-color: var(--primary); }
+.dot.marked { border-color: var(--accent); border-style: dashed; background: rgba(217, 119, 6, 0.15); }
 
 .progress-container { width: 100%; height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; margin: 1.5rem 0; }
 .progress-bar { height: 100%; background: var(--primary); transition: width 0.3s ease; }
 
-.action-trigger { font-size: 1.6rem; cursor: pointer; color: var(--text-light); }
+.action-trigger { font-size: 1.6rem; cursor: pointer; color: var(--text-light); transition: all 0.2s ease; }
 .action-trigger.active { color: var(--accent); transform: scale(1.25); }
 
-/* Chat Bot Styles */
+.status-pill { padding: 0.5rem 1.2rem; border-radius: 25px; font-size: 0.9rem; font-weight: 700; background: var(--border); color: var(--text); }
+
+.see-why { font-size: 0.8rem; text-decoration: underline; color: var(--primary); cursor: pointer; margin-top: 4px; display: inline-block; }
+.why-content { display: none; font-size: 0.85rem; color: var(--text-light); margin-top: 8px; padding: 10px; background: rgba(0,0,0,0.03); border-radius: 8px; }
+
+/* AI CHAT BOT STYLES */
 .chat-container {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: 25px;
+    right: 25px;
     z-index: 2000;
     font-family: 'Inter', sans-serif;
 }
@@ -273,35 +298,50 @@ header {
     width: 60px; height: 60px; border-radius: 50%;
     background: var(--primary); color: white;
     display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     cursor: pointer; font-size: 1.5rem;
+    transition: all 0.3s ease;
 }
+.chat-bubble:hover { transform: scale(1.1) rotate(5deg); }
 .chat-window {
-    display: none; position: absolute; bottom: 80px; right: 0;
+    display: none; position: absolute; bottom: 75px; right: 0;
     width: 350px; height: 500px; background: var(--card-bg);
     border-radius: 20px; border: 1px solid var(--border);
     flex-direction: column; overflow: hidden;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
 }
 .chat-window.active { display: flex; }
 .chat-header {
     padding: 1rem; background: var(--primary); color: white;
     display: flex; justify-content: space-between; align-items: center;
 }
-.chat-messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-.message { padding: 10px 14px; border-radius: 15px; max-width: 80%; font-size: 0.9rem; line-height: 1.4; }
-.bot-msg { background: var(--bg); color: var(--text); align-self: flex-start; border-bottom-left-radius: 2px; }
-.user-msg { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
-.chat-input-area { padding: 10px; border-top: 1px solid var(--border); display: flex; gap: 8px; }
-.chat-input { flex: 1; border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; background: var(--bg); color: var(--text); outline: none; }
-.dot-typing { display: flex; gap: 4px; padding: 10px; }
-.dot-typing span { width: 6px; height: 6px; background: var(--text-light); border-radius: 50%; animation: blink 1s infinite alternate; }
-.dot-typing span:nth-child(2) { animation-delay: 0.3s; }
-.dot-typing span:nth-child(3) { animation-delay: 0.6s; }
-@keyframes blink { from { opacity: 0.3; } to { opacity: 1; } }
+.chat-messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; scroll-behavior: smooth; }
+.message { padding: 10px 14px; border-radius: 18px; max-width: 85%; font-size: 0.9rem; line-height: 1.4; word-wrap: break-word; }
+.bot-msg { background: var(--bg); color: var(--text); align-self: flex-start; border-bottom-left-radius: 4px; }
+.user-msg { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+.chat-input-area { padding: 12px; border-top: 1px solid var(--border); display: flex; gap: 8px; background: var(--card-bg); }
+.chat-input { flex: 1; border: 1px solid var(--border); border-radius: 12px; padding: 8px 12px; background: var(--bg); color: var(--text); outline: none; font-family: inherit; }
+.dot-typing { display: flex; gap: 4px; padding: 8px 12px; align-self: flex-start; background: var(--bg); border-radius: 15px; margin-bottom: 5px; }
+.dot-typing span { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; animation: blink 1s infinite alternate; }
+.dot-typing span:nth-child(2) { animation-delay: 0.2s; }
+.dot-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes blink { from { opacity: 0.2; } to { opacity: 1; } }
+
+@keyframes slideOutLeft { to { transform: translateX(-150%) rotateY(-20deg); opacity: 0; } }
+@keyframes slideInRight { from { transform: translateX(150%) rotateY(20deg); opacity: 0; } to { transform: translateX(0) rotateY(0); opacity: 1; } }
+@keyframes slideOutRight { to { transform: translateX(150%) rotateY(20deg); opacity: 0; } }
+@keyframes slideInLeft { from { transform: translateX(-150%) rotateY(-20deg); opacity: 0; } to { transform: translateX(0) rotateY(0); opacity: 1; } }
+
+.slide-out-left { animation: slideOutLeft 0.6s var(--ease-out-expo) forwards; }
+.slide-in-right { animation: slideInRight 0.6s var(--ease-out-expo) forwards; }
+.slide-out-right { animation: slideOutRight 0.6s var(--ease-out-expo) forwards; }
+.slide-in-left { animation: slideInLeft 0.6s var(--ease-out-expo) forwards; }
 
 @media (max-width: 768px) {
-    .chat-window { width: calc(100vw - 40px); height: 400px; }
+    .flashcard-stage { height: 400px; width: 95%; }
+    .card-face { padding: 2rem; }
+    .chat-window { width: calc(100vw - 50px); right: -10px; height: 450px; }
 }
 </style>
 </head>
@@ -339,25 +379,29 @@ header {
     </div>
 </div>
 
-<!-- Chat Bot UI -->
+<!-- CHAT BOT UI -->
 <div class="chat-container">
     <div class="chat-window" id="chatWindow">
         <div class="chat-header">
-            <div style="font-weight: 700;"><i class="fas fa-robot"></i> Money Mentor AI</div>
+            <div style="font-weight: 700; display:flex; align-items:center; gap:8px;">
+                <i class="fas fa-robot"></i> Money Bot
+            </div>
             <i class="fas fa-times" style="cursor: pointer;" onclick="toggleChat()"></i>
         </div>
         <div class="chat-messages" id="chatMessages">
-            <div class="message bot-msg">Hi! I'm your Money Mentor AI. Need help understanding a financial concept or term? Ask me anything!</div>
+            <div class="message bot-msg">👋 Hi! I'm Money Bot. Need help understanding stocks, bonds, or any other money terms? Ask me anything!</div>
         </div>
-        <div id="typingIndicator" style="display: none;">
+        <div id="typingIndicator" style="display: none; padding: 0 1rem;">
             <div class="dot-typing"><span></span><span></span><span></span></div>
         </div>
         <div class="chat-input-area">
-            <input type="text" id="chatInput" class="chat-input" placeholder="Ask about banking..." onkeypress="if(event.key==='Enter') sendMessage()">
-            <button class="btn btn-primary" style="padding: 6px 12px;" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+            <input type="text" id="chatInput" class="chat-input" placeholder="Type a question..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <button class="btn btn-primary" style="padding: 8px 12px; min-width: 44px;" onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
         </div>
     </div>
-    <div class="chat-bubble" onclick="toggleChat()">
+    <div class="chat-bubble" id="chatBubble" onclick="toggleChat()">
         <i class="fas fa-comment-dots"></i>
     </div>
 </div>
@@ -370,76 +414,16 @@ const units = [
         icon: "fa-chart-line",
         class: "",
         data: [
-            { 
-                term: "Stock", 
-                flashcardDef: "Think of this as owning a tiny slice of a company. When the company makes money or grows, your slice becomes more valuable.",
-                q: "What is a 'stock'?", 
-                a: ["Share of ownership in a company", "Debt issued by a company", "A bank savings account", "A type of corporate bond"], 
-                c: 0 
-            },
-            { 
-                term: "Bond", 
-                flashcardDef: "This is essentially an IOU. You are acting as the bank and lending your money to a government or corporation in exchange for interest payments.",
-                q: "What is a 'bond'?", 
-                a: ["Share of ownership in a company", "Loan to a company or government", "An interest-bearing liquid account", "A type of insurance contract"], 
-                c: 1 
-            },
-            { 
-                term: "Asset", 
-                flashcardDef: "Any item of value you own that could be converted into cash. This includes money in the bank, jewelry, or even a car.",
-                q: "What is an 'asset'?", 
-                a: ["Debt you owe to a bank", "Potential future salary income", "Something valuable you own", "An unavoidable expense item"], 
-                c: 2 
-            },
-            { 
-                term: "Liability", 
-                flashcardDef: "The opposite of an asset. This is money that you owe to someone else, like a student loan, credit card debt, or a mortgage.",
-                q: "What is a 'liability'?", 
-                a: ["A company's total owned stock", "A shareholder dividend payment", "Debt or obligation you owe", "A financial resource of value"], 
-                c: 2 
-            },
-            { 
-                term: "Dividend", 
-                flashcardDef: "A 'thank you' payment from a company to its shareholders. It's a way for a company to share its success directly with you.",
-                q: "What is a 'dividend'?", 
-                a: ["Company profits paid to shareholders", "Company profits kept for research", "Change in a stock's market price", "The interest paid on a corporate bond"], 
-                c: 0 
-            },
-            { 
-                term: "Capital", 
-                flashcardDef: "The engine of your wealth. This is the specific pool of money you set aside to invest and grow, rather than spend on daily bills.",
-                q: "What is 'capital'?", 
-                a: ["Total company annual revenue", "Money used for investment", "The principal of a personal loan", "Total dividend earnings received"], 
-                c: 1 
-            },
-            { 
-                term: "Portfolio", 
-                flashcardDef: "Your entire financial garden. It's the mix of different stocks, bonds, and other investments you hold at once.",
-                q: "What is a 'portfolio'?", 
-                a: ["A single high-performing stock holding", "A traditional bank savings account", "A summary of outstanding debts", "Collection of all your investments"], 
-                c: 3 
-            },
-            { 
-                term: "Risk", 
-                flashcardDef: "The uncertainty of the future. In investing, it's the possibility that you might lose money or not make as much as you hoped.",
-                q: "What is 'risk' in investing?", 
-                a: ["The possibility of losing money", "A guaranteed investment return", "A fixed annual interest payment", "Steady company revenue growth"], 
-                c: 0 
-            },
-            { 
-                term: "Liquidity", 
-                flashcardDef: "How fast you can get your cash back. Cash is the most liquid, while a house is very illiquid because it takes months to sell.",
-                q: "What is 'liquidity'?", 
-                a: ["The overall profitability of an investment", "Current market demand for specific stocks", "Ease of converting an asset to cash", "The long-term potential of an investment"], 
-                c: 2 
-            },
-            { 
-                term: "Interest", 
-                flashcardDef: "The price of using someone else's money. You earn it when you save, and you pay it when you borrow.",
-                q: "What is 'interest'?", 
-                a: ["Profit made from selling a stock", "Payment for borrowing money", "The initial investment principal", "A specific dividend payout received"], 
-                c: 1 
-            }
+            { term: "Stock", def: "A share of ownership in a company and potential profits.", q: "What is a 'stock'?", a: ["Share of ownership in a company", "Debt issued by a company", "A bank savings account", "A type of corporate bond"], c: 0 },
+            { term: "Bond", def: "A loan to a company or government for interest.", q: "What is a 'bond'?", a: ["Share of ownership in a company", "Loan to a company or government", "An interest-bearing liquid account", "A type of corporate bond"], c: 1 },
+            { term: "Asset", def: "Something valuable you own, either physical or financial.", q: "What is an 'asset'?", a: ["Debt you owe to a bank", "Potential future salary income", "Something valuable you own", "An unavoidable expense item"], c: 2 },
+            { term: "Liability", def: "Obligations or debts owed to others.", q: "What is a 'liability'?", a: ["A company's total owned stock", "A shareholder dividend payment", "Debt or obligation you owe", "A financial resource of value"], c: 2 },
+            { term: "Dividend", def: "Profits distributed to shareholders.", q: "What is a 'dividend'?", a: ["Company profits paid to shareholders", "Company profits kept for research", "Change in a stock's market price", "The interest paid on a corporate bond"], c: 0 },
+            { term: "Capital", def: "Money allocated specifically for investment purposes.", q: "What is 'capital'?", a: ["Total company annual revenue", "Money used for investment", "The principal of a personal loan", "Total dividend earnings received"], c: 1 },
+            { term: "Portfolio", def: "Your complete collection of financial investments.", q: "What is a 'portfolio'?", a: ["A single high-performing stock holding", "A traditional bank savings account", "A summary of outstanding debts", "Collection of all your investments"], c: 3 },
+            { term: "Risk", def: "The chance that an investment’s actual return will differ from expected.", q: "What is 'risk' in investing?", a: ["The possibility of losing money", "A guaranteed investment return", "A fixed annual interest payment", "Steady company revenue growth"], c: 0 },
+            { term: "Liquidity", def: "Indicates how quickly an asset can be converted to cash without losing value.", q: "What is 'liquidity'?", a: ["The overall profitability of an investment", "Current market demand for specific stocks", "Ease of converting an asset to cash", "The long-term potential of an investment"], c: 2 },
+            { term: "Interest", def: "The cost of borrowing money, usually expressed as a percentage.", q: "What is 'interest'?", a: ["Profit made from selling a stock", "Payment for borrowing money", "The initial investment principal", "A specific dividend payout received"], c: 1 }
         ]
     },
     {
@@ -448,21 +432,21 @@ const units = [
         icon: "fa-piggy-bank",
         class: "unit-2-blue",
         data: [
-            { term: "Credit Card", flashcardDef: "A card that grants you a 'line of credit.' You are spending the bank's money and must pay it back later, often with interest if you don't pay in full.", q: "What is a credit card?", a: ["Lets you borrow money now and pay later", "A card that requires you to pay the full amount immediately", "A card only for online payments", "A card that automatically transfers money for subscriptions"], c: 0 },
-            { term: "Debit Card", flashcardDef: "Electronic access to your own checking account. Unlike a credit card, the money is taken out of your bank account almost instantly.", q: "How does a debit card work?", a: ["A card that stores points and rewards", "A card that tracks spending but cannot pay", "Charges your bank account immediately for purchases", "A card that lets you borrow money from the bank"], c: 2 },
-            { term: "Digital Wallet", flashcardDef: "An app (like Apple Pay or Google Pay) that securely stores your card details on your phone so you can pay without a physical card.", q: "What does a digital wallet do?", a: ["Tracks purchases and automatically invests", "Stores payment information for mobile or online purchases", "Keeps all your money in one app but cannot pay", "Sends money to others without verifying identity"], c: 1 },
-            { term: "PIN", flashcardDef: "Your 'Secret Handshake' with the ATM or card machine. It's a Personal Identification Number that keeps your account safe from unauthorized use.", q: "What is a PIN used for?", a: ["A personal number that secures access to your account", "A code that automatically earns rewards", "A number you enter once and never need again", "A number used only for logging in online"], c: 0 },
-            { term: "Recurring Payment", flashcardDef: "A 'set it and forget it' payment. You give a company permission to charge your account automatically every month for things like Netflix or gym memberships.", q: "What is a recurring payment?", a: ["Payment you make manually every month", "A one-time payment for a subscription", "Automatic scheduled payment for a service", "A payment that cancels itself automatically"], c: 2 },
-            { term: "Cashback", flashcardDef: "A reward program where the card issuer returns a small percentage (usually 1-5%) of what you spent back to you as a bonus.", q: "What is cashback?", a: ["Extra points that may expire", "A fee you pay for using a credit card", "Money returned to you after using a card", "Money automatically deducted from your account"], c: 2 },
-            { term: "Overdraft", flashcardDef: "A financial 'accident' where you spend more money than you actually have in your bank account, causing a negative balance.", q: "What happens during an overdraft?", a: ["Spending more than your account balance, sometimes with fees", "Being temporarily locked out of your account", "Losing rewards points on your debit card", "Automatically depositing money from another account"], c: 0 },
-            { term: "Financial Goal", flashcardDef: "A specific target you want to hit with your money, like saving $500 for a new phone or investing for college.", q: "What is a financial goal?", a: ["A rating of how much money you have", "Something you plan to achieve with money", "A list of items you want to buy online", "A target set by your bank without your input"], c: 1 },
-            { term: "Emergency Fund", flashcardDef: "A 'rainy day' bucket of cash. It's money saved specifically for big, unexpected problems like a car breakdown or losing a job.", q: "What is an emergency fund?", a: ["Money borrowed from a friend", "Extra money for entertainment only", "Automatic savings deducted from each purchase", "Money set aside for unexpected expenses"], c: 3 },
-            { term: "P2P Payment", flashcardDef: "Peer-to-Peer. Using apps like Venmo or CashApp to send money instantly to friends or family without needing cash or a check.", q: "What is a P2P payment?", a: ["Paying your bills automatically with a bank transfer", "Sending money directly to another person using an app", "Investing money in a stock account", "Sending money to a company for a subscription"], c: 1 },
-            { term: "Subscription Service", flashcardDef: "A business model where you pay a flat fee on a regular schedule (weekly, monthly, or yearly) to keep access to a product.", q: "What is a subscription service?", a: ["Service you pay regularly for ongoing access", "A free trial that automatically ends", "A one-time purchase with no future access", "A service that tracks your spending without payment"], c: 0 },
-            { term: "ATM Fee", flashcardDef: "The price you pay for the convenience of using a cash machine that doesn't belong to your own bank.", q: "What is an ATM fee?", a: ["A monthly fee for keeping your account", "Charge for using an ATM outside your bank’s network", "Money you earn for using certain machines", "A penalty for missing a payment"], c: 1 },
-            { term: "Late Fee", flashcardDef: "A penalty charge applied to your account if you miss the deadline for a credit card or bill payment.", q: "What is a late fee?", a: ["Extra money charged for missing a payment", "A reward for paying on time", "Money saved automatically from your account", "A fee applied only to credit cards"], c: 0 },
-            { term: "Financial Plan", flashcardDef: "Your roadmap for money. It details how you will earn, save, spend, and invest your funds to get what you want in life.", q: "What is a financial plan?", a: ["A document only your bank keeps for you", "A list of debts without solutions", "A method to track income, spending, and saving for goals", "A random estimate of how much to spend"], c: 2 },
-            { term: "Prepaid Card", flashcardDef: "A card that isn't linked to a bank account. You load it with cash ahead of time and can only spend what is currently on the card.", q: "What is a prepaid card?", a: ["A card that borrows money from the bank", "Card loaded with a set amount of money that you can spend", "A card that only tracks rewards points", "A card linked to a checking account"], c: 1 }
+            { term: "Credit Card", def: "Lets you borrow money now and pay later.", q: "What is a credit card?", a: ["Lets you borrow money now and pay later", "A card that requires you to pay the full amount immediately", "A card only for online payments", "A card that automatically transfers money for subscriptions"], c: 0 },
+            { term: "Debit Card", def: "Charges your bank account immediately for purchases.", q: "How does a debit card work?", a: ["A card that stores points and rewards", "A card that tracks spending but cannot pay", "Charges your bank account immediately for purchases", "A card that lets you borrow money from the bank"], c: 2 },
+            { term: "Digital Wallet", def: "Stores payment information for mobile or online purchases.", q: "What does a digital wallet do?", a: ["Tracks purchases and automatically invests", "Stores payment information for mobile or online purchases", "Keeps all your money in one app but cannot pay", "Sends money to others without verifying identity"], c: 1 },
+            { term: "PIN", def: "A personal number that secures access to your account.", q: "What is a PIN used for?", a: ["A personal number that secures access to your account", "A code that automatically earns rewards", "A number you enter once and never need again", "A number used only for logging in online"], c: 0 },
+            { term: "Recurring Payment", def: "Automatic scheduled payment for a service.", q: "What is a recurring payment?", a: ["Payment you make manually every month", "A one-time payment for a subscription", "Automatic scheduled payment for a service", "A payment that cancels itself automatically"], c: 2 },
+            { term: "Cashback", def: "Money returned to you after using a card.", q: "What is cashback?", a: ["Extra points that may expire", "A fee you pay for using a credit card", "Money returned to you after using a card", "Money automatically deducted from your account"], c: 2 },
+            { term: "Overdraft", def: "Spending more than your account balance, sometimes with fees.", q: "What happens during an overdraft?", a: ["Spending more than your account balance, sometimes with fees", "Being temporarily locked out of your account", "Losing rewards points on your debit card", "Automatically depositing money from another account"], c: 0 },
+            { term: "Financial Goal", def: "Something you plan to achieve with money.", q: "What is a financial goal?", a: ["A rating of how much money you have", "Something you plan to achieve with money", "A list of items you want to buy online", "A target set by your bank without your input"], c: 1 },
+            { term: "Emergency Fund", def: "Money set aside for unexpected expenses.", q: "What is an emergency fund?", a: ["Money borrowed from a friend", "Extra money for entertainment only", "Automatic savings deducted from each purchase", "Money set aside for unexpected expenses"], c: 3 },
+            { term: "P2P Payment", def: "Sending money directly to another person using an app.", q: "What is a P2P payment?", a: ["Paying your bills automatically with a bank transfer", "Sending money directly to another person using an app", "Investing money in a stock account", "Sending money to a company for a subscription"], c: 1 },
+            { term: "Subscription Service", def: "Service you pay regularly for ongoing access.", q: "What is a subscription service?", a: ["Service you pay regularly for ongoing access", "A free trial that automatically ends", "A one-time purchase with no future access", "A service that tracks your spending without payment"], c: 0 },
+            { term: "ATM Fee", def: "Charge for using an ATM outside your bank’s network.", q: "What is an ATM fee?", a: ["A monthly fee for keeping your account", "Charge for using an ATM outside your bank’s network", "Money you earn for using certain machines", "A penalty for missing a payment"], c: 1 },
+            { term: "Late Fee", def: "Extra money charged for missing a payment.", q: "What is a late fee?", a: ["Extra money charged for missing a payment", "A reward for paying on time", "Money saved automatically from your account", "A fee applied only to credit cards"], c: 0 },
+            { term: "Financial Plan", def: "A method to track income, spending, and saving for goals.", q: "What is a financial plan?", a: ["A document only your bank keeps for you", "A list of debts without solutions", "A method to track income, spending, and saving for goals", "A random estimate of how much to spend"], c: 2 },
+            { term: "Prepaid Card", def: "Card loaded with a set amount of money that you can spend.", q: "What is a prepaid card?", a: ["A card that borrows money from the bank", "Card loaded with a set amount of money that you can spend", "A card that only tracks rewards points", "A card linked to a checking account"], c: 1 }
         ]
     }
 ];
@@ -477,6 +461,15 @@ let isAnimating = false;
 
 let scores = JSON.parse(localStorage.getItem('mm_scores') || '{}');
 let starredTerms = JSON.parse(localStorage.getItem('mm_starred') || '[]'); 
+
+function shuffleArray(array) {
+    const newArr = [...array];
+    for (let i = newArr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+    }
+    return newArr;
+}
 
 function renderDashboard() {
     const grid = document.getElementById('dashboard-grid');
@@ -494,13 +487,24 @@ function renderDashboard() {
             <div class="unit-card-hero">
                 <div class="unit-term-count">${unit.data.length} Terms</div>
                 <div class="unit-info">
+                    ${isMastered ? '<span class="status-pill" style="background:#fcd34d; color:#78350f; border:none; margin-bottom:10px; display:inline-block">MASTERED</span>' : ''}
                     <h2 style="margin:0; font-family:Poppins;"><i class="fas ${unit.icon}"></i> ${unit.title}</h2>
                     <p style="margin:10px 0 0; opacity:0.9; font-size:0.95rem; font-weight:600;">Best Score: ${highScore}%</p>
                 </div>
             </div>
             <div class="unit-dropdown" id="drop-${unit.id}">
                 <button class="btn btn-primary" onclick="openStudy('${unit.id}', event)" style="flex:1"><i class="fas fa-book-open"></i> Study</button>
-                <button class="btn btn-primary" onclick="openQuiz('${unit.id}', event)" style="flex:1; background:var(--test-btn-bg);"><i class="fas fa-clipboard"></i> Test</button>
+                <button class="btn btn-outline" onclick="openStudyStarred('${unit.id}', event)" 
+                    style="flex:1; border-color:var(--accent); color:var(--accent);">
+                    <i class="fas fa-star"></i> Starred
+                </button>
+                <button class="btn btn-outline" onclick="openVideos('${unit.id}', event)" style="flex:1; border-color:var(--primary); color:var(--primary)">
+                    <i class="fas fa-play-circle"></i> Videos
+                </button>
+                <button class="btn btn-primary" onclick="openQuiz('${unit.id}', event)" 
+                    style="flex:1; background:var(--test-btn-bg); border: 1px solid var(--test-btn-border);">
+                    <i class="fas fa-clipboard"></i> Test
+                </button>
             </div>
         `;
         grid.appendChild(card);
@@ -513,10 +517,54 @@ function toggleUnit(id) {
     drops.forEach(d => d.id === `drop-${id}` ? d.classList.toggle('active') : d.classList.remove('active'));
 }
 
+function openVideos(unitId, event) {
+    event.stopPropagation();
+    document.getElementById('app-overlay').style.display = 'flex';
+    document.getElementById('overlay-title').innerText = "Unit Resources";
+    document.getElementById('action-btn-container').style.visibility = 'hidden';
+    document.getElementById('overlay-content').innerHTML = `
+        <div class="q-box" style="text-align:center; padding: 4rem 2rem;">
+            <div style="font-size: 4rem; margin-bottom: 1.5rem;">📺</div>
+            <h1 style="font-family:Poppins; color:var(--text)">Video Lessons</h1>
+            <p style="color:var(--text-light); font-weight:600; margin-bottom: 2rem;">Coming soon! Interactive video lessons for this unit are being prepared.</p>
+            <button class="btn btn-primary" style="width:100%" onclick="closeOverlay()">Go Back</button>
+        </div>
+    `;
+}
+
 function openStudy(unitId, event) {
     if(event) event.stopPropagation();
     currentUnit = units.find(u => u.id === unitId);
     activeStudySet = [...currentUnit.data];
+    isQuizMode = false;
+    currentIdx = 0;
+    launchStudyUI();
+}
+
+function shuffleStudy() {
+    activeStudySet = shuffleArray(activeStudySet);
+    currentIdx = 0;
+    launchStudyUI();
+}
+
+function openStudyStarred(unitId, event) {
+    if(event) event.stopPropagation();
+    currentUnit = units.find(u => u.id === unitId);
+    activeStudySet = currentUnit.data.filter(d => starredTerms.includes(d.term));
+    if(activeStudySet.length === 0) {
+        document.getElementById('app-overlay').style.display = 'flex';
+        document.getElementById('overlay-title').innerText = "Starred Terms";
+        document.getElementById('action-btn-container').style.visibility = 'hidden';
+        document.getElementById('overlay-content').innerHTML = `
+            <div class="q-box" style="text-align:center; padding: 4rem 2rem;">
+                <div style="font-size: 4rem; margin-bottom: 1.5rem;">⭐</div>
+                <h1 style="font-family:Poppins; color:var(--text)">No Stars Yet</h1>
+                <p style="color:var(--text-light); font-weight:600; margin-bottom: 2rem;">Tap the star icon while studying to save difficult terms here!</p>
+                <button class="btn btn-primary" style="width:100%" onclick="closeOverlay()">Got it</button>
+            </div>
+        `;
+        return;
+    }
     isQuizMode = false;
     currentIdx = 0;
     launchStudyUI();
@@ -529,7 +577,12 @@ function launchStudyUI() {
     const content = document.getElementById('overlay-content');
     content.innerHTML = `
         <div style="width:100%; margin: 0 auto; padding-top: 1rem;">
-            <div style="text-align:center; color:var(--text); font-weight:700; margin-bottom:1rem;" id="card-counter">Card 1 of ${activeStudySet.length}</div>
+            <div style="display:flex; justify-content:center; align-items:center; gap:1.5rem; margin-bottom:1rem;">
+                <div style="color:var(--text); font-weight:700;" id="card-counter">Card 1 of ${activeStudySet.length}</div>
+                <button class="btn btn-outline" style="padding:4px 12px; font-size:0.8rem; border-color:var(--primary); color:var(--primary)" onclick="shuffleStudy()">
+                    <i class="fas fa-random"></i> Shuffle
+                </button>
+            </div>
             <div class="flashcard-stage" id="stage">
                 <div class="flashcard" id="card-obj" onclick="this.classList.toggle('flipped')"></div>
             </div>
@@ -548,9 +601,11 @@ function updateFlashcardContent(cardEl, data) {
     cardEl.innerHTML = `
         <div class="card-face">
             <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary);">${data.term}</div>
+            <div style="margin-top: 3rem; font-size: 0.9rem; font-weight:700; opacity: 0.4; color: var(--text-light); letter-spacing:2px">TAP TO FLIP</div>
         </div>
         <div class="card-face card-back">
-            <div style="font-size: 1.5rem; font-weight: 500; line-height: 1.6; color: var(--text); padding: 0 1rem;">${data.flashcardDef}</div>
+            <div style="font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 2rem; opacity:0.7">DEFINITION</div>
+            <div style="font-size: 1.8rem; font-weight: 600; line-height: 1.6; color: var(--text); padding: 0 1rem;">${data.def}</div>
         </div>
     `;
 }
@@ -565,25 +620,46 @@ function moveCard(step) {
     const newCard = document.createElement('div');
     newCard.className = `flashcard ${step > 0 ? 'slide-in-right' : 'slide-in-left'}`;
     newCard.onclick = function() { this.classList.toggle('flipped'); };
+    
     currentIdx = nextIdx;
+    
     updateFlashcardContent(newCard, activeStudySet[currentIdx]);
     stage.appendChild(newCard);
     oldCard.classList.add(step > 0 ? 'slide-out-left' : 'slide-out-right');
     oldCard.id = ""; 
+    
     document.getElementById('card-counter').innerText = `Card ${currentIdx + 1} of ${activeStudySet.length}`;
-    setTimeout(() => { oldCard.remove(); newCard.id = 'card-obj'; isAnimating = false; }, 600);
+    setTimeout(() => {
+        oldCard.remove();
+        newCard.classList.remove('slide-in-right', 'slide-in-left');
+        newCard.id = 'card-obj';
+        isAnimating = false;
+    }, 600);
 }
 
 function openQuiz(unitId, event) {
     event.stopPropagation();
     currentUnit = units.find(u => u.id === unitId);
-    activeStudySet = [...currentUnit.data].sort(() => Math.random() - 0.5);
+    activeStudySet = shuffleArray([...currentUnit.data]);
     userAnswers = new Array(activeStudySet.length).fill(null);
     markedQuestions = new Array(activeStudySet.length).fill(false);
     currentIdx = 0;
     isQuizMode = true;
     document.getElementById('app-overlay').style.display = 'flex';
-    startQuiz();
+    renderQuizStart();
+}
+
+function renderQuizStart() {
+    document.getElementById('overlay-title').innerText = `${currentUnit.title} | Test`;
+    document.getElementById('action-btn-container').style.visibility = 'hidden';
+    document.getElementById('overlay-content').innerHTML = `
+        <div class="q-box" style="text-align:center; padding: 4rem 2rem;">
+            <div style="font-size: 4rem; margin-bottom: 1.5rem;">📝</div>
+            <h1 style="font-family:Poppins; color:var(--text)">Ready for the test?</h1>
+            <p style="color:var(--text-light); font-weight:600; margin-bottom: 2rem;">Aim for 90% to master this unit. Questions have been randomized.</p>
+            <button class="btn btn-primary" style="width:100%; padding: 1.2rem;" onclick="startQuiz()">Begin Assessment</button>
+        </div>
+    `;
 }
 
 function startQuiz() {
@@ -595,24 +671,87 @@ function renderQuestion() {
     const item = activeStudySet[currentIdx];
     const progress = ((currentIdx + 1) / activeStudySet.length) * 100;
     updateActionState();
-    let optionsHtml = item.a.map((opt, i) => `<button class="option-btn ${userAnswers[currentIdx] === i ? 'selected' : ''}" onclick="selectOption(${i})">${opt}</button>`).join('');
+    let optionsHtml = item.a.map((opt, i) => `
+        <button class="option-btn ${userAnswers[currentIdx] === i ? 'selected' : ''}" onclick="selectOption(${i})">${opt}</button>
+    `).join('');
+    let dotsHtml = activeStudySet.map((_, i) => `
+        <div class="dot ${i === currentIdx ? 'current' : ''} ${userAnswers[i] !== null ? 'answered' : ''} ${markedQuestions[i] ? 'marked' : ''}" onclick="jumpTo(${i})">
+            ${markedQuestions[i] ? '<i class="fas fa-bookmark" style="font-size:0.6rem; position:absolute; top:2px; right:2px; color:var(--accent)"></i>' : ''}
+            ${i+1}
+        </div>
+    `).join('');
     document.getElementById('overlay-content').innerHTML = `
         <div class="q-box">
             <span class="status-pill">Question ${currentIdx + 1} of ${activeStudySet.length}</span>
             <div class="progress-container"><div class="progress-bar" style="width:${progress}%"></div></div>
-            <h2 style="margin: 1.5rem 0; font-size: 1.4rem; color:var(--text)">${item.q}</h2>
+            <h2 style="margin: 1.5rem 0; font-size: 1.4rem; color:var(--text); line-height:1.4">
+                Question ${currentIdx + 1}: ${item.q}
+            </h2>
             <div class="options-list">${optionsHtml}</div>
+            <div class="review-grid">${dotsHtml}</div>
             <div style="display:flex; justify-content:space-between; margin-top:2rem;">
                 <button class="btn btn-outline" style="color:var(--text); border-color:var(--border)" onclick="prevQ()">Back</button>
-                <button class="btn btn-primary" onclick="nextQ()">${currentIdx === activeStudySet.length - 1 ? 'Finish' : 'Next'}</button>
+                <button class="btn btn-primary" onclick="confirmOrNext()">${currentIdx === activeStudySet.length - 1 ? 'Finish' : 'Next'}</button>
             </div>
         </div>
     `;
 }
 
 function selectOption(idx) { userAnswers[currentIdx] = idx; renderQuestion(); }
-function nextQ() { if(currentIdx < activeStudySet.length - 1) { currentIdx++; renderQuestion(); } else { finishQuiz(); } }
+
+function confirmOrNext() {
+    if(currentIdx < activeStudySet.length - 1) {
+        currentIdx++;
+        renderQuestion();
+    } else {
+        renderSubmitConfirmation();
+    }
+}
+
+function renderSubmitConfirmation() {
+    document.getElementById('action-btn-container').style.visibility = 'hidden';
+    document.getElementById('overlay-content').innerHTML = `
+        <div class="q-box" style="text-align:center; padding: 4rem 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <h2 style="font-family:Poppins; color:var(--text); font-size: 1.2rem; margin-bottom: 0.5rem; text-align: center;">Are you sure you would like to submit?</h2>
+            <p style="color:var(--text-light); font-weight:500; font-size: 0.9rem; margin-bottom: 2rem; text-align: center;">Double-check your answers one last time before finishing.</p>
+            <div style="display:flex; gap:1rem; flex-direction:column; width: 100%; max-width: 300px;">
+                <button class="btn btn-primary" style="width:100%; padding: 1.1rem; font-size: 0.95rem;" onclick="finishQuiz()">Yes, Submit Now</button>
+                <button class="btn btn-outline" style="width:100%; padding: 0.9rem; font-size: 0.9rem; color:var(--text); border-color:var(--border);" onclick="renderQuestion()">No, Go Back</button>
+            </div>
+        </div>
+    `;
+}
+
 function prevQ() { if(currentIdx > 0) { currentIdx--; renderQuestion(); } }
+function jumpTo(idx) { currentIdx = idx; renderQuestion(); }
+
+function handleAction() {
+    if(isQuizMode) {
+        markedQuestions[currentIdx] = !markedQuestions[currentIdx];
+        renderQuestion();
+    } else {
+        const term = activeStudySet[currentIdx].term;
+        if (starredTerms.includes(term)) {
+            starredTerms = starredTerms.filter(t => t !== term);
+        } else {
+            starredTerms.push(term);
+        }
+        localStorage.setItem('mm_starred', JSON.stringify(starredTerms));
+        updateActionState();
+    }
+}
+
+function updateActionState() {
+    const btn = document.getElementById('global-action-btn');
+    if(!btn || !activeStudySet[currentIdx]) return;
+    
+    if(isQuizMode) {
+        btn.className = markedQuestions[currentIdx] ? "fas fa-bookmark action-trigger active" : "fas fa-bookmark action-trigger";
+    } else {
+        const term = activeStudySet[currentIdx].term;
+        btn.className = starredTerms.includes(term) ? "fas fa-star action-trigger active" : "fas fa-star action-trigger";
+    }
+}
 
 function finishQuiz() {
     let correct = activeStudySet.reduce((acc, item, i) => userAnswers[i] === item.c ? acc + 1 : acc, 0);
@@ -624,49 +763,59 @@ function finishQuiz() {
     renderResults(score, correct);
 }
 
+function toggleWhy(i) {
+    const el = document.getElementById(`why-${i}`);
+    el.style.display = el.style.display === 'block' ? 'none' : 'block';
+}
+
 function renderResults(score, correct) {
     document.getElementById('action-btn-container').style.visibility = 'hidden';
+    let breakdown = activeStudySet.map((item, i) => `
+        <div style="display:flex; flex-direction:column; padding:12px 0; border-bottom:1px solid var(--border)">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div>
+                    <div style="font-weight:700; color:var(--text)">Question ${i+1}: ${item.term}</div>
+                    <div style="font-size:0.85rem; color:var(--text-light)">${item.q}</div>
+                    <span class="see-why" onclick="toggleWhy(${i})">See why</span>
+                </div>
+                <i class="fas ${userAnswers[i] === item.c ? 'fa-check-circle' : 'fa-times-circle'}" style="color:${userAnswers[i] === item.c ? 'var(--primary)' : 'var(--danger)'}"></i>
+            </div>
+            <div id="why-${i}" class="why-content">
+                <strong>Explanation:</strong> ${item.def}
+            </div>
+        </div>
+    `).join('');
     document.getElementById('overlay-content').innerHTML = `
         <div class="q-box" style="text-align:center;">
-            <div style="font-size: 4rem;">${score >= 90 ? '🏆' : '🥈'}</div>
-            <h1 style="color:var(--text)">${score}%</h1>
-            <p style="color:var(--text-light); font-weight:700;">You got ${correct} out of ${activeStudySet.length} correct.</p>
-            <button class="btn btn-primary" style="width:100%; margin-top:2rem;" onclick="closeOverlay()">Back to Dashboard</button>
+            <div style="font-size: 4rem; margin-bottom: 1rem;">${score >= 90 ? '🏆' : '🥈'}</div>
+            <h1 style="margin:0; color:var(--text); font-family:Poppins">${score}%</h1>
+            <p style="color:var(--text-light); font-weight:700; margin-bottom: 2rem;">${correct} of ${activeStudySet.length} correct</p>
+            <div style="text-align:left; border-top: 2px solid var(--border); padding-top: 1rem; max-height:300px; overflow-y:auto">
+                ${breakdown}
+            </div>
+            <button class="btn btn-primary" style="width:100%; margin-top:2rem; padding:1rem" onclick="closeOverlay()">Close</button>
         </div>
     `;
     renderDashboard();
 }
 
-function closeOverlay() { document.getElementById('app-overlay').style.display = 'none'; isQuizMode = false; }
+function closeOverlay() { document.getElementById('app-overlay').style.display = 'none'; isQuizMode = false; renderDashboard(); }
 
-function handleAction() {
-    if(!isQuizMode) {
-        const term = activeStudySet[currentIdx].term;
-        if (starredTerms.includes(term)) starredTerms = starredTerms.filter(t => t !== term);
-        else starredTerms.push(term);
-        localStorage.setItem('mm_starred', JSON.stringify(starredTerms));
-        updateActionState();
+// CHAT BOT LOGIC
+const apiKey = ""; // Managed by environment
+
+function toggleChat() {
+    const chatWin = document.getElementById('chatWindow');
+    chatWin.classList.toggle('active');
+    if (chatWin.classList.contains('active')) {
+        document.getElementById('chatInput').focus();
     }
 }
-
-function updateActionState() {
-    const btn = document.getElementById('global-action-btn');
-    if(!btn || !activeStudySet[currentIdx]) return;
-    if(isQuizMode) btn.style.display = 'none';
-    else {
-        btn.style.display = 'block';
-        const term = activeStudySet[currentIdx].term;
-        btn.className = starredTerms.includes(term) ? "fas fa-star action-trigger active" : "fas fa-star action-trigger";
-    }
-}
-
-// --- Chat Bot Logic ---
-const apiKey = ""; 
 
 async function sendMessage() {
     const input = document.getElementById('chatInput');
     const msg = input.value.trim();
-    if(!msg) return;
+    if (!msg) return;
 
     appendMessage(msg, 'user');
     input.value = '';
@@ -674,10 +823,14 @@ async function sendMessage() {
     const indicator = document.getElementById('typingIndicator');
     indicator.style.display = 'block';
     
-    const systemPrompt = "You are Money Mentor AI, a friendly and helpful tutor for students under 18 learning financial literacy and banking. Your goal is to explain concepts like stocks, bonds, credit cards, and interest in simple, easy-to-understand terms. Keep responses clean, safe, and encouraging. Be concise.";
-    
-    const callApi = async (retryCount = 0) => {
+    const systemPrompt = "You are 'Money Bot', a friendly financial literacy tutor for students under 18. Your goal is to explain banking, investing, and money concepts in simple, safe, and engaging ways. Always stay on topic (money and finance). Avoid any inappropriate or harmful topics. If asked about concepts from the Money Mentor dashboard units, provide helpful context.";
+
+    const maxRetries = 5;
+    const delays = [1000, 2000, 4000, 8000, 16000];
+
+    for (let i = 0; i < maxRetries; i++) {
         try {
+            // Updated endpoint to supported model gemini-2.5-flash-preview-09-2025
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -686,30 +839,31 @@ async function sendMessage() {
                     systemInstruction: { parts: [{ text: systemPrompt }] }
                 })
             });
-            
-            if (!response.ok) throw new Error('API Error');
+
+            if (!response.ok) {
+                // Implementing exponential backoff for retries
+                if (i < maxRetries - 1) {
+                    await new Promise(resolve => setTimeout(resolve, delays[i]));
+                    continue;
+                }
+                throw new Error(`API Error: ${response.status}`);
+            }
             
             const data = await response.json();
-            const botText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            const botText = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I'm having a little trouble thinking right now. Could you ask that again?";
             
-            if (botText) {
+            indicator.style.display = 'none';
+            appendMessage(botText, 'bot');
+            return; 
+        } catch (error) {
+            if (i === maxRetries - 1) {
                 indicator.style.display = 'none';
-                appendMessage(botText, 'bot');
+                appendMessage("I'm sorry, I'm having trouble connecting to my brain right now. Please try again in a moment!", 'bot');
             } else {
-                throw new Error('Empty response');
-            }
-        } catch (e) {
-            if (retryCount < 5) {
-                const delay = Math.pow(2, retryCount) * 1000;
-                setTimeout(() => callApi(retryCount + 1), delay);
-            } else {
-                indicator.style.display = 'none';
-                appendMessage("I'm having trouble connecting right now. Please try again in a moment!", 'bot');
+                await new Promise(resolve => setTimeout(resolve, delays[i]));
             }
         }
-    };
-
-    callApi();
+    }
 }
 
 function appendMessage(text, role) {
@@ -719,10 +873,6 @@ function appendMessage(text, role) {
     div.innerText = text;
     chatMessages.appendChild(div);
     chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-function toggleChat() {
-    document.getElementById('chatWindow').classList.toggle('active');
 }
 
 document.getElementById('theme-btn').onclick = () => {

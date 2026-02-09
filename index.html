@@ -212,7 +212,6 @@ header {
     content: ""; position: absolute; top: 0; left: 30px; bottom: 0;
     width: 2px; background: var(--card-line); z-index: 1;
 }
-/* Updated Floating Tooltip Styles */
 #floating-tooltip {
     position: fixed;
     width: 280px;
@@ -231,13 +230,11 @@ header {
     opacity: 1;
     transform: scale(1);
 }
-/* Specific Unit Hero Styling */
 .unit-card.unit-1-green .unit-card-hero { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; }
 .unit-card.unit-2-blue .unit-card-hero { background: linear-gradient(135deg, #7dd3fc 0%, #0ea5e9 100%); color: #0c4a6e; }
 .unit-card.unit-3-yellow .unit-card-hero { background: linear-gradient(135deg, #fde047 0%, #eab308 100%); color: #854d0e; }
 .unit-card.unit-3-yellow .unit-term-count { background: rgba(133, 77, 14, 0.15); color: #854d0e; }
 .unit-card.unit-3-yellow .unit-info p { color: #854d0e; }
-/* Dragging styles */
 .sortable-ghost { opacity: 0.4; background: var(--primary) !important; }
 .sortable-drag { cursor: grabbing; }
 .drag-handle {
@@ -366,7 +363,6 @@ header {
 </head>
 <body>
 <div id="bg-animation-container"></div>
-<!-- New Floating Tooltip Element -->
 <div id="floating-tooltip">
     <div style="font-size:0.7rem; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Unit Overview</div>
     <div id="tooltip-text" style="font-size:0.85rem; line-height:1.5; color:var(--text-light); font-weight:500;"></div>
@@ -388,6 +384,9 @@ header {
 <header>
     <div class="header-tools">
         <a href="https://sites.google.com/view/money--mentor/home" class="btn btn-ghost" style="color:white"><i class="fas fa-chevron-left"></i> Home</a>
+        <div class="status-pill" id="streak-counter" style="margin-left: 1rem; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: white;">
+            Streak: <span id="streak-days">0 day</span> <i class="fas fa-fire" style="color:#fcd34d;"></i>
+        </div>
     </div>
     <div class="logo">MONEY MENTOR</div>
     <div class="header-tools">
@@ -494,6 +493,7 @@ header {
         <i class="fas fa-comment-dots"></i>
     </div>
 </div>
+
 <script>
 // --- BACKGROUND INITIALIZATION ---
 function initBackground() {
@@ -593,20 +593,8 @@ const videoResources = {
         { title: "Credit Cards vs Debit Cards", date: "Aug 12, 2021", creator: "Gateway Bank FSB", url: "https://youtu.be/sm0FzHMInig", citation: "Gateway Bank FSB. (2021, August 12). Credit Cards vs Debit Cards (And When to Use Them) [Video]. YouTube. https://www.youtube.com/watch?v=sm0FzHMInig" }
     ],
     unit3: [
-        {
-            title: "WTF Is an ETF?",
-            date: "March 7, 2016",
-            creator: "Bloomberg Originals",
-            url: "https://youtu.be/OwpFBi-jZVg",
-            citation: "Bloomberg Originals. (2016, March 7). WTF Is an ETF? [Video]. YouTube. https://www.youtube.com/watch?v=OwpFBi-jZVg"
-        },
-        {
-            title: "Bull vs Bear Markets: What's The Difference?",
-            date: "October 15, 2024",
-            creator: "The Plain Bagel",
-            url: "https://youtu.be/UzoZxKmLOAI",
-            citation: "The Plain Bagel. (2024, October 15). Bull vs Bear Markets: What's The Difference? [Video]. YouTube. https://www.youtube.com/watch?v=UzoZxKmLOAI"
-        }
+        { title: "WTF Is an ETF?", date: "March 7, 2016", creator: "Bloomberg Originals", url: "https://youtu.be/OwpFBi-jZVg", citation: "Bloomberg Originals. (2016, March 7). WTF Is an ETF? [Video]. YouTube. https://www.youtube.com/watch?v=OwpFBi-jZVg" },
+        { title: "Bull vs Bear Markets: What's The Difference?", date: "October 15, 2024", creator: "The Plain Bagel", url: "https://youtu.be/UzoZxKmLOAI", citation: "The Plain Bagel. (2024, October 15). Bull vs Bear Markets: What's The Difference? [Video]. YouTube. https://www.youtube.com/watch?v=UzoZxKmLOAI" }
     ]
 };
 const units = [
@@ -692,24 +680,18 @@ document.addEventListener('mousemove', (e) => {
     if (tooltip.classList.contains('active')) {
         const x = e.clientX + 20;
         const y = e.clientY + 20;
-       
-        // Boundaries check
         const width = tooltip.offsetWidth;
         const height = tooltip.offsetHeight;
-       
         let finalX = x;
         let finalY = y;
-       
         if (x + width > window.innerWidth) finalX = e.clientX - width - 20;
         if (y + height > window.innerHeight) finalY = e.clientY - height - 20;
-       
         tooltip.style.left = `${finalX}px`;
         tooltip.style.top = `${finalY}px`;
     }
 });
 function handleCardMouseEnter(unitId) {
     const unit = units.find(u => u.id === unitId);
-    // Hide if dropdown is active for this card
     const drop = document.getElementById(`drop-${unitId}`);
     if (drop && drop.classList.contains('active')) return;
     if (unit) {
@@ -740,14 +722,12 @@ function renderDashboard() {
         card.className = `unit-card ${unit.class}`;
         card.setAttribute('data-id', unit.id);
         card.id = `card-${unit.id}`;
-       
         card.onmouseenter = () => handleCardMouseEnter(unit.id);
         card.onmouseleave = handleCardMouseLeave;
-       
         card.onclick = (e) => {
             if(e.target.closest('.btn') || e.target.closest('.drag-handle')) return;
             toggleUnit(unit.id);
-            handleCardMouseLeave(); // Hide tooltip when clicking to expand
+            handleCardMouseLeave();
         };
         card.innerHTML = `
             <div class="drag-handle" id="handle-${unit.id}"><i class="fas fa-grip-vertical"></i></div>
@@ -885,7 +865,8 @@ function toggleChat() {
     if (chatWin.classList.contains('active') && document.getElementById('chatMessages').children.length === 0) { appendMessage("👋 I'm Money Bot! I know over 200 concepts like 'Inflation' and 'Stocks'. Ask me anything!", 'bot'); }
 }
 async function sendMessage() {
-    const input = document.getElementById('chatInput'), msg = input.value.trim(); if (!msg) return; appendMessage(msg, 'user'); input.value = ''; const lowMsg = msg.toLowerCase();
+    const input = document.getElementById('chatInput'), msg = input.value.trim(); if (!msg) return; appendMessage(msg, 'user'); input.value = '';
+    const lowMsg = msg.toLowerCase();
     if (lowMsg === "how" || lowMsg === "help" || lowMsg.includes("how do i use")) { appendMessage(HELP_GUIDE, 'bot', true); return; }
     let queryTerm = lowMsg.replace(/what is a |what is an |what is |whats a |whats an |whats |can you define |define /g, "").replace(/[?!.]/g, "").trim();
     if (financeDictionary[queryTerm]) { appendMessage(`${financeDictionary[queryTerm]}`, 'bot'); return; }
@@ -925,6 +906,54 @@ function showResetConfirm() { document.getElementById('main-settings-view').styl
 function hideResetConfirm() { document.getElementById('main-settings-view').style.display = 'block'; document.getElementById('reset-confirm-view').style.display = 'none'; }
 function resetProgress() { localStorage.clear(); location.reload(); }
 function handleOutsideClick(event) { if (event.target.classList.contains('modal-overlay')) { closeSettings(); } }
+
+// --- Streak Counter Logic ---
+function updateStreakDisplay() {
+    const streakEl = document.getElementById('streak-days');
+    if (!streakEl) return;
+
+    let streak = parseInt(localStorage.getItem('mm_streak_count') || '0');
+    let lastDateStr = localStorage.getItem('mm_last_active_date');
+
+    const today = new Date().toDateString();
+
+    if (lastDateStr === today) {
+        // Already visited today → keep current streak
+    } else {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = yesterday.toDateString();
+
+        if (lastDateStr === yesterdayStr) {
+            streak++; // Consecutive day
+        } else if (lastDateStr) {
+            streak = 1; // Streak broken or new start
+        } else {
+            streak = 1; // First visit ever
+        }
+
+        localStorage.setItem('mm_last_active_date', today);
+        localStorage.setItem('mm_streak_count', streak);
+    }
+
+    // Singular / plural handling
+    const unitText = (streak === 1) ? 'day' : 'days';
+    streakEl.textContent = `${streak} ${unitText}`;
+
+    // Visual flair
+    const streakPill = document.getElementById('streak-counter');
+    if (streak >= 7) {
+        streakPill.style.background = 'rgba(250, 204, 21, 0.3)';
+        streakPill.style.borderColor = 'rgba(250, 204, 21, 0.6)';
+    } else if (streak >= 3) {
+        streakPill.style.background = 'rgba(255,255,255,0.2)';
+        streakPill.style.borderColor = 'rgba(255,255,255,0.4)';
+    } else {
+        streakPill.style.background = 'rgba(255,255,255,0.12)';
+        streakPill.style.borderColor = 'rgba(255,255,255,0.25)';
+    }
+}
+
 // --- TUTORIAL SYSTEM ---
 const tutorialSteps = [
     { target: null, title: "Welcome to Money Mentor!", text: "This is your personal finance student dashboard. Let's take a quick tour to help you master your money skills!" },
@@ -961,6 +990,7 @@ function showStep() {
 }
 function endTutorial() { document.getElementById('tutorial-overlay').classList.remove('active'); localStorage.setItem('mm_tut_complete', 'true'); const drops = document.querySelectorAll('.unit-dropdown'); drops.forEach(d => d.classList.remove('active')); }
 function resetTutorial() { localStorage.removeItem('mm_tut_complete'); startTutorial(); }
+
 window.onload = () => {
     initBackground();
     const savedTheme = localStorage.getItem('mm_theme') || 'dark';
@@ -980,6 +1010,7 @@ window.onload = () => {
         style.innerHTML = '.chat-bubble::after { display: none !important; }';
         document.head.appendChild(style);
     }
+    updateStreakDisplay(); // Show streak on load
     if (!localStorage.getItem('mm_tut_complete')) { setTimeout(startTutorial, 1000); }
 };
 </script>

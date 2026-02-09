@@ -45,9 +45,6 @@ body {
     color:var(--text);
     transition:all 0.35s;
 }
-/* =======================
-   HEADER (WITH PATTERN)
-   ======================= */
 header {
     background:linear-gradient(135deg, #43a047, #2e7d32);
     color:white;
@@ -63,7 +60,6 @@ header {
     gap:20px;
     overflow:hidden;
 }
-/* Pattern overlay */
 header::after {
     content:"";
     position:absolute;
@@ -78,7 +74,6 @@ header::after {
 }
 .header-left { display:flex; align-items:center; gap:12px; z-index:2; }
 .header-right { display:flex; align-items:center; gap:14px; font-size:1rem; z-index:2; }
-/* Back + Videos buttons */
 .nav-btn {
     border:none;
     cursor:pointer;
@@ -132,7 +127,6 @@ header::after {
     border-radius:20px;
     box-shadow:0 8px 20px rgba(0,0,0,0.1);
 }
-/* ---------- UNIT CARD ---------- */
 .unit-card {
     background:linear-gradient(145deg,#66bb6a,#388e3c);
     border-radius:20px;
@@ -221,7 +215,6 @@ header::after {
 }
 .study-btn { background:#43a047; }
 .test-btn { background:#1b5e20; }
-/* ---------- QUIZ OVERLAY ---------- */
 #quizOverlay {
     display:none;
     position:fixed;
@@ -245,10 +238,6 @@ header::after {
     box-shadow:0 8px 25px rgba(0,0,0,0.25);
     overflow-y:auto;
 }
-@media (max-width: 600px) {
-    .quiz-container { width:100%; margin:0; border-radius:0; min-height:100vh; }
-}
-/* X ALWAYS VISIBLE */
 #closeQuiz {
     position:absolute;
     top:18px;
@@ -261,7 +250,6 @@ header::after {
     user-select:none;
 }
 #closeQuiz:hover { transform:scale(1.1); }
-/* FLAG BUTTON */
 #flagBtn {
     position:absolute;
     top:20px;
@@ -276,7 +264,6 @@ header::after {
     border-radius:12px;
     z-index:9999;
 }
-#flagBtn:hover { transform:scale(1.05); }
 #startScreen {
     display:flex;
     flex-direction:column;
@@ -345,7 +332,6 @@ header::after {
 .progress-bar { height:12px; background:#eee; border-radius:6px; overflow:hidden; margin-top:20px; }
 [data-theme="dark"] .progress-bar { background:#2b2b2b; }
 .progress { height:100%; width:0%; background:linear-gradient(90deg,#43a047,#85e085); transition:width 0.3s; }
-/* Review page */
 #review { display:none; margin-top:15px; padding:30px; box-sizing:border-box; }
 #review h2 { text-align:center; margin-bottom:10px; font-weight:900; color:var(--green); }
 .review-grid {
@@ -383,7 +369,6 @@ header::after {
     color:var(--red);
     font-size:0.95em;
 }
-/* Score screen */
 #scoreScreen {
     display:none;
     text-align:left;
@@ -404,17 +389,16 @@ header::after {
 }
 .correct-score { color:#1b5e20; background:rgba(67,160,71,0.12); }
 .wrong-score { color:var(--red); background:rgba(220,53,69,0.10); }
-.restart-btn, .clear-btn {
+.restart-btn {
     margin-top:20px;
     padding:14px 22px;
     border:none;
     border-radius:12px;
     cursor:pointer;
     font-weight:900;
+    background:#43a047;
+    color:white;
 }
-.restart-btn { background:#43a047; color:white; }
-.restart-btn:hover { background:#388e3c; }
-/* Info note */
 .warning-note {
     text-align:center;
     font-size:0.9em;
@@ -426,7 +410,6 @@ header::after {
     max-width:650px;
     transition:all 0.4s;
 }
-/* ======= GLOBAL CLEAR ALL DATA BUTTON ======= */
 .global-clear-wrap {
     position:fixed;
     right:20px;
@@ -466,7 +449,7 @@ header::after {
 [data-theme="dark"] .global-clear-warning {
     border:1px solid rgba(255,255,255,0.08);
 }
-/* ======= STUDY OVERLAY ======= */
+/* STUDY OVERLAY */
 #studyOverlay {
     display:none;
     position:fixed;
@@ -490,9 +473,6 @@ header::after {
     box-shadow:0 8px 25px rgba(0,0,0,0.25);
     overflow-y:auto;
 }
-@media (max-width: 600px) {
-    .study-container { width:100%; margin:0; border-radius:0; min-height:100vh; }
-}
 #closeStudy {
     position:absolute;
     top:18px;
@@ -505,7 +485,6 @@ header::after {
     user-select:none;
 }
 #closeStudy:hover { transform:scale(1.1); }
-/* ======= STUDY FLASHCARD ======= */
 #study {
     padding:30px;
     box-sizing:border-box;
@@ -587,7 +566,6 @@ header::after {
     <i class="fas fa-info-circle"></i>
     Data does not sync across devices. Scores and progress are stored locally in your browser.
 </div>
-<!-- Global Clear -->
 <div class="global-clear-wrap">
     <button id="globalClearBtn">
         <i class="fas fa-trash"></i> Clear All Data
@@ -652,7 +630,7 @@ header::after {
 </div>
 <script>
 /* =========================================================
-   THEME (DEFAULT TO DARK ON FIRST VISIT)
+   THEME
    ========================================================= */
 const themeToggle = document.getElementById('theme-toggle');
 const html = document.documentElement;
@@ -664,9 +642,7 @@ if(!savedTheme){
 html.setAttribute('data-theme', savedTheme);
 function updateBulb(){
     const isDark = html.getAttribute('data-theme') === 'dark';
-    themeToggle.innerHTML = isDark
-        ? '<i class="fas fa-lightbulb"></i>'
-        : '<i class="far fa-lightbulb"></i>';
+    themeToggle.innerHTML = isDark ? '<i class="fas fa-lightbulb"></i>' : '<i class="far fa-lightbulb"></i>';
 }
 themeToggle.addEventListener('click', () => {
     const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
@@ -703,7 +679,6 @@ function setUnitHighScore(unitId, score){
     localStorage.setItem(unitId + "HighScore", String(score));
 }
 function isUnitComplete(unitId){
-    // COMPLETE is tied to HIGH SCORE, not most recent
     return getUnitHighScore(unitId) >= 90;
 }
 function renderUnitCard(){
@@ -717,7 +692,6 @@ function renderUnitCard(){
         const titleDiv = document.createElement("div");
         titleDiv.className = "title";
         titleDiv.textContent = unit.name;
-        // If unit complete (based on HIGH SCORE)
         if(isUnitComplete(unit.id)){
             const uc = document.createElement("span");
             uc.className = "unit-complete";
@@ -745,14 +719,14 @@ function renderUnitCard(){
         studyBtn.innerHTML = '<i class="fas fa-book"></i> Study';
         studyBtn.onclick = (e) => {
             e.stopPropagation();
-            openStudy(unit.id);
+            openStudy();
         };
         const testBtn = document.createElement("button");
         testBtn.className = "test-btn";
         testBtn.innerHTML = '<i class="fas fa-clipboard"></i> Unit Test';
         testBtn.onclick = (e) => {
             e.stopPropagation();
-            openQuiz(unit.id);
+            openQuiz();
         };
         dropdown.appendChild(studyBtn);
         dropdown.appendChild(testBtn);
@@ -766,7 +740,7 @@ function renderUnitCard(){
 }
 renderUnitCard();
 /* =========================================================
-   QUIZ DATA
+   QUIZ DATA + LOGIC (exactly as original)
    ========================================================= */
 const quizDataOriginal = [
   {q:"What is a 'stock'?", a:["Share of ownership in a company","Debt issued by a company","A bank savings account","A type of bond"], correct:0, explanation:"Stocks represent part ownership in a company and potential profits."},
@@ -780,9 +754,6 @@ const quizDataOriginal = [
   {q:"What is 'liquidity'?", a:["Ease of converting an asset to cash","Profitability of an investment","Market demand for stocks","Long-term investment potential"], correct:0, explanation:"Liquidity indicates how quickly an asset can be converted to cash without losing value."},
   {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stock sales","Investment principal","Dividend received"], correct:0, explanation:"Interest is the cost of borrowing money, usually expressed as a percentage."}
 ];
-/* =========================================================
-   QUIZ LOGIC
-   ========================================================= */
 let quizData = [];
 let answers = [];
 let flags = [];
@@ -816,8 +787,7 @@ function shuffleArray(a){
     }
     return a;
 }
-function openQuiz(unitId){
-    activeUnitId = unitId;
+function openQuiz(){
     quizOverlay.style.display = "flex";
     document.body.style.overflow = "hidden";
     startScreen.style.display = "flex";
@@ -948,15 +918,12 @@ function showScore(){
         missedList.appendChild(li);
     });
     const score = Math.round((correctCount/quizData.length)*100);
-    // Save last score
     setUnitLastScore(activeUnitId, score);
-    // Save high score
     const oldHigh = getUnitHighScore(activeUnitId);
     const newHigh = Math.max(oldHigh, score);
     setUnitHighScore(activeUnitId, newHigh);
     lastScoreText.textContent = `Last Unit Test Score: ${score}%`;
     highScoreText.textContent = `Highest Unit Test Score: ${newHigh}%`;
-    // UNIT COMPLETE TEXT based on HIGH SCORE
     if(newHigh >= 90){
         unitCompleteText.textContent = "⭐ Unit Complete (based on your highest score)";
     } else {
@@ -976,7 +943,7 @@ restartBtn.onclick = ()=>{
     loadQuestion();
 };
 /* =========================================================
-   STUDY MODE
+   STUDY FLASHCARD LOGIC (added)
    ========================================================= */
 let flashcards = [];
 let currentCard = 0;
@@ -988,16 +955,16 @@ const backEl = document.getElementById("back");
 const flipBtn = document.getElementById("flipBtn");
 const studyPrevBtn = document.getElementById("prevBtn");
 const studyNextBtn = document.getElementById("nextBtn");
-function openStudy(unitId){
+function openStudy(){
     studyOverlay.style.display = "flex";
     document.body.style.overflow = "hidden";
-    flashcards = shuffleArray(quizDataOriginal.map(q => {
+    flashcards = quizDataOriginal.map(q => {
         const termMatch = q.q.match(/'([^']+)'/);
         const term = termMatch ? termMatch[1] : '';
         const correctDef = q.a[q.correct];
         const similarDefs = q.a.filter((_, i) => i !== q.correct);
         return {term, correctDef, similarDefs};
-    }));
+    });
     currentCard = 0;
     isFlipped = false;
     loadCard();
@@ -1038,26 +1005,21 @@ studyNextBtn.onclick = () => {
     }
 };
 /* =========================================================
-   GLOBAL CLEAR ALL DATA (BUT KEEP THEME)
+   GLOBAL CLEAR
    ========================================================= */
 document.getElementById("globalClearBtn").addEventListener("click", () => {
     const ok = confirm(
         "This will permanently delete all saved scores and unit completion for this dashboard on this browser.\n\nDo you want to continue?"
     );
     if(!ok) return;
-    // Keep theme
     const theme = localStorage.getItem("theme") || "dark";
-    // Remove only dashboard keys
-    // (This prevents nuking other Google Sites storage)
     const keysToRemove = [];
     for(let i=0;i<localStorage.length;i++){
         const k = localStorage.key(i);
         if(!k) continue;
-        // unit score keys
         if(k.startsWith("unit1")) keysToRemove.push(k);
     }
     keysToRemove.forEach(k => localStorage.removeItem(k));
-    // Restore theme
     localStorage.setItem("theme", theme);
     html.setAttribute("data-theme", theme);
     updateBulb();

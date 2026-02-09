@@ -144,34 +144,63 @@ header {
 .btn-ghost { background: transparent; color: var(--text); }
 .header-tools .btn-ghost { color: white; }
 
-/* --- SETTINGS MENU --- */
-.settings-dropdown {
-    position: absolute;
-    top: 55px;
-    right: 0;
-    width: 220px;
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+/* --- SETTINGS MODAL (Centered Box) --- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
     display: none;
-    flex-direction: column;
-    overflow: hidden;
-    z-index: 1001;
+    align-items: center;
+    justify-content: center;
+    z-index: 2001;
+    padding: 20px;
 }
-.settings-dropdown.active { display: flex; }
-.settings-item {
-    padding: 12px 16px;
+.modal-overlay.active { display: flex; }
+
+.modal-content {
+    background: var(--card-bg);
+    width: 100%;
+    max-width: 400px;
+    border-radius: 28px;
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    overflow: hidden;
+    position: relative;
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.settings-option {
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: space-between;
+    padding: 1rem;
+    background: var(--bg);
+    border-radius: 16px;
+    margin-bottom: 1rem;
     cursor: pointer;
-    font-size: 0.9rem;
-    color: var(--text);
-    transition: background 0.2s;
+    border: 1px solid transparent;
 }
-.settings-item:hover { background: var(--bg); }
-.settings-item.danger { color: var(--danger); border-top: 1px solid var(--border); }
+.settings-option:hover { border-color: var(--primary); }
+
+.settings-option i { font-size: 1.2rem; color: var(--primary); }
+
+.settings-option.danger {
+    background: rgba(220, 38, 38, 0.05);
+    color: var(--danger);
+}
+.settings-option.danger i { color: var(--danger); }
 
 .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; position: relative; z-index: 10;}
 .unit-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
@@ -441,25 +470,9 @@ header {
     </div>
     <div class="logo">MONEY MENTOR</div>
     <div class="header-tools">
-        <button id="settings-trigger" class="btn btn-outline" onclick="toggleSettingsMenu()">
+        <button id="settings-trigger" class="btn btn-outline" onclick="openSettings()">
             <i class="fas fa-cog"></i>
         </button>
-        <div id="settings-dropdown" class="settings-dropdown">
-            <div class="settings-item" onclick="toggleTheme()">
-                <i id="theme-icon-menu" class="fas fa-moon"></i>
-                <span id="theme-text">Dark Mode</span>
-            </div>
-            <div class="settings-item danger" onclick="confirmReset()">
-                <i class="fas fa-trash"></i> Reset All Data
-            </div>
-            <div id="reset-confirm" style="display:none; padding: 12px; background: rgba(220, 38, 38, 0.1); flex-direction:column; gap:8px;">
-                <p style="margin:0; font-size:0.75rem; font-weight:700; color:var(--danger)">Are you sure?</p>
-                <div style="display:flex; gap:5px;">
-                    <button class="btn btn-primary" style="background:var(--danger); padding:4px 8px; flex:1; font-size:0.75rem;" onclick="resetProgress()">Yes</button>
-                    <button class="btn btn-outline" style="padding:4px 8px; flex:1; font-size:0.75rem; color:var(--text); border-color:var(--border)" onclick="cancelReset()">No</button>
-                </div>
-            </div>
-        </div>
         <div class="status-pill" style="color: white; border: 1px solid rgba(255,255,255,0.3); background: transparent;">
             Units Complete: <span id="unitsDone">0</span>/2
         </div>
@@ -468,6 +481,50 @@ header {
 
 <div class="container">
     <div class="unit-grid" id="dashboard-grid"></div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div id="settings-modal" class="modal-overlay" onclick="handleOutsideClick(event)">
+    <div class="modal-content">
+        <div id="main-settings-view">
+            <div class="modal-header">
+                <h3 style="margin:0; font-family:Poppins;">Settings</h3>
+                <i class="fas fa-times" style="cursor:pointer; font-size:1.2rem; opacity:0.5" onclick="closeSettings()"></i>
+            </div>
+            <div class="modal-body">
+                <div class="settings-option" onclick="toggleTheme()">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <i id="theme-icon-modal" class="fas fa-moon"></i>
+                        <span id="theme-text-modal" style="font-weight:600">Dark Mode</span>
+                    </div>
+                    <i class="fas fa-chevron-right" style="font-size:0.8rem; opacity:0.3"></i>
+                </div>
+                
+                <div class="settings-option danger" onclick="showResetConfirm()">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <i class="fas fa-trash-alt"></i>
+                        <span style="font-weight:600">Reset All Data</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="reset-confirm-view" style="display:none;">
+            <div class="modal-header">
+                <h3 style="margin:0; font-family:Poppins; color:var(--danger)">Confirm Reset</h3>
+            </div>
+            <div class="modal-body" style="text-align:center;">
+                <div style="font-size:3rem; margin-bottom:1rem;">⚠️</div>
+                <p style="font-weight:700; margin-bottom:0.5rem;">Are you absolutely sure?</p>
+                <p style="font-size:0.85rem; color:var(--text-light); margin-bottom:2rem;">This will delete all your scores and starred terms. This action cannot be undone.</p>
+                
+                <div style="display:flex; gap:10px;">
+                    <button class="btn btn-primary" style="flex:1; background:var(--danger);" onclick="resetProgress()">Yes, Reset</button>
+                    <button class="btn btn-outline" style="flex:1; color:var(--text); border-color:var(--border)" onclick="hideResetConfirm()">No, Keep Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div id="app-overlay" class="overlay">
@@ -925,13 +982,9 @@ function toggleChat() {
     const chatWin = document.getElementById('chatWindow');
     chatWin.classList.toggle('active');
     
-    // Remove "Ask Me" badge on first click
     if (!badgeRemoved) {
         badgeRemoved = true;
         localStorage.setItem('mm_badge_removed', 'true');
-        const bubble = document.getElementById('chatBubble');
-        bubble.style.setProperty('--after-display', 'none');
-        // Simple way to hide the pseudo-element via style tag
         const style = document.createElement('style');
         style.innerHTML = '.chat-bubble::after { display: none !important; }';
         document.head.appendChild(style);
@@ -997,10 +1050,14 @@ function appendMessage(text, role, isHtml = false) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// --- SETTINGS & THEME LOGIC ---
-function toggleSettingsMenu() {
-    document.getElementById('settings-dropdown').classList.toggle('active');
-    cancelReset(); // Close confirmation if open
+// --- NEW SETTINGS MODAL LOGIC ---
+function openSettings() {
+    document.getElementById('settings-modal').classList.add('active');
+    hideResetConfirm(); // Ensure reset view is hidden by default
+}
+
+function closeSettings() {
+    document.getElementById('settings-modal').classList.remove('active');
 }
 
 function toggleTheme() {
@@ -1013,18 +1070,20 @@ function toggleTheme() {
 
 function updateThemeUI() {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const icon = document.getElementById('theme-icon-menu');
-    const text = document.getElementById('theme-text');
-    icon.className = isDark ? "fas fa-sun" : "fas fa-moon";
-    text.innerText = isDark ? "Light Mode" : "Dark Mode";
+    const iconModal = document.getElementById('theme-icon-modal');
+    const textModal = document.getElementById('theme-text-modal');
+    iconModal.className = isDark ? "fas fa-sun" : "fas fa-moon";
+    textModal.innerText = isDark ? "Light Mode" : "Dark Mode";
 }
 
-function confirmReset() {
-    document.getElementById('reset-confirm').style.display = 'flex';
+function showResetConfirm() {
+    document.getElementById('main-settings-view').style.display = 'none';
+    document.getElementById('reset-confirm-view').style.display = 'block';
 }
 
-function cancelReset() {
-    document.getElementById('reset-confirm').style.display = 'none';
+function hideResetConfirm() {
+    document.getElementById('main-settings-view').style.display = 'block';
+    document.getElementById('reset-confirm-view').style.display = 'none';
 }
 
 function resetProgress() {
@@ -1032,10 +1091,9 @@ function resetProgress() {
     location.reload();
 }
 
-// Close settings if clicking outside
-window.onclick = function(event) {
-    if (!event.target.closest('#settings-trigger') && !event.target.closest('#settings-dropdown')) {
-        document.getElementById('settings-dropdown').classList.remove('active');
+function handleOutsideClick(event) {
+    if (event.target.classList.contains('modal-overlay')) {
+        closeSettings();
     }
 }
 
@@ -1046,7 +1104,6 @@ window.onload = () => {
     updateThemeUI();
     renderDashboard();
 
-    // Check if badge should be hidden
     if (badgeRemoved) {
         const style = document.createElement('style');
         style.innerHTML = '.chat-bubble::after { display: none !important; }';

@@ -451,20 +451,10 @@ header {
 .slide-out-right { animation: slideOutRight 0.6s var(--ease-out-expo) forwards; }
 .slide-in-left { animation: slideInLeft 0.6s var(--ease-out-expo) forwards; }
 
-/* Shuffle Animation */
-@keyframes cardShuffle {
-    0% { transform: scale(1) rotate(0deg); opacity: 1; }
-    50% { transform: scale(0.5) rotate(15deg); opacity: 0.5; }
-    100% { transform: scale(1) rotate(0deg); opacity: 1; }
-}
-.shuffling { animation: cardShuffle 0.4s var(--ease-out-expo); }
-
 @media (max-width: 768px) {
     .flashcard-stage { height: 400px; width: 95%; }
     .card-face { padding: 2rem; }
     .chat-window { width: calc(100vw - 40px); right: -10px; height: 450px; bottom: 100px; }
-    header .btn span { display: none; }
-    header .btn i { margin-right: 0; }
 }
 </style>
 </head>
@@ -474,8 +464,7 @@ header {
 
 <header>
     <div class="header-tools">
-        <a href="https://sites.google.com/view/money--mentor/home" class="btn btn-ghost" style="color:white"><i class="fas fa-chevron-left"></i> <span>Home</span></a>
-        <a href="https://sites.google.com/view/money--mentor/videos" class="btn btn-outline" style="border-color: rgba(255,255,255,0.3); background: rgba(0,0,0,0.1);"><i class="fas fa-play-circle"></i> <span>Videos</span></a>
+        <a href="https://sites.google.com/view/money--mentor/home" class="btn btn-ghost" style="color:white"><i class="fas fa-chevron-left"></i> Home</a>
     </div>
     <div class="logo">MONEY MENTOR</div>
     <div class="header-tools">
@@ -488,7 +477,7 @@ header {
     </div>
 </header>
 
-<!-- SETTINGS MODAL -->
+<!-- THE NEW SETTINGS MODAL -->
 <div id="settings-modal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
@@ -561,7 +550,7 @@ header {
 </div>
 
 <script>
-// --- BACKGROUND INITIALIZATION ---
+// --- BACKGROUND INITIALIZATION (UNCHANGED) ---
 function initBackground() {
     const container = document.getElementById('bg-animation-container');
     container.innerHTML = '';
@@ -605,6 +594,7 @@ function initBackground() {
 const OBFUSCATED_KEY = ""; 
 function getCleanKey() { return OBFUSCATED_KEY; }
 
+// --- ALL TERMS AND LOGIC (UNCHANGED) ---
 const financeDictionary = {
     "hi": "Hello! I'm Money Bot. Ready to learn about finances today?",
     "hello": "Hi there! I'm your Money Mentor assistant. Ask me anything about the terms on this site!",
@@ -776,18 +766,6 @@ function openStudyStarred(unitId, event) {
     launchStudyUI();
 }
 
-function shuffleStudySet() {
-    const stage = document.getElementById('stage');
-    stage.classList.add('shuffling');
-    setTimeout(() => {
-        activeStudySet = shuffleArray(activeStudySet);
-        currentIdx = 0;
-        updateFlashcardContent(document.getElementById('card-obj'), activeStudySet[currentIdx]);
-        document.getElementById('card-counter').innerText = `Card 1 of ${activeStudySet.length}`;
-        stage.classList.remove('shuffling');
-    }, 400);
-}
-
 function launchStudyUI() {
     document.getElementById('app-overlay').style.display = 'flex';
     document.getElementById('overlay-title').innerText = `${currentUnit.title} | Flashcards`;
@@ -796,9 +774,6 @@ function launchStudyUI() {
     content.innerHTML = `
         <div style="width:100%; margin: 0 auto; padding-top: 1rem;">
             <div style="display:flex; justify-content:center; align-items:center; gap:1.5rem; margin-bottom:1rem;">
-                <button class="btn btn-outline" style="color:var(--text); border-color:var(--border); padding: 5px 10px;" onclick="shuffleStudySet()">
-                    <i class="fas fa-random"></i> Shuffle
-                </button>
                 <div style="color:var(--text); font-weight:700;" id="card-counter">Card 1 of ${activeStudySet.length}</div>
             </div>
             <div class="flashcard-stage" id="stage">
@@ -816,7 +791,6 @@ function launchStudyUI() {
 
 function updateFlashcardContent(cardEl, data) {
     updateActionState();
-    cardEl.classList.remove('flipped');
     cardEl.innerHTML = `
         <div class="card-face">
             <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary);">${data.term}</div>
@@ -968,7 +942,7 @@ function closeOverlay() {
     renderDashboard(); 
 }
 
-// --- MONEY BOT ---
+// --- MONEY BOT LOGIC (UNCHANGED) ---
 let badgeRemoved = localStorage.getItem('mm_badge_removed') === 'true';
 
 function toggleChat() {
@@ -1041,10 +1015,10 @@ function appendMessage(text, role, isHtml = false) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// --- SETTINGS ---
+// --- SETTINGS MODAL LOGIC (NEW SYSTEM) ---
 function openSettings() {
     document.getElementById('settings-modal').classList.add('active');
-    hideResetConfirm();
+    hideResetConfirm(); // Ensure reset view is reset
 }
 
 function closeSettings() {
@@ -1062,7 +1036,7 @@ function toggleTheme() {
 function updateThemeUI() {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     const iconModal = document.getElementById('theme-icon-modal');
-    if(iconModal) iconModal.className = isDark ? "fas fa-sun" : "fas fa-moon";
+    iconModal.className = isDark ? "fas fa-sun" : "fas fa-moon";
 }
 
 function showResetConfirm() {
@@ -1080,6 +1054,7 @@ function resetProgress() {
     location.reload();
 }
 
+// Close on outside click
 window.onclick = function(event) {
     const modal = document.getElementById('settings-modal');
     if (event.target === modal) closeSettings();

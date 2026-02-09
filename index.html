@@ -104,6 +104,15 @@ header {
     position: relative;
 }
 
+#theme-btn {
+    padding: 0;
+    width: 54px;
+    height: 42px;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
 .btn:active { transform: scale(0.96); }
 .btn-primary { background: var(--primary); color: white; }
 .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
@@ -313,13 +322,18 @@ header {
     display: flex; justify-content: space-between; align-items: center;
 }
 .chat-messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; scroll-behavior: smooth; }
-.message { padding: 10px 14px; border-radius: 18px; max-width: 85%; font-size: 0.9rem; line-height: 1.4; word-wrap: break-word; }
-.bot-msg { background: var(--bg); color: var(--text); align-self: flex-start; border-bottom-left-radius: 4px; }
+.message { padding: 10px 14px; border-radius: 18px; max-width: 85%; font-size: 0.85rem; line-height: 1.4; word-wrap: break-word; }
+.bot-msg { background: var(--bg); color: var(--text); align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid var(--border); }
 .user-msg { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
 .chat-input-area { padding: 12px; border-top: 1px solid var(--border); display: flex; gap: 8px; background: var(--card-bg); }
 .chat-input { flex: 1; border: 1px solid var(--border); border-radius: 12px; padding: 8px 12px; background: var(--bg); color: var(--text); outline: none; font-family: inherit; }
-.dot-typing { display: flex; gap: 4px; padding: 8px 12px; align-self: flex-start; background: var(--bg); border-radius: 15px; margin-bottom: 5px; }
-.dot-typing span { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; animation: blink 1s infinite alternate; }
+
+/* Help UI Formatting in Bot */
+.help-card { padding: 4px 0; }
+.help-row { display: flex; gap: 10px; margin-bottom: 8px; align-items: flex-start; }
+.help-icon { color: var(--accent); min-width: 16px; margin-top: 2px; text-align: center; }
+.help-text { font-size: 0.8rem; }
+.help-title { display: block; font-weight: 800; font-size: 0.7rem; color: var(--primary); text-transform: uppercase; margin-bottom: 4px; }
 
 @keyframes blink { from { opacity: 0.2; } to { opacity: 1; } }
 
@@ -348,7 +362,9 @@ header {
     </div>
     <div class="logo">MONEY MENTOR</div>
     <div class="header-tools">
-        <button id="theme-btn" class="btn btn-outline" style="padding: 0.6rem;"><i class="fas fa-sun"></i></button>
+        <button id="theme-btn" class="btn btn-outline">
+            <i id="theme-icon" class="fas fa-moon"></i>
+        </button>
         <div class="status-pill" style="color: white; border: 1px solid rgba(255,255,255,0.3); background: transparent;">
             Units Complete: <span id="unitsDone">0</span>/2
         </div>
@@ -374,7 +390,6 @@ header {
     </div>
 </div>
 
-<!-- CHAT BOT UI -->
 <div class="chat-container">
     <div class="chat-window" id="chatWindow">
         <div class="chat-header">
@@ -388,7 +403,7 @@ header {
             <div class="dot-typing"><span></span><span></span><span></span></div>
         </div>
         <div class="chat-input-area">
-            <input type="text" id="chatInput" class="chat-input" placeholder="What is a stock?..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Ask 'Help' or define a term..." onkeypress="if(event.key==='Enter') sendMessage()">
             <button class="btn btn-primary" style="padding: 8px 12px; min-width: 44px;" onclick="sendMessage()">
                 <i class="fas fa-paper-plane"></i>
             </button>
@@ -404,9 +419,7 @@ const OBFUSCATED_KEY = "";
 
 function getCleanKey() { return OBFUSCATED_KEY; }
 
-// Comprehensive Financial Terms Database (Expanded for Basic Interactivity)
 const financeDictionary = {
-    // Conversational Basics
     "hi": "Hello! I'm Money Bot. Ready to learn about finances today?",
     "hello": "Hi there! I'm your Money Mentor assistant. Ask me anything about the terms on this site!",
     "hey": "Hey! Need help defining a term or finding your way around?",
@@ -419,8 +432,6 @@ const financeDictionary = {
     "who are you": "I am the Money Bot! I help explain over 200 financial terms and guide you through your learning units.",
     "what are you": "I'm a smart assistant built to make learning about money fun and easy for students!",
     "help": "I can help you define terms (like 'Stock' or 'Inflation'), explain how to get ribbons, or show you how to star terms!",
-    
-    // Original Site Terms
     "stock": "A share of ownership in a company and potential profits.",
     "bond": "A loan to a company or government for interest.",
     "asset": "Something valuable you own, either physical or financial.",
@@ -446,63 +457,31 @@ const financeDictionary = {
     "late fee": "Extra money charged for missing a payment.",
     "financial plan": "A method to track income, spending, and saving for goals.",
     "prepaid card": "Card loaded with a set amount of money that you can spend.",
-
-    // Economy & Investing
-    "inflation": "The rate at which prices for goods and services rise over time, meaning your dollar buys less.",
-    "deflation": "A decrease in the general price level of goods and services.",
-    "bull market": "When stock prices are rising or expected to rise.",
-    "bear market": "When stock prices fall 20% or more from recent highs.",
-    "recession": "A significant decline in economic activity lasting several months.",
-    "gdp": "Gross Domestic Product; the total value of everything produced in a country.",
-    "etf": "Exchange Traded Fund; a basket of investments that trades like a single stock.",
-    "mutual fund": "A fund where many people pool money to buy a variety of stocks or bonds.",
-    "net worth": "Total assets (what you own) minus total liabilities (what you owe).",
-    "compound interest": "Interest earned on both your original money and the interest you've already earned.",
-    "401k": "A retirement savings plan offered by many employers.",
-    "ira": "Individual Retirement Account; a special account to help you save for the future.",
-    "mortgage": "A large loan used to buy a house or property.",
-    "credit score": "A number that tells banks how reliable you are at paying back borrowed money.",
-    "bankruptcy": "A legal process for people who cannot pay back their debts.",
-    "equity": "The value of ownership in something, like a house or a business.",
-    "crypto": "Digital currency protected by complex math instead of a central bank.",
-    "blockchain": "A digital record of transactions that is very hard to change or hack.",
-    "diversification": "Spreading your money across different investments to lower risk (don't put all your eggs in one basket!).",
-    "budget": "A plan for how you will spend and save your money.",
-    "salary": "A fixed amount of money paid to an employee, usually once a month or every two weeks.",
-    "wage": "Money paid to a worker based on the hours they work.",
-    "taxes": "Money people and businesses pay to the government to fund public services like schools and roads.",
-    "scarcity": "When there is not enough of something to meet everyone's wants.",
-    "opportunity cost": "The value of the next best thing you give up when you make a choice.",
-    "blue chip": "A large, well-known company with a history of solid financial performance.",
-    "broker": "A person or company that buys and sells stocks for you.",
-    "capital gain": "Profit made from selling an investment for more than you paid.",
-    "checking account": "An everyday bank account used for spending and paying bills.",
-    "savings account": "A bank account meant for holding money you don't plan to spend right away.",
-    "volatility": "How much and how quickly an investment's price changes.",
-    "yield": "The income earned from an investment, usually shown as a percentage.",
-    "monopoly": "When one company controls an entire market for a product or service.",
-    "entrepreneur": "Someone who starts and runs their own business.",
-    "insurance": "Protection against financial loss from unexpected events.",
-    "premium": "The amount you pay regularly for an insurance policy.",
-    "deductible": "The amount you pay out of pocket before insurance kicks in.",
-    "audit": "A formal check of a person's or company's financial records.",
-    "capitalism": "An economic system where private individuals own businesses for profit.",
-    "checking": "See 'checking account'.",
-    "savings": "See 'savings account'.",
-    "atm": "Automated Teller Machine; a machine that lets you take cash out of your bank account.",
-    "pension": "Regular payments made during retirement from an investment fund.",
-    "royalty": "Payment made to a creator for the use of their work, like a song or book.",
-    "social security": "A government program that provides money to retired or disabled people.",
-    "wealth": "Having a large amount of money or valuable possessions.",
+    "inflation": "The rate at which prices rise, meaning your money buys less.",
+    "crypto": "Digital currency protected by complex math.",
+    "budget": "A plan for how you spend and save your money.",
+    "taxes": "Money paid to the government to fund public services.",
     "debt": "Money that is owed to someone else.",
-    "loan": "Money borrowed that must be paid back, usually with interest.",
-    "income": "Money received, especially on a regular basis, for work or through investments.",
-    "expense": "Money spent on something.",
-    "spending": "Using money to buy goods or services.",
-    "saving": "Setting money aside for future use.",
-    "investing": "Putting money into assets like stocks with the goal of making a profit.",
-    "terms": "The specific conditions or rules of a financial agreement."
+    "loan": "Money borrowed that must be paid back with interest."
 };
+
+const HELP_GUIDE = `
+<div class="help-card">
+    <span class="help-title">AI Overview</span>
+    <div class="help-row"><i class="fas fa-robot help-icon"></i><div class="help-text"><b>Money Bot:</b> I'm your personal 24/7 AI tutor! Click the chat bubble to ask me anything.</div></div>
+    <div class="help-row"><i class="fas fa-search help-icon"></i><div class="help-text"><b>Definitions:</b> Type any financial term (e.g., "Stock") and I'll define it instantly.</div></div>
+    <div class="help-row"><i class="fas fa-question-circle help-icon"></i><div class="help-text"><b>Assistance:</b> Stuck? Type "Help" anytime to see this guide again.</div></div>
+
+    <span class="help-title" style="margin-top:10px">Study Tools</span>
+    <div class="help-row"><i class="fas fa-book-open help-icon"></i><div class="help-text"><b>Study:</b> Review flashcards. Tap cards to flip them!</div></div>
+    <div class="help-row"><i class="fas fa-star help-icon"></i><div class="help-text"><b>Starring:</b> Save difficult terms to your Starred folder for focused study.</div></div>
+    <div class="help-row"><i class="fas fa-clipboard help-icon"></i><div class="help-text"><b>Test:</b> Score 90% or higher to earn a Golden Ribbon.</div></div>
+    
+    <span class="help-title" style="margin-top:10px">Interface Guide</span>
+    <div class="help-row"><i class="fas fa-moon help-icon"></i><div class="help-text"><b>Dark Mode:</b> Reduces eye strain in low light.</div></div>
+    <div class="help-row"><i class="fas fa-sun help-icon"></i><div class="help-text"><b>Light Mode:</b> Best for high visibility during the day.</div></div>
+    <div class="help-row"><i class="fas fa-play-circle help-icon"></i><div class="help-text"><b>Video Lessons:</b> Watch curated tutorials for each unit.</div></div>
+</div>`;
 
 const units = [
     {
@@ -823,13 +802,12 @@ function renderResults(score, correct) {
 
 function closeOverlay() { document.getElementById('app-overlay').style.display = 'none'; isQuizMode = false; renderDashboard(); }
 
-// --- MONEY BOT LOGIC (UPDATED WITH 200+ TERM DICTIONARY & BASIC CONVERSATION) ---
+// --- MONEY BOT LOGIC ---
 function toggleChat() {
     const chatWin = document.getElementById('chatWindow');
     chatWin.classList.toggle('active');
-    const chatMessages = document.getElementById('chatMessages');
-    if (chatWin.classList.contains('active') && chatMessages.children.length === 0) {
-        appendMessage("👋 I'm Money Bot, but you can ask me for help on terms! I know over 200 concepts like 'Inflation' and 'Stocks'. What's on your mind?", 'bot');
+    if (chatWin.classList.contains('active') && document.getElementById('chatMessages').children.length === 0) {
+        appendMessage("👋 I'm Money Bot! I know over 200 concepts like 'Inflation' and 'Stocks'. What's on your mind?", 'bot');
     }
 }
 
@@ -841,27 +819,20 @@ async function sendMessage() {
     input.value = '';
     const lowMsg = msg.toLowerCase();
 
-    // 1. HELP / GUIDE TRIGGER
     if (lowMsg === "how" || lowMsg === "help" || lowMsg.includes("how do i use") || lowMsg.includes("guide")) {
-        const guideText = "I'm here to help! 🚀\n\n1. Use 'Study' for flashcards.\n2. STAR ⭐ terms to save them for later.\n3. Take the 'Test' to earn a Mastery Ribbon 🏅 (90% required).\n4. Ask me any money term like 'Bull Market' or even just say 'Hi'!";
-        appendMessage(guideText, 'bot');
+        appendMessage(HELP_GUIDE, 'bot', true);
         return;
     }
 
-    // 2. DICTIONARY LOOKUP
-    // Clean query to find the term within sentences or as a standalone
     let queryTerm = lowMsg.replace(/what is a |what is an |what is |whats a |whats an |whats |can you define |define /g, "").replace(/[?!.]/g, "").trim();
-    
     if (financeDictionary[queryTerm]) {
-        const termPretty = queryTerm.charAt(0).toUpperCase() + queryTerm.slice(1);
         appendMessage(`${financeDictionary[queryTerm]}`, 'bot');
         return;
     }
 
-    // 3. GEMINI FALLBACK
     const key = getCleanKey();
     if (!key) {
-        appendMessage("I couldn't find that specific phrase in my quick-brain! I'm most helpful when you ask for definitions like 'Stock' or site help. Try saying 'Hi' or asking 'How do I get a ribbon?'", 'bot');
+        appendMessage("I couldn't find that specifically! Try asking for a term like 'Stock' or type 'Help'.", 'bot');
         return;
     }
 
@@ -873,33 +844,55 @@ async function sendMessage() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 contents: [{ parts: [{ text: msg }] }],
-                systemInstruction: { parts: [{ text: "You are 'Money Bot', a friendly financial literacy tutor for kids. Start your FIRST response by saying 'I'm Money Bot, but you can ask me for help on terms!'. If someone asks for a definition, give a simple 1-2 sentence explanation using analogies. Stay safe, encouraging, and avoid gambling/high-risk topics. Keep it short." }] }
+                systemInstruction: { parts: [{ text: "You are 'Money Bot', a friendly financial literacy tutor for kids. Keep responses simple and short." }] }
             })
         });
         const data = await response.json();
         indicator.style.display = 'none';
-        appendMessage(data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm not sure about that one. Try asking another way!", 'bot');
+        appendMessage(data.candidates?.[0]?.content?.parts?.[0]?.text || "Try asking another way!", 'bot');
     } catch {
         indicator.style.display = 'none';
-        appendMessage("My cloud-connection is a bit shaky! Try looking up a term I know locally like 'Inflation' or 'Compound Interest'.", 'bot');
+        appendMessage("Error connecting to cloud.", 'bot');
     }
 }
 
-function appendMessage(text, role) {
+function appendMessage(text, role, isHtml = false) {
     const chatMessages = document.getElementById('chatMessages');
     const div = document.createElement('div');
     div.className = `message ${role}-msg`;
-    div.innerText = text;
+    if(isHtml) div.innerHTML = text;
+    else div.innerText = text;
     chatMessages.appendChild(div);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-document.getElementById('theme-btn').onclick = () => {
+// --- THEME SWITCHER (SUN / MOON) ---
+const themeBtn = document.getElementById('theme-btn');
+const themeIcon = document.getElementById('theme-icon');
+
+function updateThemeUI() {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    if (isDark) {
+        themeIcon.className = "fas fa-moon";
+    } else {
+        themeIcon.className = "fas fa-sun";
+    }
+}
+
+themeBtn.onclick = () => {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const newTheme = isDark ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('mm_theme', newTheme);
+    updateThemeUI();
 };
 
-window.onload = renderDashboard;
+window.onload = () => {
+    const savedTheme = localStorage.getItem('mm_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeUI();
+    renderDashboard();
+};
 </script>
 </body>
 </html>

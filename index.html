@@ -68,6 +68,39 @@ body {
     100% { background-position: 500px 500px, 440px 560px, 610px 680px; }
 }
 
+/* BACKGROUND ANIMATION LAYERS */
+#bg-animation-container {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.swirl-pattern {
+    position: absolute;
+    width: 600px; height: 600px;
+    opacity: 0.15;
+    animation: rotateSwirl 45s linear infinite;
+}
+
+.floating-triangle {
+    position: absolute;
+    fill: var(--dot-color);
+    opacity: 0.4;
+    animation: triangleFloat 25s infinite alternate ease-in-out;
+}
+
+@keyframes rotateSwirl {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes triangleFloat {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(150px, 200px) rotate(360deg); }
+}
+
 header {
     background: linear-gradient(135deg, #059669, #065f46);
     color: white;
@@ -121,7 +154,7 @@ header {
 .btn-ghost { background: transparent; color: var(--text); }
 .header-tools .btn-ghost { color: white; }
 
-.container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+.container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; position: relative; z-index: 10;}
 .unit-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
 
 .unit-card {
@@ -356,6 +389,8 @@ header {
 </head>
 <body>
 
+<div id="bg-animation-container"></div>
+
 <header>
     <div class="header-tools">
         <a href="https://sites.google.com/view/money--mentor/home" class="btn btn-ghost" style="color:white"><i class="fas fa-chevron-left"></i> Home</a>
@@ -415,8 +450,53 @@ header {
 </div>
 
 <script>
-const OBFUSCATED_KEY = ""; 
+// --- BACKGROUND INITIALIZATION ---
+function initBackground() {
+    const container = document.getElementById('bg-animation-container');
+    
+    // Swirls
+    for(let s=0; s<2; s++) {
+        const swirl = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        swirl.setAttribute("viewBox", "0 0 100 100");
+        swirl.classList.add("swirl-pattern");
+        swirl.style.left = s === 0 ? "-150px" : "auto";
+        swirl.style.right = s === 1 ? "-150px" : "auto";
+        swirl.style.top = s === 0 ? "15%" : "65%";
+        swirl.style.animationDirection = s === 0 ? "normal" : "reverse";
+        
+        for(let i=0; i<45; i++) {
+            const angle = 0.4 * i;
+            const x = 50 + (i * 1.1) * Math.cos(angle);
+            const y = 50 + (i * 1.1) * Math.sin(angle);
+            const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            dot.setAttribute("cx", x);
+            dot.setAttribute("cy", y);
+            dot.setAttribute("r", "1.2");
+            dot.setAttribute("fill", "var(--dot-color)");
+            swirl.appendChild(dot);
+        }
+        container.appendChild(swirl);
+    }
 
+    // Triangles
+    for(let i=0; i<15; i++) {
+        const tri = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        tri.setAttribute("viewBox", "0 0 100 100");
+        tri.classList.add("floating-triangle");
+        const size = Math.random() * 25 + 20;
+        tri.style.width = size + "px";
+        tri.style.left = Math.random() * 100 + "vw";
+        tri.style.top = Math.random() * 100 + "vh";
+        tri.style.animationDelay = (Math.random() * -20) + "s";
+        
+        const poly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        poly.setAttribute("points", "50,15 90,85 10,85");
+        tri.appendChild(poly);
+        container.appendChild(tri);
+    }
+}
+
+const OBFUSCATED_KEY = ""; 
 function getCleanKey() { return OBFUSCATED_KEY; }
 
 const financeDictionary = {
@@ -429,7 +509,7 @@ const financeDictionary = {
     "thank you": "No problem at all! I'm here whenever you need a definition.",
     "bye": "Goodbye! See you next time for more money mastery!",
     "goodbye": "Bye! Don't forget to practice those flashcards!",
-    "who are you": "I am the Money Bot! I help explain over 200 financial terms and guide you through your learning units.",
+    "who are you": "I am the Money Bot! I help explain over 200 financial concepts.",
     "what are you": "I'm a smart assistant built to make learning about money fun and easy for students!",
     "help": "I can help you define terms (like 'Stock' or 'Inflation'), explain how to get ribbons, or show you how to star terms!",
     "stock": "A share of ownership in a company and potential profits.",
@@ -866,17 +946,13 @@ function appendMessage(text, role, isHtml = false) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// --- THEME SWITCHER (SUN / MOON) ---
+// --- THEME SWITCHER ---
 const themeBtn = document.getElementById('theme-btn');
 const themeIcon = document.getElementById('theme-icon');
 
 function updateThemeUI() {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    if (isDark) {
-        themeIcon.className = "fas fa-moon";
-    } else {
-        themeIcon.className = "fas fa-sun";
-    }
+    themeIcon.className = isDark ? "fas fa-moon" : "fas fa-sun";
 }
 
 themeBtn.onclick = () => {
@@ -888,6 +964,7 @@ themeBtn.onclick = () => {
 };
 
 window.onload = () => {
+    initBackground();
     const savedTheme = localStorage.getItem('mm_theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
     updateThemeUI();

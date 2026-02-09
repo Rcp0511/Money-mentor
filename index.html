@@ -438,12 +438,30 @@ header {
 [data-theme="dark"] .tutorial-box { background: #1e293b; color: #f1f5f9; border: 1px solid #334155; }
 .tutorial-box h3 { margin: 0 0 10px; font-family: 'Poppins', sans-serif; color: var(--primary); }
 .tutorial-box p { margin: 0 0 15px; font-size: 0.9rem; line-height: 1.5; }
-.tutorial-close {
-    position: fixed; top: 120px; right: 20px; width: 44px; height: 44px;
-    background: var(--danger); color: white; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; z-index: 10003; font-size: 1.2rem;
+
+/* Modified Tutorial Skip Button */
+.tutorial-skip-btn {
+    position: fixed; bottom: 30px; left: 30px; 
+    z-index: 10003; 
+    background: var(--primary);
+    color: white;
     box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.tutorial-skip-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+}
+.tutorial-skip-btn:active {
+    transform: scale(0.95);
 }
 
 @media (max-width: 768px) {
@@ -451,6 +469,7 @@ header {
     .card-face { padding: 2rem; }
     .chat-window { width: calc(100vw - 40px); right: -10px; height: 450px; bottom: 100px; }
     .tutorial-box { width: 280px; left: 50% !important; transform: translateX(-50%) !important; }
+    .tutorial-skip-btn { bottom: 20px; left: 20px; font-size: 0.8rem; padding: 0.6rem 1rem; }
 }
 </style>
 </head>
@@ -461,7 +480,9 @@ header {
 <!-- Tutorial Elements -->
 <div id="tutorial-overlay">
     <div class="tutorial-dimmer" id="tut-dimmer"></div>
-    <div class="tutorial-close" onclick="endTutorial()"><i class="fas fa-times"></i></div>
+    <button class="tutorial-skip-btn" onclick="endTutorial()">
+        <i class="fas fa-forward"></i> Skip Tutorial
+    </button>
     <div class="tutorial-box" id="tut-box">
         <h3 id="tut-title">Welcome!</h3>
         <p id="tut-text">Let's show you around your new student dashboard.</p>
@@ -718,7 +739,7 @@ const units = [
         id: "unit1",
         title: "Basic Investing Vocab",
         icon: "fa-chart-line",
-        class: "unit-1-green", // Apply specific static class
+        class: "unit-1-green", 
         data: [
             { term: "Stock", def: "A share of ownership in a company and potential profits.", q: "What is a 'stock'?", a: ["Share of ownership in a company", "Debt issued by a company", "A bank savings account", "A type of corporate bond"], c: 0 },
             { term: "Bond", def: "A loan to a company or government for interest.", q: "What is a 'bond'?", a: ["Share of ownership in a company", "Loan to a company or government", "An interest-bearing liquid account", "A type of corporate bond"], c: 1 },

@@ -103,7 +103,7 @@ body {
 }
 
 header {
-    background: linear-gradient(135deg, #059669, #065f46);
+    background: linear-gradient(135deg, var(--primary), var(--primary-hover));
     color: white;
     padding: 1rem 2rem;
     display: flex;
@@ -182,6 +182,38 @@ header {
     padding: 1.5rem;
 }
 
+.settings-section-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 800;
+    color: var(--text-light);
+    margin-bottom: 0.75rem;
+    padding-left: 0.5rem;
+}
+
+.theme-swatch-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem;
+    background: var(--bg);
+    border-radius: 16px;
+    justify-content: space-around;
+}
+
+.theme-swatch {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.theme-swatch:hover { transform: scale(1.15); }
+.theme-swatch.active { border-color: white; box-shadow: 0 0 0 2px var(--text); }
+
 .settings-option {
     display: flex; align-items: center; justify-content: space-between;
     padding: 1rem; background: var(--bg); border-radius: 16px;
@@ -230,7 +262,7 @@ header {
 
 .unit-card-hero {
     padding: 2.5rem; padding-left: 5rem;
-    background: linear-gradient(135deg, #10b981 0%, #065f46 100%);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
     color: white; position: relative; z-index: 2; overflow: hidden;
 }
 .unit-card.unit-2-blue .unit-card-hero {
@@ -461,6 +493,17 @@ header {
                 <i class="fas fa-times" style="cursor:pointer; font-size:1.2rem; opacity:0.5" onclick="closeSettings()"></i>
             </div>
             <div class="modal-body">
+                <div class="settings-section-title">Themes</div>
+                <div class="theme-swatch-container">
+                    <div class="theme-swatch" style="background:#10b981;" onclick="setPrimaryColor('#10b981', '#059669', this)" title="Green"></div>
+                    <div class="theme-swatch" style="background:#f97316;" onclick="setPrimaryColor('#f97316', '#ea580c', this)" title="Orange"></div>
+                    <div class="theme-swatch" style="background:#ef4444;" onclick="setPrimaryColor('#ef4444', '#dc2626', this)" title="Red"></div>
+                    <div class="theme-swatch" style="background:#3b82f6;" onclick="setPrimaryColor('#3b82f6', '#2563eb', this)" title="Blue"></div>
+                    <div class="theme-swatch" style="background:#a855f7;" onclick="setPrimaryColor('#a855f7', '#9333ea', this)" title="Purple"></div>
+                    <div class="theme-swatch" style="background:#eab308;" onclick="setPrimaryColor('#eab308', '#ca8a04', this)" title="Yellow"></div>
+                </div>
+
+                <div class="settings-section-title">General</div>
                 <div class="settings-option gold" onclick="resetTutorial(); closeSettings();">
                     <div style="display:flex; align-items:center; gap:12px;">
                         <i class="fas fa-redo-alt"></i>
@@ -902,6 +945,18 @@ function openSettings() { document.getElementById('settings-modal').classList.ad
 function closeSettings() { document.getElementById('settings-modal').classList.remove('active'); }
 function toggleTheme() { const isDark = document.documentElement.getAttribute('data-theme') === 'dark', newTheme = isDark ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', newTheme); localStorage.setItem('mm_theme', newTheme); updateThemeUI(); }
 function updateThemeUI() { const isDark = document.documentElement.getAttribute('data-theme') === 'dark', iconModal = document.getElementById('theme-icon-modal'), textModal = document.getElementById('theme-text-modal'); if (iconModal) iconModal.className = isDark ? "fas fa-sun" : "fas fa-moon"; if (textModal) textModal.innerText = isDark ? "Light Mode" : "Dark Mode"; }
+
+function setPrimaryColor(main, hover, el) {
+    document.documentElement.style.setProperty('--primary', main);
+    document.documentElement.style.setProperty('--primary-hover', hover);
+    localStorage.setItem('mm_primary_color', main);
+    localStorage.setItem('mm_primary_hover', hover);
+    
+    // UI feedback for swatch selection
+    document.querySelectorAll('.theme-swatch').forEach(s => s.classList.remove('active'));
+    if (el) el.classList.add('active');
+}
+
 function showResetConfirm() { document.getElementById('main-settings-view').style.display = 'none'; document.getElementById('reset-confirm-view').style.display = 'block'; }
 function hideResetConfirm() { document.getElementById('main-settings-view').style.display = 'block'; document.getElementById('reset-confirm-view').style.display = 'none'; }
 function resetProgress() { localStorage.clear(); location.reload(); }
@@ -1012,6 +1067,20 @@ window.onload = () => {
     initBackground();
     const savedTheme = localStorage.getItem('mm_theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // Load saved primary colors
+    const savedMain = localStorage.getItem('mm_primary_color');
+    const savedHover = localStorage.getItem('mm_primary_hover');
+    if (savedMain && savedHover) {
+        setPrimaryColor(savedMain, savedHover);
+        // Set active class on corresponding swatch
+        document.querySelectorAll('.theme-swatch').forEach(s => {
+            if (s.style.backgroundColor === savedMain || s.getAttribute('style').includes(savedMain)) {
+                s.classList.add('active');
+            }
+        });
+    }
+
     updateThemeUI();
     renderDashboard();
     

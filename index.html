@@ -502,21 +502,33 @@
 </div>
 
 <script>
-// Theme toggle
+// ────────────────────────────────────────────────
+// 1. Theme toggle
+// ────────────────────────────────────────────────
 const html = document.documentElement;
 let theme = localStorage.getItem('theme') || 'dark';
 html.setAttribute('data-theme', theme);
-document.getElementById('theme-toggle').onclick = () => {
+
+document.getElementById('theme-toggle').addEventListener('click', () => {
   theme = theme === 'dark' ? 'light' : 'dark';
   html.setAttribute('data-theme', theme);
   localStorage.setItem('theme', theme);
-};
+});
 
-// Navigation
-document.getElementById('backBtn').onclick = () => window.location.href = "https://sites.google.com/view/money--mentor/home?authuser=0";
-document.getElementById('videosBtn').onclick = () => window.location.href = "https://sites.google.com/view/money--mentor/learn/videos?authuser=0";
+// ────────────────────────────────────────────────
+// 2. Navigation
+// ────────────────────────────────────────────────
+document.getElementById('backBtn').addEventListener('click', () => {
+  window.location.href = "https://sites.google.com/view/money--mentor/home?authuser=0";
+});
 
-// Units & scores
+document.getElementById('videosBtn').addEventListener('click', () => {
+  window.location.href = "https://sites.google.com/view/money--mentor/learn/videos?authuser=0";
+});
+
+// ────────────────────────────────────────────────
+// 3. Units & progress
+// ────────────────────────────────────────────────
 const units = [{ name: "Unit 1: Investing Vocab", id: "unit1" }];
 const container = document.getElementById('unitContainer');
 const progressText = document.getElementById('progressText');
@@ -528,19 +540,24 @@ function isComplete(id) { return getScore(id + 'HighScore') >= 90; }
 function renderUnits() {
   container.innerHTML = '';
   let completed = 0;
-  units.forEach(u => {
+
+  units.forEach(unit => {
     const card = document.createElement('div');
     card.className = 'unit-card';
+
     const header = document.createElement('div');
     header.className = 'unit-header';
+
     const title = document.createElement('div');
     title.className = 'title';
-    title.textContent = u.name;
-    if (isComplete(u.id)) {
+    title.textContent = unit.name;
+
+    if (isComplete(unit.id)) {
       const badge = document.createElement('span');
       badge.className = 'unit-complete';
       badge.textContent = 'Unit Complete';
       title.prepend(badge);
+
       const star = document.createElement('i');
       star.className = 'fas fa-star';
       star.style.color = 'gold';
@@ -548,33 +565,61 @@ function renderUnits() {
       title.appendChild(star);
       completed++;
     }
+
     const scores = document.createElement('div');
     scores.className = 'scores';
-    scores.textContent = `Last: ${getScore(u.id + 'LastScore')}% | Best: ${getScore(u.id + 'HighScore')}%`;
-    header.append(title, scores);
+    scores.textContent = `Last: ${getScore(unit.id + 'LastScore')}% | Best: ${getScore(unit.id + 'HighScore')}%`;
+
+    header.appendChild(title);
+    header.appendChild(scores);
     card.appendChild(header);
+
+    // Dropdown
     const dropdown = document.createElement('div');
     dropdown.className = 'unit-dropdown';
+
     const studyBtn = document.createElement('button');
     studyBtn.className = 'study-btn';
     studyBtn.innerHTML = '<i class="fas fa-book"></i> Study';
-    studyBtn.onclick = e => { e.stopPropagation(); openStudy(); };
+
     const testBtn = document.createElement('button');
     testBtn.className = 'test-btn';
     testBtn.innerHTML = '<i class="fas fa-clipboard"></i> Unit Test';
-    testBtn.onclick = e => { e.stopPropagation(); openQuiz(); };
-    dropdown.append(studyBtn, testBtn);
+
+    dropdown.appendChild(studyBtn);
+    dropdown.appendChild(testBtn);
     card.appendChild(dropdown);
-    card.onclick = () => {
-      dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
-    };
+
+    // Card click toggles dropdown
+    card.addEventListener('click', (e) => {
+      // Only toggle if click is NOT on the buttons
+      if (!e.target.closest('button')) {
+        dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+      }
+    });
+
+    // Button clicks (stop propagation so card doesn't close dropdown immediately)
+    studyBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openStudy();
+    });
+
+    testBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openQuiz();
+    });
+
     container.appendChild(card);
   });
+
   progressText.textContent = `${completed} out of ${units.length} units completed`;
 }
+
 renderUnits();
 
-// Quiz data
+// ────────────────────────────────────────────────
+// Quiz data & logic
+// ────────────────────────────────────────────────
 const quizDataOriginal = [
   {q:"What is a 'stock'?", a:["Share of ownership in a company","Debt issued by a company","A bank savings account","A type of bond"], correct:0},
   {q:"What is a 'bond'?", a:["Loan to a company or government","Share of ownership in a company","An interest-bearing account","A type of insurance"], correct:0},
@@ -588,104 +633,120 @@ const quizDataOriginal = [
   {q:"What is 'interest'?", a:["Payment for borrowed money","Profit from stock sales","Investment principal","Dividend received"], correct:0}
 ];
 
-// Quiz logic
-let quizData = [], currentQuestion = 0, answers = [], flags = [];
+let quizData = [];
+let currentQuestion = 0;
+let answers = [];
+let flags = [];
 
 function openQuiz() {
   document.getElementById('quizOverlay').style.display = 'flex';
   document.body.style.overflow = 'hidden';
+
   document.getElementById('startScreen').style.display = 'flex';
   document.getElementById('quiz').style.display = 'none';
   document.getElementById('review').style.display = 'none';
   document.getElementById('scoreScreen').style.display = 'none';
   document.getElementById('flagBtn').style.display = 'none';
-  quizData = quizDataOriginal.map(q => ({...q, shuffled: shuffle([...q.a])}));
+
+  quizData = quizDataOriginal.map(q => ({ ...q, shuffled: shuffle([...q.a]) }));
   answers = new Array(quizData.length).fill(null);
   flags = new Array(quizData.length).fill(false);
   currentQuestion = 0;
+
   loadQuestion();
 }
 
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+    [array[i], array[j]] = [array[j], array[i]];
   }
-  return arr;
+  return array;
 }
 
 function loadQuestion() {
   const q = quizData[currentQuestion];
   document.getElementById('questionNumber').textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
   document.getElementById('question').textContent = q.q;
+
   const opts = document.getElementById('options');
   opts.innerHTML = '';
+
   q.shuffled.forEach((text, i) => {
     const btn = document.createElement('button');
     btn.textContent = text;
     if (answers[currentQuestion] === i) btn.classList.add('selected');
-    btn.onclick = () => {
+    btn.addEventListener('click', () => {
       answers[currentQuestion] = i;
       [...opts.children].forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
-    };
+    });
     opts.appendChild(btn);
   });
+
   document.getElementById('progress').style.width = `${((currentQuestion + 1) / quizData.length) * 100}%`;
 }
 
-document.getElementById('startBtn').onclick = () => {
+document.getElementById('startBtn').addEventListener('click', () => {
   document.getElementById('startScreen').style.display = 'none';
   document.getElementById('quiz').style.display = 'block';
   document.getElementById('flagBtn').style.display = 'inline-flex';
-};
+});
 
-document.getElementById('nextBtn').onclick = () => {
+document.getElementById('nextBtn').addEventListener('click', () => {
   if (currentQuestion < quizData.length - 1) {
     currentQuestion++;
     loadQuestion();
   } else {
     showReview();
   }
-};
+});
 
-document.getElementById('prevBtn').onclick = () => {
+document.getElementById('prevBtn').addEventListener('click', () => {
   if (currentQuestion > 0) {
     currentQuestion--;
     loadQuestion();
   }
-};
+});
 
 function showReview() {
   document.getElementById('quiz').style.display = 'none';
   document.getElementById('review').style.display = 'block';
+
   const grid = document.getElementById('reviewGrid');
   grid.innerHTML = '';
+
   quizData.forEach((_, i) => {
     const box = document.createElement('div');
     box.className = 'review-box';
     box.textContent = i + 1;
     if (answers[i] !== null) box.classList.add('answered');
     else box.classList.add('not-answered');
-    if (flags[i]) box.innerHTML += '<i class="fas fa-flag review-flag"></i>';
-    box.onclick = () => {
+    if (flags[i]) {
+      const flag = document.createElement('i');
+      flag.className = 'fas fa-flag review-flag';
+      box.appendChild(flag);
+    }
+    box.addEventListener('click', () => {
       currentQuestion = i;
       document.getElementById('review').style.display = 'none';
       document.getElementById('quiz').style.display = 'block';
       loadQuestion();
-    };
+    });
     grid.appendChild(box);
   });
 }
 
-document.getElementById('toScoreBtn').onclick = () => {
+document.getElementById('toScoreBtn').addEventListener('click', () => {
   let correct = 0;
   const list = document.getElementById('missedList');
   list.innerHTML = '';
+
   quizData.forEach((q, i) => {
     const li = document.createElement('li');
     const chosen = answers[i] === null ? null : q.shuffled[answers[i]];
     const correctAns = q.a[q.correct];
+
     if (chosen === correctAns) {
       correct++;
       li.className = 'correct-score';
@@ -696,42 +757,54 @@ document.getElementById('toScoreBtn').onclick = () => {
     }
     list.appendChild(li);
   });
+
   const score = Math.round((correct / quizData.length) * 100);
   setScore('unit1LastScore', score);
   const high = Math.max(getScore('unit1HighScore'), score);
   setScore('unit1HighScore', high);
+
   document.getElementById('lastScoreText').textContent = `Last Score: ${score}%`;
   document.getElementById('highScoreText').textContent = `High Score: ${high}%`;
   document.getElementById('unitCompleteText').textContent = high >= 90 ? '⭐ Unit Complete!' : '';
+
   document.getElementById('review').style.display = 'none';
   document.getElementById('scoreScreen').style.display = 'block';
   renderUnits();
-};
+});
 
-document.getElementById('restartBtn').onclick = () => {
+document.getElementById('restartBtn').addEventListener('click', () => {
   answers.fill(null);
   flags.fill(false);
   currentQuestion = 0;
   document.getElementById('scoreScreen').style.display = 'none';
   document.getElementById('quiz').style.display = 'block';
   loadQuestion();
-};
+});
 
-// Study logic
-let cards = [], cardIndex = 0, flipped = false;
+// ────────────────────────────────────────────────
+// Study / Flashcard logic
+// ────────────────────────────────────────────────
+let cards = [];
+let cardIndex = 0;
+let flipped = false;
 
 function openStudy() {
   document.getElementById('studyOverlay').style.display = 'flex';
   document.body.style.overflow = 'hidden';
+
   cards = quizDataOriginal.map(q => {
-    const term = q.q.match(/'([^']+)'/)?.[1] || q.q.split(' ')[2] || q.q;
+    const termMatch = q.q.match(/'([^']+)'/);
+    const term = termMatch ? termMatch[1] : q.q;
     return {
       term,
       correct: q.a[q.correct],
       wrong: q.a.filter((_, i) => i !== q.correct)
     };
   });
-  shuffle(cards);
+
+  // Shuffle for variety
+  cards.sort(() => Math.random() - 0.5);
+
   cardIndex = 0;
   flipped = false;
   showCard();
@@ -741,54 +814,55 @@ function showCard() {
   const c = cards[cardIndex];
   document.getElementById('front').textContent = c.term;
   document.getElementById('back').innerHTML = `
-    <strong>Correct Definition:</strong> ${c.correct}<br><br>
-    <strong>Similar / Incorrect:</strong><br>${c.wrong.map(w => `• ${w}`).join('<br>')}
+    <strong>Correct Definition:</strong><br>${c.correct}<br><br>
+    <strong>Similar / Incorrect Definitions:</strong><br>
+    ${c.wrong.map(w => `• ${w}`).join('<br>')}
   `;
   document.getElementById('back').style.display = flipped ? 'block' : 'none';
 }
 
-document.getElementById('flipBtn').onclick = () => {
+document.getElementById('flipBtn').addEventListener('click', () => {
   flipped = !flipped;
   showCard();
-};
+});
 
-document.getElementById('prevCard').onclick = () => {
+document.getElementById('prevCard').addEventListener('click', () => {
   if (cardIndex > 0) {
     cardIndex--;
     flipped = false;
     showCard();
   }
-};
+});
 
-document.getElementById('nextCard').onclick = () => {
+document.getElementById('nextCard').addEventListener('click', () => {
   if (cardIndex < cards.length - 1) {
     cardIndex++;
     flipped = false;
     showCard();
   }
-};
+});
 
 // Close overlays
-document.getElementById('closeQuiz').onclick = () => {
+document.getElementById('closeQuiz').addEventListener('click', () => {
   document.getElementById('quizOverlay').style.display = 'none';
   document.body.style.overflow = '';
-};
+});
 
-document.getElementById('closeStudy').onclick = () => {
+document.getElementById('closeStudy').addEventListener('click', () => {
   document.getElementById('studyOverlay').style.display = 'none';
   document.body.style.overflow = '';
-};
+});
 
-// Clear data
-document.getElementById('globalClearBtn').onclick = () => {
-  if (confirm("Clear all saved scores and progress?")) {
-    const theme = localStorage.getItem('theme');
+// Clear all data
+document.getElementById('globalClearBtn').addEventListener('click', () => {
+  if (confirm("This will permanently delete all saved scores and progress.\n\nContinue?")) {
+    const currentTheme = localStorage.getItem('theme');
     localStorage.clear();
-    if (theme) localStorage.setItem('theme', theme);
+    if (currentTheme) localStorage.setItem('theme', currentTheme);
     renderUnits();
-    alert("Data cleared.");
+    alert("All data cleared.");
   }
-};
+});
 </script>
 </body>
 </html>

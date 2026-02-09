@@ -240,10 +240,31 @@ header {
     width: 2px; background: var(--card-line); z-index: 1;
 }
 
-/* Specific Unit 1 Styling to prevent theme bleed */
+/* Specific Unit 1 Styling */
 .unit-card.unit-1-green .unit-card-hero {
     background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: white;
+}
+
+/* Specific Unit 2 Styling */
+.unit-card.unit-2-blue .unit-card-hero {
+    background: linear-gradient(135deg, #7dd3fc 0%, #0ea5e9 100%);
+    color: #0c4a6e;
+}
+
+/* Specific Unit 3 Styling - Yellow */
+.unit-card.unit-3-yellow .unit-card-hero {
+    background: linear-gradient(135deg, #fde047 0%, #eab308 100%);
+    color: #854d0e;
+}
+
+.unit-card.unit-3-yellow .unit-term-count {
+    background: rgba(133, 77, 14, 0.15);
+    color: #854d0e;
+}
+
+.unit-card.unit-3-yellow .unit-info p {
+    color: #854d0e;
 }
 
 /* Dragging styles */
@@ -265,16 +286,16 @@ header {
     z-index: 10;
     font-size: 1.2rem;
 }
+.unit-card.unit-3-yellow .drag-handle {
+    color: #854d0e;
+}
 
 .unit-card-hero {
     padding: 2.5rem; padding-left: 5rem;
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
     color: white; position: relative; z-index: 2; overflow: hidden;
 }
-.unit-card.unit-2-blue .unit-card-hero {
-    background: linear-gradient(135deg, #7dd3fc 0%, #0ea5e9 100%);
-    color: #0c4a6e;
-}
+
 .unit-card-hero::after {
     content: ""; position: absolute; top: 0; right: 0; bottom: 0; left: 0;
     background-image: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.08) 20px, rgba(255,255,255,0.08) 40px);
@@ -439,7 +460,6 @@ header {
 .tutorial-box h3 { margin: 0 0 10px; font-family: 'Poppins', sans-serif; color: var(--primary); }
 .tutorial-box p { margin: 0 0 15px; font-size: 0.9rem; line-height: 1.5; }
 
-/* Modified Tutorial Skip Button */
 .tutorial-skip-btn {
     position: fixed; bottom: 30px; left: 30px; 
     z-index: 10003; 
@@ -503,7 +523,7 @@ header {
             <i class="fas fa-cog"></i>
         </button>
         <div id="counter-highlight-target" class="status-pill" style="color: white; border: 1px solid rgba(255,255,255,0.3); background: transparent;">
-            Units Complete: <span id="unitsDone">0</span>/2
+            Units Complete: <span id="unitsDone">0</span>/3
         </div>
     </div>
 </header>
@@ -629,7 +649,7 @@ function initBackground() {
             const y = 50 + (i * 1.1) * Math.sin(angle);
             const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
             dot.setAttribute("cx", x); dot.setAttribute("cy", y); dot.setAttribute("r", "1.2");
-            dot.setAttribute("fill", particleColor); // Use dynamic color
+            dot.setAttribute("fill", particleColor);
             dot.classList.add('bg-particle');
             swirl.appendChild(dot);
         }
@@ -643,14 +663,13 @@ function initBackground() {
         tri.style.animationDelay = (Math.random() * -20) + "s";
         const poly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
         poly.setAttribute("points", "50,15 90,85 10,85"); 
-        poly.setAttribute("fill", particleColor); // Use dynamic color
+        poly.setAttribute("fill", particleColor);
         poly.classList.add('bg-particle');
         tri.appendChild(poly);
         container.appendChild(tri);
     }
 }
 
-// Function to update background particle colors
 function updateBackgroundColors(color) {
     const particles = document.querySelectorAll('.bg-particle');
     particles.forEach(p => {
@@ -685,7 +704,14 @@ const financeDictionary = {
     "budget": "A plan for how you spend and save your money.",
     "taxes": "Money paid to the government to fund public services.",
     "debt": "Money that is owed to someone else.",
-    "loan": "Money borrowed that must be paid back with interest."
+    "loan": "Money borrowed that must be paid back with interest.",
+    "bull market": "A market condition where prices of stocks are generally rising.",
+    "bear market": "A market condition where prices of stocks are generally falling.",
+    "etf": "A collection of stocks or bonds that can be traded like a single stock.",
+    "index fund": "A type of ETF or mutual fund that tracks a market index, like the S&P 500.",
+    "dividend yield": "The ratio of a company’s annual dividend compared to its stock price.",
+    "ipo": "The first time a company sells its stock to the public.",
+    "diversification": "Spreading investments across multiple assets to reduce risk."
 };
 
 const HELP_GUIDE = `
@@ -731,6 +757,22 @@ const videoResources = {
             url: "https://youtu.be/sm0FzHMInig",
             citation: "Gateway Bank FSB. (2021, August 12). Credit Cards vs Debit Cards (And When to Use Them) [Video]. YouTube. https://www.youtube.com/watch?v=sm0FzHMInig"
         }
+    ],
+    unit3: [
+        {
+            title: "Bull Markets and Bear Markets Explained",
+            date: "Jan 12, 2022",
+            creator: "Investopedia",
+            url: "https://youtu.be/H7FfP8W4M20",
+            citation: "Investopedia. (2022, January 12). Bull Markets vs Bear Markets [Video]. YouTube. https://www.youtube.com/watch?v=H7FfP8W4M20"
+        },
+        {
+            title: "What are ETFs and How Do They Work?",
+            date: "April 5, 2023",
+            creator: "Fidelity Investments",
+            url: "https://youtu.be/W87n1n_q6-U",
+            citation: "Fidelity Investments. (2023, April 5). Understanding ETFs [Video]. YouTube. https://www.youtube.com/watch?v=W87n1n_q6-U"
+        }
     ]
 };
 
@@ -774,6 +816,29 @@ const units = [
             { term: "Late Fee", def: "Extra money charged for missing a payment.", q: "What is a late fee?", a: ["Extra money charged for missing a payment", "A reward for paying on time", "Money saved automatically from your account", "A fee applied only to credit cards"], c: 0 },
             { term: "Financial Plan", def: "A method to track income, spending, and saving for goals.", q: "What is a financial plan?", a: ["A document only your bank keeps for you", "A list of debts without solutions", "A method to track income, spending, and saving for goals", "A random estimate of how much to spend"], c: 2 },
             { term: "Prepaid Card", def: "Card loaded with a set amount of money that you can spend.", q: "What is a prepaid card?", a: ["A card that borrows money from the bank", "Card loaded with a set amount of money that you can spend", "A card that only tracks rewards points", "A card linked to a checking account"], c: 1 }
+        ]
+    },
+    {
+        id: "unit3",
+        title: "Advanced Investing Concepts",
+        icon: "fa-gem",
+        class: "unit-3-yellow",
+        data: [
+            { term: "Bull Market", def: "A market condition where prices of stocks are generally rising.", q: "What is a 'Bull Market'?", a: ["Market where prices are generally rising", "Market where prices are generally falling", "A market only for farm commodities", "A market with no trading activity"], c: 0 },
+            { term: "Bear Market", def: "A market condition where prices of stocks are generally falling.", q: "What is a 'Bear Market'?", a: ["Market where prices are rising quickly", "Market where prices are generally falling", "A market restricted to professional traders", "A market that only trades on weekends"], c: 1 },
+            { term: "ETF (Exchange-Traded Fund)", def: "A collection of stocks or bonds that can be traded like a single stock.", q: "What does ETF stand for and mean?", a: ["Electronic Trade Folder", "Exchange-Traded Fund; a tradeable collection of assets", "Extra Tax Fund", "Equity Transfer Form"], c: 1 },
+            { term: "Index Fund", def: "A type of ETF or mutual fund that tracks a market index, like the S&P 500.", q: "What is an Index Fund?", a: ["A fund that tracks a specific market index", "A fund that only buys new companies", "A fund managed by one person without computer help", "A fund that only tracks the price of gold"], c: 0 },
+            { term: "Dividend Yield", def: "The ratio of a company’s annual dividend compared to its stock price.", q: "What is 'Dividend Yield'?", a: ["The total amount of dividends paid in history", "Ratio of annual dividend to stock price", "The speed at which dividends are paid", "The tax rate on dividend income"], c: 1 },
+            { term: "Market Capitalization", def: "The total value of a company’s outstanding shares (stock price × number of shares).", q: "What is Market Capitalization?", a: ["Total cash a company has in the bank", "Total value of all outstanding shares", "The number of employees a company has", "The physical size of a company's headquarters"], c: 1 },
+            { term: "IPO (Initial Public Offering)", def: "The first time a company sells its stock to the public.", q: "What is an IPO?", a: ["A company's last day of trading", "The first time a company sells stock to the public", "An internal profit optimization plan", "An international payment order"], c: 1 },
+            { term: "Mutual Fund", def: "A pool of money from multiple investors used to buy a variety of stocks, bonds, or other assets.", q: "What is a Mutual Fund?", a: ["A loan shared between two people", "A pool of money from investors used to buy various assets", "A bank account with a fixed interest rate", "A single stock owned by many people"], c: 1 },
+            { term: "Blue Chip Stock", def: "A well-established, financially stable company’s stock with a reliable history.", q: "What defines a 'Blue Chip' stock?", a: ["A new technology startup", "A company that is currently losing money", "A stable company with a reliable history", "A stock that is priced under one dollar"], c: 2 },
+            { term: "Volatility", def: "How much a stock or market price fluctuates over time.", q: "What does 'Volatility' measure?", a: ["The total volume of trades in a day", "How much a price fluctuates over time", "The popularity of a stock on social media", "The length of time a company has been public"], c: 1 },
+            { term: "Sector", def: "A group of companies in the same industry or category, like technology or healthcare.", q: "What is a 'Sector' in investing?", a: ["A specific floor on the stock exchange", "A group of companies in the same industry", "The geographic location of a company", "The time of day a stock is most active"], c: 1 },
+            { term: "Growth Stock", def: "A stock expected to grow faster than the overall market, often reinvesting profits.", q: "What characterizes a Growth Stock?", a: ["It pays very high dividends", "It is expected to grow faster than the average market", "It never changes in price", "It is a company that has stopped expanding"], c: 1 },
+            { term: "Value Stock", def: "A stock believed to be undervalued compared to its fundamentals.", q: "What is a 'Value Stock'?", a: ["A stock that is extremely expensive", "A stock believed to be undervalued", "A stock that has no assets", "A stock that only grows during holidays"], c: 1 },
+            { term: "Diversification", def: "Spreading investments across multiple assets to reduce risk.", q: "Why is 'Diversification' important?", a: ["It guarantees you will never lose money", "It spreads investments to reduce risk", "It makes it easier to track one single company", "It increases the fees you pay to your bank"], c: 1 },
+            { term: "Liquidity Risk", def: "The risk that an investor cannot quickly sell an investment without losing value.", q: "What is 'Liquidity Risk'?", a: ["The risk of a company going bankrupt", "The risk of not being able to sell an asset quickly", "The risk that the price of gold will drop", "The risk of your bank account being hacked"], c: 1 }
         ]
     }
 ];
@@ -1001,18 +1066,11 @@ function hexToRgba(hex, alpha) {
 function setPrimaryColor(main, hover, el) {
     document.documentElement.style.setProperty('--primary', main);
     document.documentElement.style.setProperty('--primary-hover', hover);
-    
-    // Convert hex to RGBA for dot grid color
     const dotColor = hexToRgba(main, 0.35);
     document.documentElement.style.setProperty('--dot-color', dotColor);
-    
     localStorage.setItem('mm_primary_color', main);
     localStorage.setItem('mm_primary_hover', hover);
-    
-    // Update background particles to match theme
     updateBackgroundColors(main);
-
-    // UI feedback for swatch selection
     document.querySelectorAll('.theme-swatch').forEach(s => s.classList.remove('active'));
     if (el) el.classList.add('active');
 }
@@ -1075,39 +1133,20 @@ function showStep() {
         if (el) {
             const rect = el.getBoundingClientRect();
             const padding = 10;
-            
-            // Highlight target with clip-path
-            dimmer.style.clipPath = `polygon(
-                0% 0%, 0% 100%, 
-                ${rect.left - padding}px 100%, 
-                ${rect.left - padding}px ${rect.top - padding}px, 
-                ${rect.right + padding}px ${rect.top - padding}px, 
-                ${rect.right + padding}px ${rect.bottom + padding}px, 
-                ${rect.left - padding}px ${rect.bottom + padding}px, 
-                ${rect.left - padding}px 100%, 
-                100% 100%, 100% 0%
-            )`;
-
-            // Position box
+            dimmer.style.clipPath = `polygon(0% 0%, 0% 100%, ${rect.left - padding}px 100%, ${rect.left - padding}px ${rect.top - padding}px, ${rect.right + padding}px ${rect.top - padding}px, ${rect.right + padding}px ${rect.bottom + padding}px, ${rect.left - padding}px ${rect.bottom + padding}px, ${rect.left - padding}px 100%, 100% 100%, 100% 0%)`;
             const boxRect = box.getBoundingClientRect();
             let top = rect.bottom + 20;
             let left = rect.left + (rect.width / 2) - (boxRect.width / 2);
-
-            // Bounds check
             if (top + boxRect.height > window.innerHeight) top = rect.top - boxRect.height - 20;
             if (left < 10) left = 10;
             if (left + boxRect.width > window.innerWidth - 10) left = window.innerWidth - boxRect.width - 10;
-
             box.style.top = top + "px";
             box.style.left = left + "px";
             box.style.transform = "none";
         }
     } else {
-        // Center box for splash steps
         dimmer.style.clipPath = `polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%)`;
-        box.style.top = "50%";
-        box.style.left = "50%";
-        box.style.transform = "translate(-50%, -50%)";
+        box.style.top = "50%"; box.style.left = "50%"; box.style.transform = "translate(-50%, -50%)";
     }
 }
 
@@ -1127,29 +1166,23 @@ window.onload = () => {
     initBackground();
     const savedTheme = localStorage.getItem('mm_theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
-    
-    // Load saved primary colors
     const savedMain = localStorage.getItem('mm_primary_color');
     const savedHover = localStorage.getItem('mm_primary_hover');
     if (savedMain && savedHover) {
         setPrimaryColor(savedMain, savedHover);
-        // Set active class on corresponding swatch
         document.querySelectorAll('.theme-swatch').forEach(s => {
             if (s.style.backgroundColor === savedMain || s.getAttribute('style').includes(savedMain)) {
                 s.classList.add('active');
             }
         });
     }
-
     updateThemeUI();
     renderDashboard();
-    
     if (badgeRemoved) {
         const style = document.createElement('style');
         style.innerHTML = '.chat-bubble::after { display: none !important; }';
         document.head.appendChild(style);
     }
-
     if (!localStorage.getItem('mm_tut_complete')) {
         setTimeout(startTutorial, 1000);
     }

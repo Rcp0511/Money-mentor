@@ -93,7 +93,7 @@ body {
 header {
     background: linear-gradient(135deg, var(--primary), var(--primary-hover));
     color: white;
-    padding: 1rem 2rem;
+    padding: 1rem 1.5rem 1.8rem 1.5rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -101,6 +101,8 @@ header {
     top: 0;
     z-index: 100;
     box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 .logo {
     font-family: 'Poppins', sans-serif;
@@ -108,7 +110,13 @@ header {
     font-size: 1.25rem;
     letter-spacing: -0.5px;
 }
-.header-tools { display: flex; align-items: center; gap: 0.75rem; position: relative; }
+.header-tools { 
+    display: flex; 
+    align-items: center; 
+    gap: 0.75rem; 
+    position: relative; 
+    flex-wrap: wrap;
+}
 .btn {
     border: none;
     border-radius: 12px;
@@ -362,11 +370,14 @@ header {
 </style>
 </head>
 <body>
+
 <div id="bg-animation-container"></div>
+
 <div id="floating-tooltip">
     <div style="font-size:0.7rem; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Unit Overview</div>
     <div id="tooltip-text" style="font-size:0.85rem; line-height:1.5; color:var(--text-light); font-weight:500;"></div>
 </div>
+
 <div id="tutorial-overlay">
     <div class="tutorial-dimmer" id="tut-dimmer"></div>
     <button class="tutorial-skip-btn" onclick="endTutorial()">
@@ -381,6 +392,7 @@ header {
         </div>
     </div>
 </div>
+
 <header>
     <div class="header-tools">
         <a href="https://sites.google.com/view/money--mentor/home" class="btn btn-ghost" style="color:white"><i class="fas fa-chevron-left"></i> Home</a>
@@ -398,9 +410,11 @@ header {
         </div>
     </div>
 </header>
+
 <div class="container">
     <div class="unit-grid" id="dashboard-grid"></div>
 </div>
+
 <div id="settings-modal" class="modal-overlay" onclick="handleOutsideClick(event)">
     <div class="modal-content">
         <div id="main-settings-view">
@@ -456,6 +470,7 @@ header {
         </div>
     </div>
 </div>
+
 <div id="app-overlay" class="overlay">
     <div class="overlay-header">
         <button class="btn btn-ghost" onclick="closeOverlay()">
@@ -470,6 +485,7 @@ header {
         <div class="content-max" id="overlay-content"></div>
     </div>
 </div>
+
 <div class="chat-container" id="botContainer">
     <div class="chat-window" id="chatWindow">
         <div class="chat-header">
@@ -493,7 +509,6 @@ header {
         <i class="fas fa-comment-dots"></i>
     </div>
 </div>
-
 <script>
 // --- BACKGROUND INITIALIZATION ---
 function initBackground() {
@@ -614,7 +629,7 @@ const units = [
             { term: "Portfolio", def: "Your complete collection of financial investments.", q: "What is a 'portfolio'?", a: ["A single high-performing stock holding", "A traditional bank savings account", "A summary of outstanding debts", "Collection of all your investments"], c: 3 },
             { term: "Risk", def: "The chance that an investment’s actual return will differ from expected.", q: "What is 'risk' in investing?", a: ["The possibility of losing money", "A guaranteed investment return", "A fixed annual interest payment", "Steady company revenue growth"], c: 0 },
             { term: "Liquidity", def: "Indicates how quickly an asset can be converted to cash without losing value.", q: "What is 'liquidity'?", a: ["The overall profitability of an investment", "Current market demand for specific stocks", "Ease of converting an asset to cash", "The long-term potential of an investment"], c: 2 },
-            { term: "Interest", def: "The cost of borrowing money, usually expressed as a percentage.", q: "What is 'interest'?", a: ["Profit made from selling a stock", "Payment for borrowing money", "The initial investment principal", "A specific dividend payout received"], c: 1 }
+            { term: "Interest", def: "The cost of borrowing money, usually expressed of a percentage.", q: "What is 'interest'?", a: ["Profit made from selling a stock", "Payment for borrowing money", "The initial investment principal", "A specific dividend payout received"], c: 1 }
         ]
     },
     {
@@ -906,24 +921,19 @@ function showResetConfirm() { document.getElementById('main-settings-view').styl
 function hideResetConfirm() { document.getElementById('main-settings-view').style.display = 'block'; document.getElementById('reset-confirm-view').style.display = 'none'; }
 function resetProgress() { localStorage.clear(); location.reload(); }
 function handleOutsideClick(event) { if (event.target.classList.contains('modal-overlay')) { closeSettings(); } }
-
 // --- Streak Counter Logic ---
 function updateStreakDisplay() {
     const streakEl = document.getElementById('streak-days');
     if (!streakEl) return;
-
     let streak = parseInt(localStorage.getItem('mm_streak_count') || '0');
     let lastDateStr = localStorage.getItem('mm_last_active_date');
-
     const today = new Date().toDateString();
-
     if (lastDateStr === today) {
         // Already visited today → keep current streak
     } else {
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
         const yesterdayStr = yesterday.toDateString();
-
         if (lastDateStr === yesterdayStr) {
             streak++; // Consecutive day
         } else if (lastDateStr) {
@@ -931,15 +941,12 @@ function updateStreakDisplay() {
         } else {
             streak = 1; // First visit ever
         }
-
         localStorage.setItem('mm_last_active_date', today);
         localStorage.setItem('mm_streak_count', streak);
     }
-
     // Singular / plural handling
     const unitText = (streak === 1) ? 'day' : 'days';
     streakEl.textContent = `${streak} ${unitText}`;
-
     // Visual flair
     const streakPill = document.getElementById('streak-counter');
     if (streak >= 7) {
@@ -953,7 +960,6 @@ function updateStreakDisplay() {
         streakPill.style.borderColor = 'rgba(255,255,255,0.25)';
     }
 }
-
 // --- TUTORIAL SYSTEM ---
 const tutorialSteps = [
     { target: null, title: "Welcome to Money Mentor!", text: "This is your personal finance student dashboard. Let's take a quick tour to help you master your money skills!" },
@@ -990,7 +996,6 @@ function showStep() {
 }
 function endTutorial() { document.getElementById('tutorial-overlay').classList.remove('active'); localStorage.setItem('mm_tut_complete', 'true'); const drops = document.querySelectorAll('.unit-dropdown'); drops.forEach(d => d.classList.remove('active')); }
 function resetTutorial() { localStorage.removeItem('mm_tut_complete'); startTutorial(); }
-
 window.onload = () => {
     initBackground();
     const savedTheme = localStorage.getItem('mm_theme') || 'dark';

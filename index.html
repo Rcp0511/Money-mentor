@@ -110,11 +110,11 @@ header {
     font-size: 1.25rem;
     letter-spacing: -0.5px;
 }
-.header-tools { 
-    display: flex; 
-    align-items: center; 
-    gap: 0.75rem; 
-    position: relative; 
+.header-tools {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    position: relative;
     flex-wrap: wrap;
 }
 .btn {
@@ -370,14 +370,11 @@ header {
 </style>
 </head>
 <body>
-
 <div id="bg-animation-container"></div>
-
 <div id="floating-tooltip">
     <div style="font-size:0.7rem; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Unit Overview</div>
     <div id="tooltip-text" style="font-size:0.85rem; line-height:1.5; color:var(--text-light); font-weight:500;"></div>
 </div>
-
 <div id="tutorial-overlay">
     <div class="tutorial-dimmer" id="tut-dimmer"></div>
     <button class="tutorial-skip-btn" onclick="endTutorial()">
@@ -392,10 +389,10 @@ header {
         </div>
     </div>
 </div>
-
 <header>
     <div class="header-tools">
         <a href="https://sites.google.com/view/money--mentor/home" class="btn btn-ghost" style="color:white"><i class="fas fa-chevron-left"></i> Home</a>
+        <a href="https://sites.google.com/view/money--mentor/meetings?authuser=0" target="_blank" class="btn btn-ghost" style="color:white"><i class="fas fa-video"></i> Online Meetings</a>
         <div class="status-pill" id="streak-counter" style="margin-left: 1rem; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: white;">
             Streak: <span id="streak-days">0 day</span> <i class="fas fa-fire" style="color:#fcd34d;"></i>
         </div>
@@ -410,11 +407,9 @@ header {
         </div>
     </div>
 </header>
-
 <div class="container">
     <div class="unit-grid" id="dashboard-grid"></div>
 </div>
-
 <div id="settings-modal" class="modal-overlay" onclick="handleOutsideClick(event)">
     <div class="modal-content">
         <div id="main-settings-view">
@@ -470,7 +465,6 @@ header {
         </div>
     </div>
 </div>
-
 <div id="app-overlay" class="overlay">
     <div class="overlay-header">
         <button class="btn btn-ghost" onclick="closeOverlay()">
@@ -485,7 +479,6 @@ header {
         <div class="content-max" id="overlay-content"></div>
     </div>
 </div>
-
 <div class="chat-container" id="botContainer">
     <div class="chat-window" id="chatWindow">
         <div class="chat-header">
@@ -802,11 +795,21 @@ function openVideos(unitId, event) {
     }
     document.getElementById('overlay-content').innerHTML = videosHtml;
 }
-function openStudy(unitId, event) { if(event) event.stopPropagation(); currentUnit = units.find(u => u.id === unitId); activeStudySet = [...currentUnit.data]; isQuizMode = false; currentIdx = 0; launchStudyUI(); }
+function openStudy(unitId, event) { 
+    if(event) event.stopPropagation(); 
+    currentUnit = units.find(u => u.id === unitId); 
+    activeStudySet = shuffleArray([...currentUnit.data]); 
+    isQuizMode = false; 
+    currentIdx = 0; 
+    launchStudyUI(); 
+}
 function openStudyStarred(unitId, event) {
-    if(event) event.stopPropagation(); currentUnit = units.find(u => u.id === unitId); activeStudySet = currentUnit.data.filter(d => starredTerms.includes(d.term));
+    if(event) event.stopPropagation(); 
+    currentUnit = units.find(u => u.id === unitId); 
+    activeStudySet = shuffleArray(currentUnit.data.filter(d => starredTerms.includes(d.term)));
     if(activeStudySet.length === 0) {
-        document.getElementById('app-overlay').style.display = 'flex'; document.getElementById('overlay-title').innerText = "Starred Terms";
+        document.getElementById('app-overlay').style.display = 'flex'; 
+        document.getElementById('overlay-title').innerText = "Starred Terms";
         document.getElementById('action-btn-container').style.visibility = 'hidden';
         document.getElementById('overlay-content').innerHTML = `<div class="q-box" style="text-align:center; padding: 4rem 2rem;"><div style="font-size: 4rem; margin-bottom: 1.5rem;">⭐</div><h1 style="font-family:Poppins; color:var(--text)">No Stars Yet</h1><p style="color:var(--text-light); font-weight:600; margin-bottom: 2rem;">Tap the star icon while studying to save difficult terms here!</p><button class="btn btn-primary" style="width:100%" onclick="closeOverlay()">Got it</button></div>`;
         return;
@@ -814,10 +817,33 @@ function openStudyStarred(unitId, event) {
     isQuizMode = false; currentIdx = 0; launchStudyUI();
 }
 function launchStudyUI() {
-    document.getElementById('app-overlay').style.display = 'flex'; document.getElementById('overlay-title').innerText = `${currentUnit.title} | Flashcards`;
+    document.getElementById('app-overlay').style.display = 'flex'; 
+    document.getElementById('overlay-title').innerText = `${currentUnit.title} | Flashcards`;
     document.getElementById('action-btn-container').style.visibility = 'visible';
     const content = document.getElementById('overlay-content');
-    content.innerHTML = `<div style="width:100%; margin: 0 auto; padding-top: 1rem;"><div style="display:flex; justify-content:center; align-items:center; gap:1.5rem; margin-bottom:1rem;"><div style="color:var(--text); font-weight:700;" id="card-counter">Card 1 of ${activeStudySet.length}</div></div><div class="flashcard-stage" id="stage"><div class="flashcard" id="card-obj" onclick="this.classList.toggle('flipped')"></div></div><div style="max-width:800px; margin: 2rem auto 0; display:flex; justify-content:space-between; align-items:center;"><button class="btn btn-outline" style="color:var(--text); border-color:var(--border)" onclick="moveCard(-1)"><i class="fas fa-arrow-left"></i></button><div class="status-pill">Tap to flip</div><button class="btn btn-outline" style="color:var(--text); border-color:var(--border)" onclick="moveCard(1)"><i class="fas fa-arrow-right"></i></button></div></div>`;
+    content.innerHTML = `
+        <div style="width:100%; margin: 0 auto; padding-top: 1rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-bottom:1rem; flex-wrap:wrap;">
+                <div style="color:var(--text); font-weight:700;" id="card-counter">Card 1 of ${activeStudySet.length}</div>
+                <button class="btn btn-outline" onclick="shuffleAndRestartStudy()" style="display:flex; align-items:center; gap:0.5rem;">
+                    <i class="fas fa-random"></i> Shuffle
+                </button>
+            </div>
+            <div class="flashcard-stage" id="stage">
+                <div class="flashcard" id="card-obj" onclick="this.classList.toggle('flipped')"></div>
+            </div>
+            <div style="max-width:800px; margin: 2rem auto 0; display:flex; justify-content:space-between; align-items:center;">
+                <button class="btn btn-outline" style="color:var(--text); border-color:var(--border)" onclick="moveCard(-1)"><i class="fas fa-arrow-left"></i></button>
+                <div class="status-pill">Tap to flip</div>
+                <button class="btn btn-outline" style="color:var(--text); border-color:var(--border)" onclick="moveCard(1)"><i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>`;
+    updateFlashcardContent(document.getElementById('card-obj'), activeStudySet[currentIdx]);
+}
+function shuffleAndRestartStudy() {
+    activeStudySet = shuffleArray([...activeStudySet]);
+    currentIdx = 0;
+    document.getElementById('card-counter').innerText = `Card 1 of ${activeStudySet.length}`;
     updateFlashcardContent(document.getElementById('card-obj'), activeStudySet[currentIdx]);
 }
 function updateFlashcardContent(cardEl, data) {
@@ -944,10 +970,8 @@ function updateStreakDisplay() {
         localStorage.setItem('mm_last_active_date', today);
         localStorage.setItem('mm_streak_count', streak);
     }
-    // Singular / plural handling
     const unitText = (streak === 1) ? 'day' : 'days';
     streakEl.textContent = `${streak} ${unitText}`;
-    // Visual flair
     const streakPill = document.getElementById('streak-counter');
     if (streak >= 7) {
         streakPill.style.background = 'rgba(250, 204, 21, 0.3)';
@@ -1015,7 +1039,7 @@ window.onload = () => {
         style.innerHTML = '.chat-bubble::after { display: none !important; }';
         document.head.appendChild(style);
     }
-    updateStreakDisplay(); // Show streak on load
+    updateStreakDisplay();
     if (!localStorage.getItem('mm_tut_complete')) { setTimeout(startTutorial, 1000); }
 };
 </script>

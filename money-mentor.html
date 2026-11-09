@@ -332,6 +332,8 @@ header {
 .progress-bar { height: 100%; background: var(--primary); transition: width 0.3s ease; }
 .action-trigger { font-size: 1.6rem; cursor: pointer; color: var(--text-light); transition: all 0.2s ease; }
 .action-trigger.active { color: var(--accent); transform: scale(1.25); }
+.action-trigger.flag-trigger { color: white; background: #d97706; padding: 0.65rem 0.8rem; border-radius: 12px; font-size: 1.25rem; box-shadow: 0 3px 10px rgba(217,119,6,0.35); }
+.action-trigger.flag-trigger.active { color: white; background: #b45309; transform: scale(1.12); box-shadow: 0 0 0 3px rgba(217,119,6,0.25), 0 4px 14px rgba(217,119,6,0.45); }
 .status-pill { padding: 0.5rem 1.2rem; border-radius: 25px; font-size: 0.9rem; font-weight: 700; background: var(--border); color: var(--text); }
 .chat-container { position: fixed; bottom: clamp(20px, 6vw, 30px); right: clamp(20px, 6vw, 30px); z-index: 2000; font-family: 'Inter', sans-serif; transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s; }
 .chat-container.hidden-during-test { opacity: 0; transform: translateY(20px); visibility: hidden; pointer-events: none; }
@@ -409,7 +411,7 @@ header {
             Streak: <span id="streak-days">0 day</span> <i class="fas fa-fire" style="color:#fcd34d;"></i>
         </div>
     </div>
-    <div class="logo">MONEY MENTOR</div>
+    <a href="index.html" class="logo" style="color:inherit; text-decoration:none; cursor:pointer;">MONEY MENTOR</a>
     <div class="header-tools">
         <button id="settings-trigger" class="btn btn-outline" onclick="openSettings()">
             <i class="fas fa-cog"></i>
@@ -896,7 +898,8 @@ function handleAction() {
 }
 function updateActionState() {
     const btn = document.getElementById('global-action-btn'); if(!btn || !activeStudySet[currentIdx]) return;
-    if(isQuizMode) { btn.className = markedQuestions[currentIdx] ? "fas fa-bookmark action-trigger active" : "fas fa-bookmark action-trigger"; }
+    if(isQuizMode) { btn.className = markedQuestions[currentIdx] ? "fas fa-flag action-trigger flag-trigger active" : "fas fa-flag action-trigger flag-trigger";
+        btn.title = markedQuestions[currentIdx] ? "Unflag this question" : "Flag this question for review"; }
     else { const term = activeStudySet[currentIdx].term; btn.className = starredTerms.includes(term) ? "fas fa-star action-trigger active" : "fas fa-star action-trigger"; }
 }
 function finishQuiz() {

@@ -1,668 +1,1056 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0f172a" />
-  <meta name="description" content="Build real-world money skills with Money Mentor. Learn, practice, interactive calculators, and track your financial knowledge." />
-  <title>Money Mentor | Master Your Money Skills</title>
-  
-  <!-- Fonts & Icons -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <script>
-    tailwind.config = {
-      darkMode: ['class', '[data-theme="dark"]'],
-      theme: {
-        extend: {
-          colors: {
-            emerald: {
-              400: '#34d399',
-              500: '#10b981',
-              600: '#059669',
-              900: '#064e3b',
-            }
-          },
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-            display: ['Poppins', 'sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
-
-  <style>
-    :root {
-      --bg: #0b1329;
-      --bg-gradient: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.15), transparent 70%),
-                      radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.08), transparent 50%);
-      --surface: rgba(30, 41, 59, 0.75);
-      --surface-solid: #1e293b;
-      --surface-hover: rgba(51, 65, 85, 0.85);
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --border: rgba(148, 163, 184, 0.18);
-      --accent-glow: rgba(16, 185, 129, 0.35);
-      --shadow-lg: 0 25px 60px -15px rgba(0, 0, 0, 0.5);
-      --card-gradient: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
-    }
-
-    [data-theme="light"] {
-      --bg: #f0fdf4;
-      --bg-gradient: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.2), transparent 70%),
-                      radial-gradient(circle at 15% 40%, rgba(59, 130, 246, 0.1), transparent 50%);
-      --surface: rgba(255, 255, 255, 0.85);
-      --surface-solid: #ffffff;
-      --surface-hover: rgba(241, 245, 249, 0.95);
-      --text: #064e3b;
-      --muted: #475569;
-      --border: rgba(5, 150, 105, 0.2);
-      --accent-glow: rgba(16, 185, 129, 0.25);
-      --shadow-lg: 0 25px 60px -15px rgba(6, 78, 59, 0.12);
-      --card-gradient: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(240, 253, 244, 0.7));
-    }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: var(--bg);
-      background-image: var(--bg-gradient);
-      background-attachment: fixed;
-      transition: background-color 0.4s ease, color 0.4s ease;
-    }
-
-    .glass-card {
-      background: var(--surface);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--border);
-    }
-
-    .glass-card-solid {
-      background: var(--card-gradient);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--border);
-    }
-
-    .glow-effect {
-      position: relative;
-    }
-    .glow-effect::before {
-      content: '';
-      position: absolute;
-      inset: -1px;
-      background: linear-gradient(135deg, rgba(52, 211, 153, 0.4), transparent 60%, rgba(16, 185, 129, 0.3));
-      border-radius: inherit;
-      z-index: -1;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    .glow-effect:hover::before {
-      opacity: 1;
-    }
-
-    .tab-btn.active {
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: #ffffff;
-      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
-    }
-
-    .accordion-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
-    }
-    .accordion-item.active .accordion-content {
-      max-height: 500px;
-      transition: max-height 0.4s ease-in-out;
-    }
-    .accordion-item.active .accordion-icon {
-      transform: rotate(180deg);
-    }
-
-    /* Custom range input styling */
-    input[type=range] {
-      accent-color: #10b981;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Money Mentor | Learning Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<style>
+:root {
+    --bg: #dcfce7;
+    --dot-color: rgba(16, 185, 129, 0.4);
+    --card-bg: #ffffff;
+    --dropdown-bg: #bbf7d0;
+    --text: #064e3b;
+    --text-light: #374151;
+    --primary: #10b981;
+    --primary-hover: #059669;
+    --secondary: #1e293b;
+    --accent: #d97706;
+    --danger: #dc2626;
+    --border: #86efac;
+    --card-line: rgba(16, 185, 129, 0.3);
+    --test-btn-bg: #1e293b;
+    --test-btn-border: transparent;
+    --transition-speed: 0.4s;
+    --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+    --ease-in-out-back: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+}
+[data-theme="dark"] {
+    --bg: #0f172a;
+    --dot-color: rgba(16, 185, 129, 0.35);
+    --card-bg: #1e293b;
+    --dropdown-bg: #1e293b;
+    --text: #f1f5f9;
+    --text-light: #94a3b8;
+    --border: #334155;
+    --card-line: rgba(255, 255, 255, 0.1);
+    --test-btn-bg: #334155;
+    --test-btn-border: #475569;
+}
+* { box-sizing: border-box; }
+body, .unit-card, .btn, .unit-dropdown, .dot, .option-btn, .overlay {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s var(--ease-out-expo), box-shadow 0.2s ease;
+}
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg);
+    background-image:
+        radial-gradient(var(--dot-color) 3px, transparent 3px),
+        radial-gradient(var(--dot-color) 2px, transparent 2px),
+        radial-gradient(var(--dot-color) 1.5px, transparent 1.5px);
+    background-size: 140px 140px, 190px 190px, 250px 250px;
+    background-position: 0 0, 40px 60px, 110px 180px;
+    color: var(--text);
+    overflow-x: hidden;
+    min-height: 100vh;
+    animation: backgroundFloat 60s linear infinite;
+}
+@keyframes backgroundFloat {
+    0% { background-position: 0 0, 40px 60px, 110px 180px; }
+    100% { background-position: 500px 500px, 440px 560px, 610px 680px; }
+}
+#bg-animation-container {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+}
+.swirl-pattern {
+    position: absolute;
+    width: 600px; height: 600px;
+    opacity: 0.15;
+    animation: rotateSwirl 45s linear infinite;
+}
+.floating-triangle {
+    position: absolute;
+    fill: var(--dot-color);
+    opacity: 0.4;
+    animation: triangleFloat 25s infinite alternate ease-in-out;
+}
+@keyframes rotateSwirl {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+@keyframes triangleFloat {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(150px, 200px) rotate(360deg); }
+}
+header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+    color: white;
+    padding: clamp(1rem, 4vw, 1.5rem) clamp(1rem, 4vw, 1.5rem) clamp(1.2rem, 5vw, 1.8rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.logo {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.1rem, 5vw, 1.25rem);
+    letter-spacing: -0.5px;
+}
+.header-tools {
+    display: flex;
+    align-items: center;
+    gap: clamp(0.6rem, 3vw, 0.75rem);
+    position: relative;
+    flex-wrap: wrap;
+}
+.btn {
+    border: none;
+    border-radius: 12px;
+    padding: clamp(0.55rem, 3vw, 0.6rem) clamp(1rem, 4vw, 1.2rem);
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: clamp(0.85rem, 3.8vw, 0.9rem);
+    text-decoration: none;
+    position: relative;
+    min-height: 44px;
+}
+.btn:active { transform: scale(0.96); }
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+.btn-outline { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.2); }
+.btn-outline:hover { background: rgba(255,255,255,0.15); transform: translateY(-1px); }
+.btn-ghost { background: transparent; color: var(--text); }
+.header-tools .btn-ghost { color: white; }
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2001;
+    padding: clamp(15px, 5vw, 20px);
+}
+.modal-overlay.active { display: flex; }
+.modal-content {
+    background: var(--card-bg);
+    width: 100%;
+    max-width: 400px;
+    border-radius: 28px;
+    border: 1px solid var(--border);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    overflow: hidden;
+    position: relative;
+}
+.modal-header {
+    padding: clamp(1.2rem, 5vw, 1.5rem);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.modal-body {
+    padding: clamp(1.2rem, 5vw, 1.5rem);
+}
+.settings-section-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 800;
+    color: var(--text-light);
+    margin-bottom: 0.75rem;
+    padding-left: 0.5rem;
+}
+.theme-swatch-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+    padding: 0.75rem;
+    background: var(--bg);
+    border-radius: 16px;
+    justify-content: center;
+}
+.theme-swatch {
+    width: clamp(30px, 8vw, 32px);
+    height: clamp(30px, 8vw, 32px);
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.theme-swatch:hover { transform: scale(1.15); }
+.theme-swatch.active { border-color: white; box-shadow: 0 0 0 2px var(--text); }
+.settings-option {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: clamp(0.9rem, 4vw, 1rem); background: var(--bg); border-radius: 16px;
+    margin-bottom: 1rem; cursor: pointer; border: 1px solid transparent;
+}
+.settings-option:hover { border-color: var(--primary); }
+.settings-option i { font-size: 1.2rem; color: var(--primary); }
+.settings-option.danger { background: rgba(220, 38, 38, 0.05); color: var(--danger); }
+.settings-option.danger i { color: var(--danger); }
+.settings-option.gold { background: rgba(217, 119, 6, 0.1); color: var(--accent); border-color: rgba(217, 119, 6, 0.2); }
+.settings-option.gold i { color: var(--accent); }
+.container { max-width: 1000px; margin: clamp(1.5rem, 5vw, 2rem) auto; padding: 0 clamp(0.8rem, 4vw, 1rem); position: relative; z-index: 10;}
+.unit-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+.unit-card {
+    background: var(--card-bg); border-radius: 24px; border: 1px solid var(--border);
+    overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+    cursor: pointer; position: relative; backdrop-filter: blur(8px);
+}
+.unit-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+.unit-card::before {
+    content: ""; position: absolute; top: 0; left: clamp(20px, 6vw, 30px); bottom: 0;
+    width: 2px; background: var(--card-line); z-index: 1;
+}
+#floating-tooltip {
+    position: fixed;
+    width: clamp(260px, 80vw, 280px);
+    background: var(--card-bg);
+    border: 2px solid var(--primary);
+    border-radius: 16px;
+    padding: 1.2rem;
+    z-index: 3000;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.2s ease, transform 0.2s var(--ease-out-expo);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+#floating-tooltip.active {
+    opacity: 1;
+    transform: scale(1);
+}
+.unit-card.unit-1-green .unit-card-hero { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; }
+.unit-card.unit-2-blue .unit-card-hero { background: linear-gradient(135deg, #7dd3fc 0%, #0ea5e9 100%); color: #0c4a6e; }
+.unit-card.unit-3-yellow .unit-card-hero { background: linear-gradient(135deg, #fde047 0%, #eab308 100%); color: #854d0e; }
+.unit-card.unit-3-yellow .unit-term-count { background: rgba(133, 77, 14, 0.15); color: #854d0e; }
+.unit-card.unit-3-yellow .unit-info p { color: #854d0e; }
+.sortable-ghost { opacity: 0.4; background: var(--primary) !important; }
+.sortable-drag { cursor: grabbing; }
+.drag-handle {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    opacity: 0.6;
+    cursor: grab;
+    z-index: 10;
+    font-size: 1.2rem;
+}
+.unit-card.unit-3-yellow .drag-handle { color: #854d0e; }
+.unit-card-hero {
+    padding: clamp(2rem, 6vw, 2.5rem); padding-left: clamp(4.5rem, 12vw, 5rem);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+    color: white; position: relative; z-index: 2; overflow: hidden;
+}
+.unit-card-hero::after {
+    content: ""; position: absolute; top: 0; right: 0; bottom: 0; left: 0;
+    background-image: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.08) 20px, rgba(255,255,255,0.08) 40px);
+    pointer-events: none;
+}
+.unit-term-count {
+    position: absolute; top: clamp(1rem, 4vw, 1.5rem); right: clamp(1rem, 4vw, 1.5rem); font-size: clamp(0.7rem, 3.5vw, 0.75rem); font-weight: 800;
+    background: rgba(0, 0, 0, 0.25); padding: 6px 12px; border-radius: 20px;
+    letter-spacing: 0.5px; text-transform: uppercase; backdrop-filter: blur(4px); color: white;
+}
+.mastery-ribbon {
+    position: absolute; top: -5px; left: 45px; font-size: 2.2rem;
+    color: #fcd34d; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3)); z-index: 10;
+}
+.unit-dropdown {
+    max-height: 0; overflow: hidden; padding: 0 clamp(1.2rem, 5vw, 1.5rem) 0 clamp(4.5rem, 12vw, 5rem);
+    background: var(--dropdown-bg); display: flex; gap: 1rem;
+    flex-wrap: wrap; opacity: 0; transform: translateY(-10px);
+    transition: all 0.5s var(--ease-out-expo);
+}
+.unit-dropdown.active {
+    max-height: 500px; padding: clamp(1.2rem, 5vw, 1.5rem);
+    opacity: 1; transform: translateY(0);
+}
+.overlay {
+    display: none; position: fixed; inset: 0; background: var(--bg);
+    z-index: 1000; flex-direction: column;
+    background-image: radial-gradient(var(--dot-color) 3px, transparent 3px), radial-gradient(var(--dot-color) 2px, transparent 2px);
+    background-size: 140px 140px, 190px 190px;
+}
+.overlay-header {
+    padding: clamp(0.9rem, 4vw, 1rem) clamp(1rem, 4vw, 2rem); border-bottom: 2px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--card-bg); flex-wrap: wrap; gap: 10px;
+}
+.flashcard-stage { perspective: 2000px; height: clamp(380px, 65vh, 480px); width: 95%; max-width: 800px; margin: 1rem auto; position: relative; }
+.flashcard { width: 100%; height: 100%; position: absolute; transition: transform 0.6s var(--ease-in-out-back), opacity 0.4s ease; transform-style: preserve-3d; cursor: pointer; }
+.flashcard:hover { transform: translateY(-5px); }
+.flashcard.flipped { transform: rotateY(180deg); }
+.card-face {
+    position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: clamp(2rem, 6vw, 3.5rem); border-radius: 40px; border: 4px solid var(--primary);
+    background: var(--card-bg); text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+}
+.card-back { transform: rotateY(180deg); background: var(--bg); border-style: dashed; }
+.q-box { max-width: 750px; margin: 2rem auto; padding: clamp(1rem, 4vw, 1.5rem); }
+.options-list { display: flex; flex-direction: column; gap: 12px; margin: 1.5rem 0; }
+.option-btn { background: var(--card-bg); border: 2px solid var(--border); padding: clamp(1rem, 4vw, 1.2rem); border-radius: 16px; color: var(--text); font-weight: 600; text-align: left; cursor: pointer; font-size: clamp(0.92rem, 3.8vw, 1rem); }
+.option-btn.selected { border-color: var(--primary); background: rgba(16, 185, 129, 0.1); }
+.option-btn:hover { border-color: var(--primary); background: var(--bg); }
+.review-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1.5rem; justify-content: center; }
+.dot {
+    width: clamp(38px, 9vw, 42px); height: clamp(38px, 9vw, 42px); border-radius: 10px; border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center; font-size: clamp(0.82rem, 3.6vw, 0.9rem);
+    font-weight: 700; cursor: pointer; color: var(--text-light); position: relative;
+}
+.dot.current { border-color: var(--primary); color: var(--primary); transform: scale(1.1); box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
+.dot.answered { background: var(--primary); color: white; border-color: var(--primary); }
+.dot.marked { border-color: var(--accent); border-style: dashed; background: rgba(217, 119, 6, 0.15); }
+.progress-container { width: 100%; height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; margin: 1.5rem 0; }
+.progress-bar { height: 100%; background: var(--primary); transition: width 0.3s ease; }
+.action-trigger { font-size: 1.6rem; cursor: pointer; color: var(--text-light); transition: all 0.2s ease; }
+.action-trigger.active { color: var(--accent); transform: scale(1.25); }
+.status-pill { padding: 0.5rem 1.2rem; border-radius: 25px; font-size: 0.9rem; font-weight: 700; background: var(--border); color: var(--text); }
+.chat-container { position: fixed; bottom: clamp(20px, 6vw, 30px); right: clamp(20px, 6vw, 30px); z-index: 2000; font-family: 'Inter', sans-serif; transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s; }
+.chat-container.hidden-during-test { opacity: 0; transform: translateY(20px); visibility: hidden; pointer-events: none; }
+.chat-bubble { width: clamp(70px, 18vw, 80px); height: clamp(70px, 18vw, 80px); border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 30px rgba(0,0,0,0.3); cursor: pointer; font-size: clamp(1.9rem, 6vw, 2.2rem); transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); border: 4px solid rgba(255,255,255,0.2); }
+.chat-bubble:hover { transform: scale(1.1); background: var(--primary-hover); }
+.chat-bubble::after { content: "ASK ME!"; position: absolute; top: -30px; background: var(--accent); color: white; font-size: 0.65rem; font-weight: 800; padding: 3px 8px; border-radius: 10px; white-space: nowrap; animation: bounceText 2s infinite; }
+@keyframes bounceText { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+.chat-window { display: none; position: fixed; bottom: clamp(90px, 20vw, 95px); right: 12px; width: clamp(320px, 90vw, 380px); height: clamp(460px, 80vh, 550px); background: var(--card-bg); border-radius: 24px; border: 1px solid var(--border); flex-direction: column; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.4); }
+.chat-window.active { display: flex; }
+.chat-header { padding: 1.2rem; background: var(--primary); color: white; display: flex; justify-content: space-between; align-items: center; }
+.chat-messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; scroll-behavior: smooth; }
+.message { padding: 10px 14px; border-radius: 18px; max-width: 85%; font-size: 0.85rem; line-height: 1.4; word-wrap: break-word; }
+.bot-msg { background: var(--bg); color: var(--text); align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid var(--border); }
+.user-msg { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+.chat-input-area { padding: 12px; border-top: 1px solid var(--border); display: flex; gap: 8px; background: var(--card-bg); }
+.chat-input { flex: 1; border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; background: var(--bg); color: var(--text); outline: none; font-family: inherit; }
+@keyframes slideOutLeft { to { transform: translateX(-150%) rotateY(-20deg); opacity: 0; } }
+@keyframes slideInRight { from { transform: translateX(150%) rotateY(20deg); opacity: 0; } to { transform: translateX(0) rotateY(0); opacity: 1; } }
+@keyframes slideOutRight { to { transform: translateX(150%) rotateY(20deg); opacity: 0; } }
+@keyframes slideInLeft { from { transform: translateX(-150%) rotateY(-20deg); opacity: 0; } to { transform: translateX(0) rotateY(0); opacity: 1; } }
+.slide-out-left { animation: slideOutLeft 0.6s var(--ease-out-expo) forwards; }
+.slide-in-right { animation: slideInRight 0.6s var(--ease-out-expo) forwards; }
+.slide-out-right { animation: slideOutRight 0.6s var(--ease-out-expo) forwards; }
+.slide-in-left { animation: slideInLeft 0.6s var(--ease-out-expo) forwards; }
+#tutorial-overlay { position: fixed; inset: 0; z-index: 10000; display: none; pointer-events: none; }
+#tutorial-overlay.active { display: block; pointer-events: auto; }
+.tutorial-dimmer { position: absolute; inset: 0; background: rgba(0,0,0,0.8); clip-path: polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%); transition: clip-path 0.4s var(--ease-out-expo); }
+.tutorial-box { position: absolute; background: white; color: #1e293b; padding: 1.5rem; border-radius: 20px; width: clamp(280px, 82vw, 320px); box-shadow: 0 20px 40px rgba(0,0,0,0.5); z-index: 10002; transition: all 0.4s var(--ease-out-expo); }
+[data-theme="dark"] .tutorial-box { background: #1e293b; color: #f1f5f9; border: 1px solid #334155; }
+.tutorial-box h3 { margin: 0 0 10px; font-family: 'Poppins', sans-serif; color: var(--primary); }
+.tutorial-box p { margin: 0 0 15px; font-size: 0.9rem; line-height: 1.5; }
+.tutorial-skip-btn { position: fixed; bottom: clamp(20px, 6vw, 30px); left: clamp(20px, 6vw, 30px); z-index: 10003; background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.3); padding: clamp(0.65rem, 3vw, 0.75rem) clamp(1.2rem, 5vw, 1.5rem); border-radius: 12px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; }
+.tutorial-skip-btn:hover { background: var(--primary-hover); transform: translateY(-2px); }
+.tutorial-skip-btn:active { transform: scale(0.95); }
+@media (max-width: 768px) {
+    .flashcard-stage { height: clamp(380px, 65vh, 420px); width: 95%; }
+    .card-face { padding: clamp(1.8rem, 6vw, 2.5rem); }
+    .chat-window { width: calc(100vw - 24px); right: 12px; height: clamp(440px, 75vh, 450px); bottom: 90px; }
+    .tutorial-box { width: clamp(260px, 85vw, 280px); left: 50% !important; transform: translateX(-50%) !important; }
+    .tutorial-skip-btn { bottom: 20px; left: 20px; font-size: 0.85rem; padding: 0.6rem 1.2rem; }
+    .unit-dropdown .btn { flex: 1; min-height: 48px; justify-content: center; }
+}
+@media (max-width: 480px) {
+    .logo { font-size: 1.15rem; }
+    .unit-term-count { font-size: 0.7rem; padding: 5px 10px; top: 1.2rem; right: 1.2rem; }
+    .flashcard-stage { height: clamp(340px, 60vh, 380px); }
+    .card-face { padding: 1.6rem; }
+}
+</style>
 </head>
-<body class="antialiased">
-
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    
-    <!-- Navigation Bar -->
-    <header class="py-6 flex items-center justify-between gap-4 border-b border-emerald-500/10">
-      <a href="index.html" class="inline-flex items-center gap-3 group text-decoration-none">
-        <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/25 group-hover:scale-105 transition-transform duration-300">
-          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 17l6-6 4 4 8-9"/><path d="M15 6h6v6"/>
-          </svg>
-        </span>
-        <span class="font-display font-extrabold text-xl tracking-tight">Money Mentor</span>
-      </a>
-
-      <div class="flex items-center gap-3 sm:gap-6">
-        <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-400">
-          <a href="#interactive-demo" class="hover:text-emerald-400 transition-colors">Interactive Demo</a>
-          <a href="#topics" class="hover:text-emerald-400 transition-colors">Learning Topics</a>
-          <a href="#features" class="hover:text-emerald-400 transition-colors">Features</a>
-          <a href="#faq" class="hover:text-emerald-400 transition-colors">FAQ</a>
-        </nav>
-
-        <a href="Money_Mentor_Updated.html" class="hidden sm:inline-flex items-center text-sm font-semibold px-4 py-2 rounded-lg border border-slate-700/60 hover:border-emerald-500/50 hover:text-emerald-400 transition-all">
-          Open App
-        </a>
-
-        <button id="themeToggle" type="button" class="glass-card px-3.5 py-2 rounded-full text-xs font-semibold flex items-center gap-2 hover:bg-slate-800/50 transition-colors" aria-label="Toggle Theme">
-          <span id="themeIcon">☀</span> <span id="themeText" class="hidden sm:inline">Light Mode</span>
+<body>
+<div id="bg-animation-container"></div>
+<div id="floating-tooltip">
+    <div style="font-size:0.7rem; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Unit Overview</div>
+    <div id="tooltip-text" style="font-size:0.85rem; line-height:1.5; color:var(--text-light); font-weight:500;"></div>
+</div>
+<div id="tutorial-overlay">
+    <div class="tutorial-dimmer" id="tut-dimmer"></div>
+    <button class="tutorial-skip-btn" onclick="endTutorial()">
+        <i class="fas fa-forward"></i> Skip Tutorial
+    </button>
+    <div class="tutorial-box" id="tut-box">
+        <h3 id="tut-title">Welcome!</h3>
+        <p id="tut-text">Let's show you around your new student dashboard.</p>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:0.75rem; font-weight:700; opacity:0.6;" id="tut-step-count">1 / 11</span>
+            <button class="btn btn-primary" id="tut-next-btn" onclick="nextTutorialStep()">Next</button>
+        </div>
+    </div>
+</div>
+<header>
+    <div class="header-tools">
+        <a href="https://sites.google.com/view/money--mentor/home" class="btn btn-ghost" style="color:white"><i class="fas fa-chevron-left"></i> Home</a>
+        <a href="https://sites.google.com/view/money--mentor/meetings?authuser=0" target="_blank" class="btn btn-ghost" style="color:white"><i class="fas fa-video"></i> Online Meetings</a>
+        <div class="status-pill" id="streak-counter" style="margin-left: 1rem; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: white;">
+            Streak: <span id="streak-days">0 day</span> <i class="fas fa-fire" style="color:#fcd34d;"></i>
+        </div>
+    </div>
+    <div class="logo">MONEY MENTOR</div>
+    <div class="header-tools">
+        <button id="settings-trigger" class="btn btn-outline" onclick="openSettings()">
+            <i class="fas fa-cog"></i>
         </button>
-      </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="py-12 md:py-20 text-center relative">
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs font-bold tracking-widest uppercase mb-6 shadow-sm">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-sm shadow-emerald-400"></span>
-        Your Financial Freedom Starts Here
-      </div>
-
-      <h1 class="font-display text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.08] max-w-4xl mx-auto mb-6">
-        Make smarter money moves. <br class="hidden sm:block"/>
-        <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500 bg-clip-text text-transparent">Build your future.</span>
-      </h1>
-
-      <p class="text-base sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed mb-10">
-        Learn practical finance fundamentals, simulate real-world decisions with interactive tools, test your knowledge with micro-quizzes, and track your journey to money mastery.
-      </p>
-
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14">
-        <a href="Money_Mentor_Updated.html" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white font-bold text-base shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/40 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 group">
-          Enter Money Mentor App 
-          <span class="group-hover:translate-x-1 transition-transform">→</span>
-        </a>
-        <a href="#interactive-demo" class="w-full sm:w-auto px-7 py-4 rounded-xl glass-card hover:bg-slate-800/80 font-bold text-base hover:border-emerald-500/40 transition-all flex items-center justify-center gap-2">
-          Try Quick Calculators ⚡
-        </a>
-      </div>
-
-      <!-- Trust Badges -->
-      <div class="flex flex-wrap justify-center items-center gap-6 sm:gap-12 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-12">
-        <div class="flex items-center gap-2">
-          <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
-          Zero Complex Jargon
+        <div id="counter-highlight-target" class="status-pill" style="color: white; border: 1px solid rgba(255,255,255,0.3); background: transparent;">
+            Units Complete: <span id="unitsDone">0</span>/3
         </div>
-        <div class="flex items-center gap-2">
-          <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
-          Interactive Tools
+    </div>
+</header>
+<div class="container">
+    <div class="unit-grid" id="dashboard-grid"></div>
+</div>
+<div id="settings-modal" class="modal-overlay" onclick="handleOutsideClick(event)">
+    <div class="modal-content">
+        <div id="main-settings-view">
+            <div class="modal-header">
+                <h3 style="margin:0; font-family:Poppins;">Settings</h3>
+                <i class="fas fa-times" style="cursor:pointer; font-size:1.2rem; opacity:0.5" onclick="closeSettings()"></i>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section-title">Themes</div>
+                <div class="theme-swatch-container">
+                    <div class="theme-swatch" style="background:#10b981;" onclick="setPrimaryColor('#10b981', '#059669', this)" title="Green"></div>
+                    <div class="theme-swatch" style="background:#f97316;" onclick="setPrimaryColor('#f97316', '#ea580c', this)" title="Orange"></div>
+                    <div class="theme-swatch" style="background:#ef4444;" onclick="setPrimaryColor('#ef4444', '#dc2626', this)" title="Red"></div>
+                    <div class="theme-swatch" style="background:#3b82f6;" onclick="setPrimaryColor('#3b82f6', '#2563eb', this)" title="Blue"></div>
+                    <div class="theme-swatch" style="background:#a855f7;" onclick="setPrimaryColor('#a855f7', '#9333ea', this)" title="Purple"></div>
+                    <div class="theme-swatch" style="background:#eab308;" onclick="setPrimaryColor('#eab308', '#ca8a04', this)" title="Yellow"></div>
+                </div>
+                <div class="settings-section-title">General</div>
+                <div class="settings-option gold" onclick="resetTutorial(); closeSettings();">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <i class="fas fa-redo-alt"></i>
+                        <span style="font-weight:600">Reset Tutorial</span>
+                    </div>
+                </div>
+                <div class="settings-option" onclick="toggleTheme()">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <i id="theme-icon-modal" class="fas fa-moon"></i>
+                        <span id="theme-text-modal" style="font-weight:600">Dark Mode</span>
+                    </div>
+                    <i class="fas fa-chevron-right" style="font-size:0.8rem; opacity:0.3"></i>
+                </div>
+                <div class="settings-option danger" onclick="showResetConfirm()">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <i class="fas fa-trash-alt"></i>
+                        <span style="font-weight:600">Reset All Data</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="flex items-center gap-2">
-          <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
-          100% Free & Private
+        <div id="reset-confirm-view" style="display:none;">
+            <div class="modal-header">
+                <h3 style="margin:0; font-family:Poppins; color:var(--danger)">Confirm Reset</h3>
+            </div>
+            <div class="modal-body" style="text-align:center;">
+                <div style="font-size:3rem; margin-bottom:1rem;">⚠️</div>
+                <p style="font-weight:700; margin-bottom:0.5rem;">Are you absolutely sure?</p>
+                <p style="font-size:0.85rem; color:var(--text-light); margin-bottom:2rem;">This will delete all your scores and starred terms. This action cannot be undone.</p>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn btn-primary" style="flex:1; background:var(--danger);" onclick="resetProgress()">Yes, Reset</button>
+                    <button class="btn btn-outline" style="flex:1; color:var(--text); border-color:var(--border)" onclick="hideResetConfirm()">No, Keep Data</button>
+                </div>
+            </div>
         </div>
-      </div>
-    </section>
-
-    <!-- Interactive Workspace Preview Section -->
-    <section id="interactive-demo" class="py-8 mb-20">
-      <div class="text-center max-w-2xl mx-auto mb-10">
-        <h2 class="font-display text-2xl sm:text-4xl font-extrabold mb-3">Try It Right Here</h2>
-        <p class="text-slate-400 text-sm sm:text-base">Sample the interactive tools built directly into Money Mentor before jumping in.</p>
-      </div>
-
-      <div class="glass-card-solid rounded-3xl p-4 sm:p-8 shadow-2xl glow-effect">
-        
-        <!-- Interactive Widget Tabs Navigation -->
-        <div class="flex flex-wrap items-center justify-center gap-2 mb-8 border-b border-slate-700/50 pb-4">
-          <button id="tabCalc" onclick="switchWidget('calc')" class="tab-btn active px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2">
-            📈 Compound Calculator
-          </button>
-          <button id="tabBudget" onclick="switchWidget('budget')" class="tab-btn glass-card px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2">
-            📊 50/30/20 Budget Splitter
-          </button>
-          <button id="tabQuiz" onclick="switchWidget('quiz')" class="tab-btn glass-card px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2">
-            🧠 Quick Knowledge Check
-          </button>
+    </div>
+</div>
+<div id="app-overlay" class="overlay">
+    <div class="overlay-header">
+        <button class="btn btn-ghost" onclick="closeOverlay()">
+            <i class="fas fa-times"></i> Exit
+        </button>
+        <div id="overlay-title" style="font-weight: 700; color: var(--text)">Unit 1</div>
+        <div id="action-btn-container">
+            <i class="fas fa-star action-trigger" id="global-action-btn" onclick="handleAction()"></i>
         </div>
-
-        <!-- WIDGET 1: Compound Interest Calculator -->
-        <div id="widgetCalc" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div class="lg:col-span-7 space-y-5">
-            <div>
-              <div class="flex justify-between text-sm font-bold mb-1">
-                <span>Monthly Savings / Investment</span>
-                <span class="text-emerald-400 font-extrabold" id="monthlyVal">$250/mo</span>
-              </div>
-              <input type="range" id="monthlyInput" min="50" max="2000" step="50" value="250" class="w-full h-2 rounded-lg bg-slate-700 cursor-pointer" oninput="updateCompoundCalc()">
+    </div>
+    <div class="overlay-body" style="flex:1; overflow-y:auto; padding-bottom: 2rem;">
+        <div class="content-max" id="overlay-content"></div>
+    </div>
+</div>
+<div class="chat-container" id="botContainer">
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            <div style="font-weight: 700; display:flex; align-items:center; gap:8px;">
+                <i class="fas fa-comment-dots"></i> Money Bot
             </div>
-
-            <div>
-              <div class="flex justify-between text-sm font-bold mb-1">
-                <span>Time Horizon (Years)</span>
-                <span class="text-emerald-400 font-extrabold" id="yearsVal">15 Years</span>
-              </div>
-              <input type="range" id="yearsInput" min="3" max="40" step="1" value="15" class="w-full h-2 rounded-lg bg-slate-700 cursor-pointer" oninput="updateCompoundCalc()">
-            </div>
-
-            <div>
-              <div class="flex justify-between text-sm font-bold mb-1">
-                <span>Estimated Annual Return</span>
-                <span class="text-emerald-400 font-extrabold" id="returnVal">8.0%</span>
-              </div>
-              <input type="range" id="returnInput" min="3" max="12" step="0.5" value="8" class="w-full h-2 rounded-lg bg-slate-700 cursor-pointer" oninput="updateCompoundCalc()">
-            </div>
-
-            <div class="p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-xs text-slate-400 flex items-center gap-3">
-              <span class="text-xl">💡</span>
-              <span><strong>Mentor Tip:</strong> Compound interest is time in the market! Notice how interest earned eclipses your actual contributions over time.</span>
-            </div>
-          </div>
-
-          <div class="lg:col-span-5 glass-card rounded-2xl p-6 text-center flex flex-col justify-between border border-emerald-500/20">
-            <span class="text-xs font-extrabold uppercase tracking-widest text-slate-400">Projected Portfolio Value</span>
-            <div class="my-4">
-              <div id="totalPortfolio" class="text-3xl sm:text-5xl font-extrabold text-emerald-400 font-display tracking-tight">$86,520</div>
-              <div class="text-xs text-slate-400 mt-2 flex justify-center gap-4">
-                <span>Contributed: <strong id="totalDeposits" class="text-slate-200">$45,000</strong></span>
-                <span>Growth: <strong id="totalInterest" class="text-emerald-400">$41,520</strong></span>
-              </div>
-            </div>
-            
-            <!-- Simple Progress Visualizer -->
-            <div class="w-full bg-slate-700/50 rounded-full h-3 overflow-hidden flex">
-              <div id="depositBar" class="bg-slate-400 h-full" style="width: 52%"></div>
-              <div id="interestBar" class="bg-emerald-400 h-full" style="width: 48%"></div>
-            </div>
-            <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-semibold">
-              <span>■ Your Deposits</span>
-              <span>■ Compound Growth</span>
-            </div>
-          </div>
+            <i class="fas fa-times" style="cursor: pointer;" onclick="toggleChat()"></i>
         </div>
-
-        <!-- WIDGET 2: 50/30/20 Budget Calculator -->
-        <div id="widgetBudget" class="hidden grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-          <div class="md:col-span-6 space-y-6">
-            <div>
-              <label class="block text-sm font-bold mb-2">Monthly Net Income (After Taxes)</label>
-              <div class="relative">
-                <span class="absolute left-4 top-3 text-slate-400 font-bold">$</span>
-                <input type="number" id="netIncomeInput" value="4000" step="100" class="w-full bg-slate-900/60 border border-slate-700 rounded-xl py-3 pl-8 pr-4 text-emerald-400 font-extrabold text-lg focus:outline-none focus:border-emerald-500 transition-colors" oninput="updateBudgetCalc()">
-              </div>
-            </div>
-            <p class="text-xs text-slate-400 leading-relaxed">
-              The <strong>50/30/20 rule</strong> is an intuitive budgeting framework: 50% for essentials (Needs), 30% for personal choices (Wants), and 20% for future goals (Savings & Debt).
-            </p>
-          </div>
-
-          <div class="md:col-span-6 grid grid-cols-1 gap-3">
-            <div class="p-4 rounded-xl bg-slate-800/60 border border-emerald-500/30 flex items-center justify-between">
-              <div>
-                <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">50% Needs</span>
-                <div class="text-xs text-slate-400">Rent, utilities, groceries, insurance</div>
-              </div>
-              <div id="needsAmount" class="text-xl font-bold font-display text-emerald-400">$2,000</div>
-            </div>
-
-            <div class="p-4 rounded-xl bg-slate-800/60 border border-blue-500/30 flex items-center justify-between">
-              <div>
-                <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">30% Wants</span>
-                <div class="text-xs text-slate-400">Dining out, entertainment, hobbies</div>
-              </div>
-              <div id="wantsAmount" class="text-xl font-bold font-display text-blue-400">$1,200</div>
-            </div>
-
-            <div class="p-4 rounded-xl bg-slate-800/60 border border-purple-500/30 flex items-center justify-between">
-              <div>
-                <span class="text-xs font-bold text-purple-400 uppercase tracking-wider">20% Savings / Investing</span>
-                <div class="text-xs text-slate-400">Emergency fund, Roth IRA, extra debt paydown</div>
-              </div>
-              <div id="savingsAmount" class="text-xl font-bold font-display text-purple-400">$800</div>
-            </div>
-          </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div id="typingIndicator" style="display: none; padding: 0 1rem;">
+            <div class="dot-typing" style="color:var(--text-light); font-size:0.8rem;">Thinking...</div>
         </div>
-
-        <!-- WIDGET 3: Micro-Quiz Interactive -->
-        <div id="widgetQuiz" class="hidden max-w-2xl mx-auto py-2">
-          <div class="text-center mb-6">
-            <span class="text-xs font-extrabold uppercase tracking-widest text-emerald-400">Financial IQ Micro-Check</span>
-            <h3 class="text-xl font-bold mt-1" id="quizQuestion">What is an Emergency Fund primary rule of thumb?</h3>
-          </div>
-
-          <div id="quizOptions" class="space-y-3">
-            <button onclick="checkQuiz(0)" class="w-full text-left p-4 rounded-xl border border-slate-700/80 bg-slate-800/40 hover:bg-slate-700/60 font-semibold text-sm transition-all flex justify-between items-center group">
-              <span>A) 1 to 2 weeks of discretionary spending</span>
-              <span class="opacity-0 group-hover:opacity-100 transition-opacity text-emerald-400">Select →</span>
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Ask 'Help' or define a term..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <button class="btn btn-primary" style="padding: 8px 12px; min-width: 44px; border-radius: 12px" onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
             </button>
-            <button onclick="checkQuiz(1)" class="w-full text-left p-4 rounded-xl border border-slate-700/80 bg-slate-800/40 hover:bg-slate-700/60 font-semibold text-sm transition-all flex justify-between items-center group">
-              <span>B) 3 to 6 months of essential living expenses in a liquid savings account</span>
-              <span class="opacity-0 group-hover:opacity-100 transition-opacity text-emerald-400">Select →</span>
-            </button>
-            <button onclick="checkQuiz(2)" class="w-full text-left p-4 rounded-xl border border-slate-700/80 bg-slate-800/40 hover:bg-slate-700/60 font-semibold text-sm transition-all flex justify-between items-center group">
-              <span>C) Invested entirely in volatile individual stocks</span>
-              <span class="opacity-0 group-hover:opacity-100 transition-opacity text-emerald-400">Select →</span>
-            </button>
-          </div>
-
-          <div id="quizFeedback" class="hidden mt-6 p-4 rounded-xl text-center font-bold text-sm"></div>
         </div>
-
-      </div>
-    </section>
-
-    <!-- Interactive Topic Explorer -->
-    <section id="topics" class="py-12 border-t border-emerald-500/10">
-      <div class="text-center max-w-2xl mx-auto mb-12">
-        <h2 class="font-display text-3xl sm:text-4xl font-extrabold mb-3">Master Key Financial Modules</h2>
-        <p class="text-slate-400 text-sm sm:text-base">Explore the comprehensive topics covered inside the Money Mentor app.</p>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="glass-card p-6 rounded-2xl hover:-translate-y-1 transition-all duration-300 glow-effect">
-          <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-2xl mb-4 font-bold">💳</div>
-          <h3 class="font-bold text-lg mb-2">Credit Score & Debt</h3>
-          <p class="text-slate-400 text-sm leading-relaxed mb-4">Learn how credit utilization, payment history, and debt payoff strategies (Snowball vs. Avalanche) shape your financial freedom.</p>
-          <span class="text-xs font-extrabold text-emerald-400 tracking-wider uppercase">Interactive Modules Included</span>
-        </div>
-
-        <div class="glass-card p-6 rounded-2xl hover:-translate-y-1 transition-all duration-300 glow-effect">
-          <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-2xl mb-4 font-bold">📊</div>
-          <h3 class="font-bold text-lg mb-2">Investing Fundamentals</h3>
-          <p class="text-slate-400 text-sm leading-relaxed mb-4">Demystify index funds, ETF diversification, compound interest, stock market basics, and 401(k) / Roth IRA retirement accounts.</p>
-          <span class="text-xs font-extrabold text-blue-400 tracking-wider uppercase">Growth Visualizers Included</span>
-        </div>
-
-        <div class="glass-card p-6 rounded-2xl hover:-translate-y-1 transition-all duration-300 glow-effect">
-          <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-2xl mb-4 font-bold">💰</div>
-          <h3 class="font-bold text-lg mb-2">Budgeting & Cash Flow</h3>
-          <p class="text-slate-400 text-sm leading-relaxed mb-4">Master cash-flow tracking, zero-based budgeting, cutting hidden expenses, and establishing automated saving systems.</p>
-          <span class="text-xs font-extrabold text-purple-400 tracking-wider uppercase">Budget Builder Tool</span>
-        </div>
-
-        <div class="glass-card p-6 rounded-2xl hover:-translate-y-1 transition-all duration-300 glow-effect">
-          <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-2xl mb-4 font-bold">🛡️</div>
-          <h3 class="font-bold text-lg mb-2">Emergency Safety Nets</h3>
-          <p class="text-slate-400 text-sm leading-relaxed mb-4">Build an airtight liquidity cushion in high-yield savings accounts (HYSA) to weather unexpected job changes or emergencies.</p>
-          <span class="text-xs font-extrabold text-amber-400 tracking-wider uppercase">Risk Assessment Check</span>
-        </div>
-
-        <div class="glass-card p-6 rounded-2xl hover:-translate-y-1 transition-all duration-300 glow-effect">
-          <div class="w-12 h-12 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center text-2xl mb-4 font-bold">📑</div>
-          <h3 class="font-bold text-lg mb-2">Tax Basics & Deductions</h3>
-          <p class="text-slate-400 text-sm leading-relaxed mb-4">Understand tax brackets, W-2 vs 1099, tax-advantaged accounts (HSA, IRA), and strategies to retain more of what you earn.</p>
-          <span class="text-xs font-extrabold text-rose-400 tracking-wider uppercase">Tax Bracket Demystified</span>
-        </div>
-
-        <div class="glass-card p-6 rounded-2xl hover:-translate-y-1 transition-all duration-300 glow-effect">
-          <div class="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-2xl mb-4 font-bold">🎯</div>
-          <h3 class="font-bold text-lg mb-2">Goal Setting & Milestones</h3>
-          <p class="text-slate-400 text-sm leading-relaxed mb-4">Set SMART financial goals for homeownership, travel, or retirement, and track your progress step by step.</p>
-          <span class="text-xs font-extrabold text-cyan-400 tracking-wider uppercase">Milestone Trackers</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Platform Features -->
-    <section id="features" class="py-16">
-      <div class="text-center max-w-2xl mx-auto mb-12">
-        <h2 class="font-display text-3xl sm:text-4xl font-extrabold mb-3">Designed for Actionable Learning</h2>
-        <p class="text-slate-400 text-sm sm:text-base">Everything you need to turn financial theory into confident everyday actions.</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div class="text-center p-6">
-          <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-3xl mx-auto mb-5 shadow-inner">
-            📚
-          </div>
-          <h3 class="font-bold text-xl mb-2">Bite-Sized Lessons</h3>
-          <p class="text-slate-400 text-sm leading-relaxed">No overwhelming textbooks. Digest concise lessons engineered for quick daily learning routines.</p>
-        </div>
-
-        <div class="text-center p-6">
-          <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-3xl mx-auto mb-5 shadow-inner">
-            ⚡
-          </div>
-          <h3 class="font-bold text-xl mb-2">Interactive Simulations</h3>
-          <p class="text-slate-400 text-sm leading-relaxed">Test financial choices in a risk-free environment. See how compound interest and interest rates compound over decades.</p>
-        </div>
-
-        <div class="text-center p-6">
-          <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-3xl mx-auto mb-5 shadow-inner">
-            📈
-          </div>
-          <h3 class="font-bold text-xl mb-2">Progress & Knowledge Tracking</h3>
-          <p class="text-slate-400 text-sm leading-relaxed">Watch your mastery score rise as you complete quizzes, practice flashcards, and complete finance challenges.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- FAQ Accordion Section -->
-    <section id="faq" class="py-16 border-t border-emerald-500/10">
-      <div class="text-center max-w-2xl mx-auto mb-12">
-        <h2 class="font-display text-3xl sm:text-4xl font-extrabold mb-3">Frequently Asked Questions</h2>
-        <p class="text-slate-400 text-sm sm:text-base">Have questions about Money Mentor? We've got answers.</p>
-      </div>
-
-      <div class="max-w-3xl mx-auto space-y-4">
-        <div class="accordion-item glass-card rounded-2xl p-5 cursor-pointer" onclick="toggleAccordion(this)">
-          <div class="flex justify-between items-center font-bold text-base sm:text-lg">
-            <span>Is Money Mentor free to use?</span>
-            <span class="accordion-icon transition-transform duration-300 text-emerald-400">▼</span>
-          </div>
-          <div class="accordion-content">
-            <p class="pt-4 text-slate-400 text-sm leading-relaxed border-t border-slate-700/40 mt-3">
-              Yes! Money Mentor is completely free to use. All core learning materials, quizzes, interactive calculators, and progress trackers are accessible without any hidden fees.
-            </p>
-          </div>
-        </div>
-
-        <div class="accordion-item glass-card rounded-2xl p-5 cursor-pointer" onclick="toggleAccordion(this)">
-          <div class="flex justify-between items-center font-bold text-base sm:text-lg">
-            <span>Do I need prior financial knowledge to start?</span>
-            <span class="accordion-icon transition-transform duration-300 text-emerald-400">▼</span>
-          </div>
-          <div class="accordion-content">
-            <p class="pt-4 text-slate-400 text-sm leading-relaxed border-t border-slate-700/40 mt-3">
-              Not at all! Money Mentor is designed for all skill levels—from absolute beginners learning budgeting basics to intermediate learners mastering compound growth and credit score optimization.
-            </p>
-          </div>
-        </div>
-
-        <div class="accordion-item glass-card rounded-2xl p-5 cursor-pointer" onclick="toggleAccordion(this)">
-          <div class="flex justify-between items-center font-bold text-base sm:text-lg">
-            <span>Is my personal data saved or shared?</span>
-            <span class="accordion-icon transition-transform duration-300 text-emerald-400">▼</span>
-          </div>
-          <div class="accordion-content">
-            <p class="pt-4 text-slate-400 text-sm leading-relaxed border-t border-slate-700/40 mt-3">
-              Your privacy is paramount. Money Mentor operates entirely in your browser using local storage for theme choices and quick calculators. No personal banking details are ever requested or stored.
-            </p>
-          </div>
-        </div>
-
-        <div class="accordion-item glass-card rounded-2xl p-5 cursor-pointer" onclick="toggleAccordion(this)">
-          <div class="flex justify-between items-center font-bold text-base sm:text-lg">
-            <span>How do I open the main learning app?</span>
-            <span class="accordion-icon transition-transform duration-300 text-emerald-400">▼</span>
-          </div>
-          <div class="accordion-content">
-            <p class="pt-4 text-slate-400 text-sm leading-relaxed border-t border-slate-700/40 mt-3">
-              Simply click the <strong>"Enter Money Mentor App"</strong> button anywhere on this page or navigate to <code class="text-emerald-400 bg-slate-900/60 px-2 py-0.5 rounded">Money_Mentor_Updated.html</code> to launch your complete learning dashboard.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Bottom CTA Card -->
-    <section class="py-12 mb-16">
-      <div class="glass-card-solid rounded-3xl p-8 sm:p-14 text-center relative overflow-hidden border border-emerald-500/30">
-        <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -left-10 -top-10 w-48 h-48 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-        <h2 class="font-display text-3xl sm:text-5xl font-extrabold mb-4">Ready to Master Your Money?</h2>
-        <p class="text-slate-400 text-base sm:text-lg max-w-xl mx-auto mb-8">
-          Join thousands of learners taking control of their financial destiny today.
-        </p>
-
-        <a href="Money_Mentor_Updated.html" class="inline-flex items-center gap-2 px-9 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white font-extrabold text-base shadow-xl shadow-emerald-500/30 hover:scale-105 transition-all">
-          Go to Main Application <span>→</span>
-        </a>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="py-8 border-t border-slate-700/40 text-slate-400 text-xs sm:text-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
-        <span class="font-bold text-slate-300">Money Mentor</span>
-        <span>© <span id="year"></span>. All rights reserved.</span>
-      </div>
-
-      <div>Learn today. Make informed financial decisions tomorrow.</div>
-
-      <div>
-        <a href="Money_Mentor_Updated.html" class="text-emerald-400 hover:underline font-bold">Open Application →</a>
-      </div>
-    </footer>
-
-  </div>
-
-  <script>
-    // Theme Management
-    const root = document.documentElement;
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-    const themeText = document.getElementById('themeText');
-
-    const savedTheme = localStorage.getItem('moneyMentorLandingTheme') || 'dark';
-    setTheme(savedTheme);
-
-    themeToggle.addEventListener('click', () => {
-      const currentTheme = root.getAttribute('data-theme');
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      setTheme(newTheme);
+    </div>
+    <div class="chat-bubble" id="chatBubble" onclick="toggleChat()">
+        <i class="fas fa-comment-dots"></i>
+    </div>
+</div>
+<script>
+// --- BACKGROUND INITIALIZATION ---
+function initBackground() {
+    const container = document.getElementById('bg-animation-container');
+    container.innerHTML = '';
+    const particleColor = localStorage.getItem('mm_primary_color') || '#10b981';
+    for(let s=0; s<2; s++) {
+        const swirl = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        swirl.setAttribute("viewBox", "0 0 100 100");
+        swirl.classList.add("swirl-pattern");
+        swirl.style.left = s === 0 ? "-150px" : "auto";
+        swirl.style.right = s === 1 ? "-150px" : "auto";
+        swirl.style.top = s === 0 ? "15%" : "65%";
+        swirl.style.animationDirection = s === 0 ? "normal" : "reverse";
+        for(let i=0; i<45; i++) {
+            const angle = 0.4 * i;
+            const x = 50 + (i * 1.1) * Math.cos(angle);
+            const y = 50 + (i * 1.1) * Math.sin(angle);
+            const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            dot.setAttribute("cx", x); dot.setAttribute("cy", y); dot.setAttribute("r", "1.2");
+            dot.setAttribute("fill", particleColor);
+            dot.classList.add('bg-particle');
+            swirl.appendChild(dot);
+        }
+        container.appendChild(swirl);
+    }
+    for(let i=0; i<15; i++) {
+        const tri = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        tri.setAttribute("viewBox", "0 0 100 100"); tri.classList.add("floating-triangle");
+        const size = Math.random() * 25 + 20; tri.style.width = size + "px";
+        tri.style.left = Math.random() * 100 + "vw"; tri.style.top = Math.random() * 100 + "vh";
+        tri.style.animationDelay = (Math.random() * -20) + "s";
+        const poly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+        poly.setAttribute("points", "50,15 90,85 10,85");
+        poly.setAttribute("fill", particleColor);
+        poly.classList.add('bg-particle');
+        tri.appendChild(poly);
+        container.appendChild(tri);
+    }
+}
+function updateBackgroundColors(color) {
+    const particles = document.querySelectorAll('.bg-particle');
+    particles.forEach(p => { p.setAttribute('fill', color); });
+}
+const OBFUSCATED_KEY = "";
+function getCleanKey() { return OBFUSCATED_KEY; }
+const financeDictionary = {
+    "hi": "Hello! I'm Money Bot. Ready to learn about finances today?",
+    "hello": "Hi there! I'm your Money Mentor assistant. Ask me anything about the terms on this site!",
+    "hey": "Hey! Need help defining a term or finding your way around?",
+    "thanks": "You're very welcome! Keep up the great studying!",
+    "bye": "Goodbye! See you next time for more money mastery!",
+    "help": "I can help you define terms (like 'Stock' or 'Inflation'), explain how to get ribbons, or show you how to star terms!",
+    "stock": "A share of ownership in a company and potential profits.",
+    "bond": "A loan to a company or government for interest.",
+    "asset": "Something valuable you own, either physical or financial.",
+    "liability": "Obligations or debts owed to others.",
+    "dividend": "Profit distributions to shareholders.",
+    "capital": "Money allocated specifically for investment purposes.",
+    "portfolio": "Your complete collection of financial investments.",
+    "risk": "The chance that an investment’s actual return will differ from expected.",
+    "liquidity": "Indicates how quickly an asset can be converted to cash without losing value.",
+    "interest": "The cost of borrowing money, usually expressed as a percentage.",
+    "credit card": "Lets you borrow money now and pay later.",
+    "debit card": "Charges your bank account immediately for purchases.",
+    "inflation": "The rate at which prices rise, meaning your money buys less.",
+    "crypto": "Digital currency protected by complex math.",
+    "budget": "A plan for how you spend and save your money.",
+    "taxes": "Money paid to the government to fund public services.",
+    "debt": "Money that is owed to someone else.",
+    "loan": "Money borrowed that must be paid back with interest.",
+    "bull market": "A market condition where prices of stocks are generally rising.",
+    "bear market": "A market condition where prices of stocks are generally falling.",
+    "etf": "A collection of stocks or bonds that can be traded like a single stock.",
+    "index fund": "A type of ETF or mutual fund that tracks a market index, like the S&P 500.",
+    "dividend yield": "The ratio of a company’s annual dividend compared to its stock price.",
+    "ipo": "The first time a company sells its stock to the public.",
+    "diversification": "Spreading investments across multiple assets to reduce risk."
+};
+const HELP_GUIDE = `
+<div class="help-card">
+    <span class="help-title">AI Overview</span>
+    <div class="help-row"><i class="fas fa-comment-dots help-icon"></i><div class="help-text"><b>Money Bot:</b> I'm your personal 24/7 AI tutor! Click the chat bubble to ask me anything.</div></div>
+    <div class="help-row"><i class="fas fa-search help-icon"></i><div class="help-text"><b>Definitions:</b> Type any financial term (e.g., "Stock") and I'll define it instantly.</div></div>
+    <span class="help-title" style="margin-top:10px">Study Tools</span>
+    <div class="help-row"><i class="fas fa-book-open help-icon"></i><div class="help-text"><b>Study:</b> Review flashcards. Tap cards to flip them!</div></div>
+    <div class="help-row"><i class="fas fa-star help-icon"></i><div class="help-text"><b>Starring:</b> Save difficult terms to your Starred folder for focused study.</div></div>
+    <div class="help-row"><i class="fas fa-clipboard help-icon"></i><div class="help-text"><b>Test:</b> Score 90% or higher to earn a Golden Ribbon.</div></div>
+</div>`;
+const videoResources = {
+    unit1: [
+        { title: "How the Stock Market Works Today", date: "Nov 3, 2022", creator: "TED-Ed", url: "https://youtu.be/p7HKvqRI_Bo", citation: "TED-Ed. (2022, November 3). How the Stock Market Works Today [Video]. YouTube. https://www.youtube.com/watch?v=p7HKvqRI_Bo" },
+        { title: "The Basics of Investing (Stocks, Bonds, & Funds)", date: "Sept 18, 2023", creator: "Professor Dave Explains", url: "https://youtu.be/qIw-yFC-HNU", citation: "Professor Dave Explains. (2023, September 18). The Basics of Investing (Stocks, Bonds, Mutual Funds, and Types of Interest) [Video]. YouTube. https://www.youtube.com/watch?v=qIw-yFC-HNU" }
+    ],
+    unit2: [
+        { title: "How Do Banks Work?", date: "May 20, 2020", creator: "St. Louis Fed", url: "https://youtu.be/fTTGALaRZoc?si=FxPBY3DXpJNP72fF", citation: "St. Louis Fed. (2020, May 20). How Do Banks Work? [Video]. YouTube. https://youtu.be/fTTGALaRZoc?si=FxPBY3DXpJNP72fF" },
+        { title: "Credit Cards vs Debit Cards", date: "Aug 12, 2021", creator: "Gateway Bank FSB", url: "https://youtu.be/sm0FzHMInig", citation: "Gateway Bank FSB. (2021, August 12). Credit Cards vs Debit Cards (And When to Use Them) [Video]. YouTube. https://www.youtube.com/watch?v=sm0FzHMInig" }
+    ],
+    unit3: [
+        { title: "WTF Is an ETF?", date: "March 7, 2016", creator: "Bloomberg Originals", url: "https://youtu.be/OwpFBi-jZVg", citation: "Bloomberg Originals. (2016, March 7). WTF Is an ETF? [Video]. YouTube. https://www.youtube.com/watch?v=OwpFBi-jZVg" },
+        { title: "Bull vs Bear Markets: What's The Difference?", date: "October 15, 2024", creator: "The Plain Bagel", url: "https://youtu.be/UzoZxKmLOAI", citation: "The Plain Bagel. (2024, October 15). Bull vs Bear Markets: What's The Difference? [Video]. YouTube. https://www.youtube.com/watch?v=UzoZxKmLOAI" }
+    ]
+};
+const units = [
+    {
+        id: "unit1",
+        title: "Basic Investing Vocab",
+        icon: "fa-chart-line",
+        class: "unit-1-green",
+        overview: "Learn definitions for the essential building blocks of the stock market. You'll review terms like Stocks and Bonds, Assets vs Liabilities, and what defines a Portfolio.",
+        data: [
+            { term: "Stock", def: "A share of ownership in a company and potential profits.", q: "What is a 'stock'?", a: ["Share of ownership in a company", "Debt issued by a company", "A bank savings account", "A type of corporate bond"], c: 0 },
+            { term: "Bond", def: "A loan to a company or government for interest.", q: "What is a 'bond'?", a: ["Share of ownership in a company", "Loan to a company or government", "An interest-bearing liquid account", "A type of corporate bond"], c: 1 },
+            { term: "Asset", def: "Something valuable you own, either physical or financial.", q: "What is an 'asset'?", a: ["Debt you owe to a bank", "Potential future salary income", "Something valuable you own", "An unavoidable expense item"], c: 2 },
+            { term: "Liability", def: "Obligations or debts owed to others.", q: "What is a 'liability'?", a: ["A company's total owned stock", "A shareholder dividend payment", "Debt or obligation you owe", "A financial resource of value"], c: 2 },
+            { term: "Dividend", def: "Profits distributed to shareholders.", q: "What is a 'dividend'?", a: ["Company profits paid to shareholders", "Company profits kept for research", "Change in a stock's market price", "The interest paid on a corporate bond"], c: 0 },
+            { term: "Capital", def: "Money allocated specifically for investment purposes.", q: "What is 'capital'?", a: ["Total company annual revenue", "Money used for investment", "The principal of a personal loan", "Total dividend earnings received"], c: 1 },
+            { term: "Portfolio", def: "Your complete collection of financial investments.", q: "What is a 'portfolio'?", a: ["A single high-performing stock holding", "A traditional bank savings account", "A summary of outstanding debts", "Collection of all your investments"], c: 3 },
+            { term: "Risk", def: "The chance that an investment’s actual return will differ from expected.", q: "What is 'risk' in investing?", a: ["The possibility of losing money", "A guaranteed investment return", "A fixed annual interest payment", "Steady company revenue growth"], c: 0 },
+            { term: "Liquidity", def: "Indicates how quickly an asset can be converted to cash without losing value.", q: "What is 'liquidity'?", a: ["The overall profitability of an investment", "Current market demand for specific stocks", "Ease of converting an asset to cash", "The long-term potential of an investment"], c: 2 },
+            { term: "Interest", def: "The cost of borrowing money, usually expressed of a percentage.", q: "What is 'interest'?", a: ["Profit made from selling a stock", "Payment for borrowing money", "The initial investment principal", "A specific dividend payout received"], c: 1 }
+        ]
+    },
+    {
+        id: "unit2",
+        title: "Banking & Payments",
+        icon: "fa-piggy-bank",
+        class: "unit-2-blue",
+        overview: "Review the differences between Credit and Debit cards. Study concepts like Financial Goals and Emergency Funds to prepare for unexpected costs.",
+        data: [
+            { term: "Credit Card", def: "Lets you borrow money now and pay later.", q: "What is a credit card?", a: ["Lets you borrow money now and pay later", "A card that requires you to pay the full amount immediately", "A card only for online payments", "A card that automatically transfers money for subscriptions"], c: 0 },
+            { term: "Debit Card", def: "Charges your bank account immediately for purchases.", q: "How does a debit card work?", a: ["A card that stores points and rewards", "A card that tracks spending but cannot pay", "Charges your bank account immediately for purchases", "A card that lets you borrow money from the bank"], c: 2 },
+            { term: "Digital Wallet", def: "Stores payment information for mobile or online purchases.", q: "What does a digital wallet do?", a: ["Tracks purchases and automatically invests", "Stores payment information for mobile or online purchases", "Keeps all your money in one app but cannot pay", "Sends money to others without verifying identity"], c: 1 },
+            { term: "PIN", def: "A personal number that secures access to your account.", q: "What is a PIN used for?", a: ["A personal number that secures access to your account", "A code that automatically earns rewards", "A number you enter once and never need again", "A number used only for logging in online"], c: 0 },
+            { term: "Recurring Payment", def: "Automatic scheduled payment for a service.", q: "What is a recurring payment?", a: ["Payment you make manually every month", "A one-time payment for a subscription", "Automatic scheduled payment for a service", "A payment that cancels itself automatically"], c: 2 },
+            { term: "Cashback", def: "Money returned to you after using a card.", q: "What is cashback?", a: ["Extra points that may expire", "A fee you pay for using a credit card", "Money returned to you after using a card", "Money automatically deducted from your account"], c: 2 },
+            { term: "Overdraft", def: "Spending more than your account balance, sometimes with fees.", q: "What happens during an overdraft?", a: ["Spending more than your account balance, sometimes with fees", "Being temporarily locked out of your account", "Losing rewards points on your debit card", "Automatically depositing money from another account"], c: 0 },
+            { term: "Financial Goal", def: "Something you plan to achieve with money.", q: "What is a financial goal?", a: ["A rating of how much money you have", "Something you plan to achieve with money", "A list of items you want to buy online", "A target set by your bank without your input"], c: 1 },
+            { term: "Emergency Fund", def: "Money set aside for unexpected expenses.", q: "What is an emergency fund?", a: ["Money borrowed from a friend", "Extra money for entertainment only", "Automatic savings deducted from each purchase", "Money set aside for unexpected expenses"], c: 3 },
+            { term: "P2P Payment", def: "Sending money directly to another person using an app.", q: "What is a P2P payment?", a: ["Paying your bills automatically with a bank transfer", "Sending money directly to another person using an app", "Investing money in a stock account", "Sending money to a company for a subscription"], c: 1 },
+            { term: "Subscription Service", def: "Service you pay regularly for ongoing access.", q: "What is a subscription service?", a: ["Service you pay regularly for ongoing access", "A free trial that automatically ends", "A one-time purchase with no future access", "A service that tracks your spending without payment"], c: 0 },
+            { term: "ATM Fee", def: "Charge for using an ATM outside your bank’s network.", q: "What is an ATM fee?", a: ["A monthly fee for keeping your account", "Charge for using an ATM outside your bank’s network", "Money you earn for using certain machines", "A penalty for missing a payment"], c: 1 },
+            { term: "Late Fee", def: "Extra money charged for missing a payment.", q: "What is a late fee?", a: ["Extra money charged for missing a payment", "A reward for paying on time", "Money saved automatically from your account", "A fee applied only to credit cards"], c: 0 },
+            { term: "Financial Plan", def: "A method to track income, spending, and saving for goals.", q: "What is a financial plan?", a: ["A document only your bank keeps for you", "A list of debts without solutions", "A method to track income, spending, and saving for goals", "A random estimate of how much to spend"], c: 2 },
+            { term: "Prepaid Card", def: "Card loaded with a set amount of money that you can spend.", q: "What is a prepaid card?", a: ["A card that borrows money from the bank", "Card loaded with a set amount of money that you can spend", "A card that only tracks rewards points", "A card linked to a checking account"], c: 1 }
+        ]
+    },
+    {
+        id: "unit3",
+        title: "Advanced Investing Concepts",
+        icon: "fa-gem",
+        class: "unit-3-yellow",
+        overview: "Study professional terminology. Learn the definitions of Bull and Bear markets, understand what ETFs and Index Funds are, and identify concepts like Market Cap and IPOs.",
+        data: [
+            { term: "Bull Market", def: "A market condition where prices of stocks are generally rising.", q: "What is a 'Bull Market'?", a: ["Market where prices are generally rising", "Market where prices are generally falling", "A market only for farm commodities", "A market with no trading activity"], c: 0 },
+            { term: "Bear Market", def: "A market condition where prices of stocks are generally falling.", q: "What is a 'Bear Market'?", a: ["Market where prices are rising quickly", "Market where prices are generally falling", "A market restricted to professional traders", "A market that only trades on weekends"], c: 1 },
+            { term: "ETF (Exchange-Traded Fund)", def: "A collection of stocks or bonds that can be traded like a single stock.", q: "What does ETF stand for and mean?", a: ["Electronic Trade Folder", "Exchange-Traded Fund; a tradeable collection of assets", "Extra Tax Fund", "Equity Transfer Form"], c: 1 },
+            { term: "Index Fund", def: "A type of ETF or mutual fund that tracks a market index, like the S&P 500.", q: "What is an Index Fund?", a: ["A fund that tracks a specific market index", "A fund that only buys new companies", "A fund managed by one person without computer help", "A fund that only tracks the price of gold"], c: 0 },
+            { term: "Dividend Yield", def: "The ratio of a company’s annual dividend compared to its stock price.", q: "What is 'Dividend Yield'?", a: ["The total amount of dividends paid in history", "Ratio of annual dividend to stock price", "The speed at which dividends are paid", "The tax rate on dividend income"], c: 1 },
+            { term: "Market Capitalization", def: "The total value of a company’s outstanding shares (stock price × number of shares).", q: "What is Market Capitalization?", a: ["Total cash a company has in the bank", "Total value of all outstanding shares", "The number of employees a company has", "The physical size of a company's headquarters"], c: 1 },
+            { term: "IPO (Initial Public Offering)", def: "The first time a company sells its stock to the public.", q: "What is an IPO?", a: ["A company's last day of trading", "The first time a company sells stock to the public", "An internal profit optimization plan", "An international payment order"], c: 1 },
+            { term: "Mutual Fund", def: "A pool of money from multiple investors used to buy a variety of stocks, bonds, or other assets.", q: "What is a Mutual Fund?", a: ["A loan shared between two people", "A pool of money from investors used to buy various assets", "A bank account with a fixed interest rate", "A single stock owned by many people"], c: 1 },
+            { term: "Blue Chip Stock", def: "A well-established, financially stable company’s stock with a reliable history.", q: "What defines a 'Blue Chip' stock?", a: ["A new technology startup", "A company that is currently losing money", "A stable company with a reliable history", "A stock that is priced under one dollar"], c: 2 },
+            { term: "Volatility", def: "How much a stock or market price fluctuates over time.", q: "What does 'Volatility' measure?", a: ["The total volume of trades in a day", "How much a price fluctuates over time", "The popularity of a stock on social media", "The length of time a company has been public"], c: 1 },
+            { term: "Sector", def: "A group of companies in the same industry or category, like technology or healthcare.", q: "What is a 'Sector' in investing?", a: ["A specific floor on the stock exchange", "A group of companies in the same industry", "The geographic location of a company", "The time of day a stock is most active"], c: 1 },
+            { term: "Growth Stock", def: "A stock expected to grow faster than the overall market, often reinvesting profits.", q: "What characterizes a Growth Stock?", a: ["It pays very high dividends", "It is expected to grow faster than the average market", "It never changes in price", "It is a company that has stopped expanding"], c: 1 },
+            { term: "Value Stock", def: "A stock believed to be undervalued compared to its fundamentals.", q: "What is a 'Value Stock'?", a: ["A stock that is extremely expensive", "A stock believed to be undervalued", "A stock that has no assets", "A stock that only grows during holidays"], c: 1 },
+            { term: "Diversification", def: "Spreading investments across multiple assets to reduce risk.", q: "Why is 'Diversification' important?", a: ["It guarantees you will never lose money", "It spreads investments to reduce risk", "It makes it easier to track one single company", "It increases the fees you pay to your bank"], c: 1 },
+            { term: "Liquidity Risk", def: "The risk that an investor cannot quickly sell an investment without losing value.", q: "What is 'Liquidity Risk'?", a: ["The risk of a company going bankrupt", "The risk of not being able to sell an asset quickly", "The risk that the price of gold will drop", "The risk of your bank account being hacked"], c: 1 }
+        ]
+    }
+];
+let currentUnit = null, activeStudySet = [], currentIdx = 0, userAnswers = [], markedQuestions = [], isQuizMode = false, isAnimating = false;
+let scores = JSON.parse(localStorage.getItem('mm_scores') || '{}'), starredTerms = JSON.parse(localStorage.getItem('mm_starred') || '[]');
+function shuffleArray(array) {
+    const newArr = [...array];
+    for (let i = newArr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [newArr[i], newArr[j]] = [newArr[j], newArr[i]]; }
+    return newArr;
+}
+// --- TOOLTIP LOGIC ---
+const tooltip = document.getElementById('floating-tooltip');
+const tooltipText = document.getElementById('tooltip-text');
+document.addEventListener('mousemove', (e) => {
+    if (tooltip.classList.contains('active')) {
+        const x = e.clientX + 20;
+        const y = e.clientY + 20;
+        const width = tooltip.offsetWidth;
+        const height = tooltip.offsetHeight;
+        let finalX = x;
+        let finalY = y;
+        if (x + width > window.innerWidth) finalX = e.clientX - width - 20;
+        if (y + height > window.innerHeight) finalY = e.clientY - height - 20;
+        tooltip.style.left = `${finalX}px`;
+        tooltip.style.top = `${finalY}px`;
+    }
+});
+function handleCardMouseEnter(unitId) {
+    const unit = units.find(u => u.id === unitId);
+    const drop = document.getElementById(`drop-${unitId}`);
+    if (drop && drop.classList.contains('active')) return;
+    if (unit) {
+        tooltipText.innerText = unit.overview;
+        tooltip.classList.add('active');
+        document.documentElement.style.setProperty('--primary-temp', getComputedStyle(document.getElementById(`card-${unitId}`)).getPropertyValue('--primary'));
+    }
+}
+function handleCardMouseLeave() {
+    tooltip.classList.remove('active');
+}
+function renderDashboard() {
+    const grid = document.getElementById('dashboard-grid'); grid.innerHTML = '';
+    const savedOrder = JSON.parse(localStorage.getItem('mm_unit_order') || '[]');
+    let sortedUnits = [...units];
+    if (savedOrder.length > 0) {
+        sortedUnits.sort((a, b) => {
+            let indexA = savedOrder.indexOf(a.id); let indexB = savedOrder.indexOf(b.id);
+            if (indexA === -1) indexA = 999; if (indexB === -1) indexB = 999;
+            return indexA - indexB;
+        });
+    }
+    let completedCount = 0;
+    sortedUnits.forEach(unit => {
+        const highScore = scores[unit.id] || 0; const isMastered = highScore >= 90;
+        if(isMastered) completedCount++;
+        const card = document.createElement('div');
+        card.className = `unit-card ${unit.class}`;
+        card.setAttribute('data-id', unit.id);
+        card.id = `card-${unit.id}`;
+        card.onmouseenter = () => handleCardMouseEnter(unit.id);
+        card.onmouseleave = handleCardMouseLeave;
+        card.onclick = (e) => {
+            if(e.target.closest('.btn') || e.target.closest('.drag-handle')) return;
+            toggleUnit(unit.id);
+            handleCardMouseLeave();
+        };
+        card.innerHTML = `
+            <div class="drag-handle" id="handle-${unit.id}"><i class="fas fa-grip-vertical"></i></div>
+            ${isMastered ? '<div class="mastery-ribbon"><i class="fas fa-medal"></i></div>' : ''}
+            <div class="unit-card-hero">
+                <div class="unit-term-count">${unit.data.length} Terms</div>
+                <div class="unit-info">
+                    ${isMastered ? '<span class="status-pill" style="background:#fcd34d; color:#78350f; border:none; margin-bottom:10px; display:inline-block">MASTERED</span>' : ''}
+                    <h2 style="margin:0; font-family:Poppins;"><i class="fas ${unit.icon}"></i> ${unit.title}</h2>
+                    <p style="margin:10px 0 0; opacity:0.9; font-size:0.95rem; font-weight:600;">Best Score: ${highScore}%</p>
+                </div>
+            </div>
+            <div class="unit-dropdown" id="drop-${unit.id}">
+                <button id="study-btn-${unit.id}" class="btn btn-primary" onclick="openStudy('${unit.id}', event)" style="flex:1"><i class="fas fa-book-open"></i> Study</button>
+                <button id="starred-btn-${unit.id}" class="btn btn-outline" onclick="openStudyStarred('${unit.id}', event)" style="flex:1; border-color:var(--accent); color:var(--accent);"><i class="fas fa-star"></i> Starred Terms</button>
+                <button id="videos-btn-${unit.id}" class="btn btn-outline" onclick="openVideos('${unit.id}', event)" style="flex:1; border-color:var(--primary); color:var(--primary)"><i class="fas fa-play-circle"></i> Videos</button>
+                <button id="test-btn-${unit.id}" class="btn btn-primary" onclick="openQuiz('${unit.id}', event)" style="flex:1; background:var(--test-btn-bg); border: 1px solid var(--test-btn-border);"><i class="fas fa-clipboard"></i> Test</button>
+            </div>
+        `;
+        grid.appendChild(card);
     });
-
-    function setTheme(theme) {
-      root.setAttribute('data-theme', theme);
-      if (theme === 'dark') {
-        root.classList.add('dark');
-        themeIcon.textContent = '☀';
-        themeText.textContent = 'Light Mode';
-      } else {
-        root.classList.remove('dark');
-        themeIcon.textContent = '☾';
-        themeText.textContent = 'Dark Mode';
-      }
-      localStorage.setItem('moneyMentorLandingTheme', theme);
+    document.getElementById('unitsDone').innerText = completedCount;
+    new Sortable(grid, {
+        handle: '.drag-handle', animation: 150, ghostClass: 'sortable-ghost', dragClass: 'sortable-drag',
+        onEnd: function() {
+            const newOrder = Array.from(grid.querySelectorAll('.unit-card')).map(card => card.getAttribute('data-id'));
+            localStorage.setItem('mm_unit_order', JSON.stringify(newOrder));
+        }
+    });
+}
+function toggleUnit(id) {
+    const drops = document.querySelectorAll('.unit-dropdown');
+    drops.forEach(d => d.id === `drop-${id}` ? d.classList.toggle('active') : d.classList.remove('active'));
+}
+function openVideos(unitId, event) {
+    event.stopPropagation(); document.getElementById('app-overlay').style.display = 'flex';
+    document.getElementById('overlay-title').innerText = "Unit Lessons";
+    document.getElementById('action-btn-container').style.visibility = 'hidden';
+    const videos = videoResources[unitId] || []; let videosHtml = '';
+    if(videos.length === 0) {
+        videosHtml = `<div class="q-box" style="text-align:center; padding: 4rem 2rem;"><div style="font-size: 4rem; margin-bottom: 1.5rem;">📺</div><h2 style="font-family:Poppins; color:var(--text)">Coming Soon!</h2><p style="color:var(--text-light); font-weight:600; margin-bottom: 2rem;">We are currently curating the best video lessons for this unit.</p><button class="btn btn-primary" style="width:100%" onclick="closeOverlay()">Go Back</button></div>`;
+    } else {
+        videosHtml = `
+            <div class="q-box">
+                <h1 style="font-family:Poppins; color:var(--text); margin-bottom: 2rem; text-align:center;">Video Lessons</h1>
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                    ${videos.map(v => `
+                        <div style="background:var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                            <h3 style="margin-top:0; color:var(--primary); font-family:Poppins;">${v.title}</h3>
+                            <p style="color:var(--text-light); font-size:0.85rem; margin-bottom:0.5rem;"><b>Creator:</b> ${v.creator} • ${v.date}</p>
+                            <p style="color:var(--text-light); font-size:0.8rem; font-style:italic; border-left: 3px solid var(--primary); padding-left: 10px; margin-bottom: 1.5rem;">${v.citation}</p>
+                            <a href="${v.url}" target="_blank" class="btn btn-primary" style="margin-top:0.5rem"><i class="fab fa-youtube"></i> Watch on YouTube</a>
+                        </div>`).join('')}
+                </div>
+                <button class="btn btn-outline" style="width:100%; margin-top:2rem; color:var(--text); border-color:var(--border)" onclick="closeOverlay()">Done Watching</button>
+            </div>`;
     }
-
-    // Dynamic Year
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Interactive Widget Switcher
-    function switchWidget(widgetType) {
-      document.getElementById('widgetCalc').classList.add('hidden');
-      document.getElementById('widgetBudget').classList.add('hidden');
-      document.getElementById('widgetQuiz').classList.add('hidden');
-
-      document.getElementById('tabCalc').classList.remove('active');
-      document.getElementById('tabBudget').classList.remove('active');
-      document.getElementById('tabQuiz').classList.remove('active');
-
-      if (widgetType === 'calc') {
-        document.getElementById('widgetCalc').classList.remove('hidden');
-        document.getElementById('tabCalc').classList.add('active');
-      } else if (widgetType === 'budget') {
-        document.getElementById('widgetBudget').classList.remove('hidden');
-        document.getElementById('tabBudget').classList.add('active');
-      } else if (widgetType === 'quiz') {
-        document.getElementById('widgetQuiz').classList.remove('hidden');
-        document.getElementById('tabQuiz').classList.add('active');
-      }
+    document.getElementById('overlay-content').innerHTML = videosHtml;
+}
+function openStudy(unitId, event) {
+    if(event) event.stopPropagation();
+    currentUnit = units.find(u => u.id === unitId);
+    activeStudySet = shuffleArray([...currentUnit.data]);
+    isQuizMode = false;
+    currentIdx = 0;
+    launchStudyUI();
+}
+function openStudyStarred(unitId, event) {
+    if(event) event.stopPropagation();
+    currentUnit = units.find(u => u.id === unitId);
+    activeStudySet = shuffleArray(currentUnit.data.filter(d => starredTerms.includes(d.term)));
+    if(activeStudySet.length === 0) {
+        document.getElementById('app-overlay').style.display = 'flex';
+        document.getElementById('overlay-title').innerText = "Starred Terms";
+        document.getElementById('action-btn-container').style.visibility = 'hidden';
+        document.getElementById('overlay-content').innerHTML = `<div class="q-box" style="text-align:center; padding: 4rem 2rem;"><div style="font-size: 4rem; margin-bottom: 1.5rem;">⭐</div><h1 style="font-family:Poppins; color:var(--text)">No Stars Yet</h1><p style="color:var(--text-light); font-weight:600; margin-bottom: 2rem;">Tap the star icon while studying to save difficult terms here!</p><button class="btn btn-primary" style="width:100%" onclick="closeOverlay()">Got it</button></div>`;
+        return;
     }
-
-    // Compound Interest Calculation Logic
-    function updateCompoundCalc() {
-      const monthly = parseFloat(document.getElementById('monthlyInput').value);
-      const years = parseInt(document.getElementById('yearsInput').value);
-      const rate = parseFloat(document.getElementById('returnInput').value) / 100;
-
-      document.getElementById('monthlyVal').textContent = `$${monthly.toLocaleString()}/mo`;
-      document.getElementById('yearsVal').textContent = `${years} Years`;
-      document.getElementById('returnVal').textContent = `${(rate * 100).toFixed(1)}%`;
-
-      const months = years * 12;
-      const rMonthly = rate / 12;
-
-      // Compound interest formula for periodic contributions
-      let total = 0;
-      for (let i = 0; i < months; i++) {
-        total = (total + monthly) * (1 + rMonthly);
-      }
-
-      const totalDeposits = monthly * months;
-      const totalInterest = Math.max(0, total - totalDeposits);
-
-      document.getElementById('totalPortfolio').textContent = `$${Math.round(total).toLocaleString()}`;
-      document.getElementById('totalDeposits').textContent = `$${Math.round(totalDeposits).toLocaleString()}`;
-      document.getElementById('totalInterest').textContent = `$${Math.round(totalInterest).toLocaleString()}`;
-
-      const depositPct = Math.round((totalDeposits / total) * 100);
-      const interestPct = 100 - depositPct;
-
-      document.getElementById('depositBar').style.width = `${depositPct}%`;
-      document.getElementById('interestBar').style.width = `${interestPct}%`;
+    isQuizMode = false; currentIdx = 0; launchStudyUI();
+}
+function launchStudyUI() {
+    document.getElementById('app-overlay').style.display = 'flex';
+    document.getElementById('overlay-title').innerText = `${currentUnit.title} | Flashcards`;
+    document.getElementById('action-btn-container').style.visibility = 'visible';
+    const content = document.getElementById('overlay-content');
+    content.innerHTML = `
+        <div style="width:100%; margin: 0 auto; padding-top: 1rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-bottom:1rem; flex-wrap:wrap;">
+                <div style="color:var(--text); font-weight:700;" id="card-counter">Card 1 of ${activeStudySet.length}</div>
+                <button class="btn btn-outline" onclick="shuffleAndRestartStudy()" style="display:flex; align-items:center; gap:0.5rem;">
+                    <i class="fas fa-random"></i> Shuffle
+                </button>
+            </div>
+            <div class="flashcard-stage" id="stage">
+                <div class="flashcard" id="card-obj" onclick="this.classList.toggle('flipped')"></div>
+            </div>
+            <div style="max-width:800px; margin: 2rem auto 0; display:flex; justify-content:space-between; align-items:center;">
+                <button class="btn btn-outline" style="color:var(--text); border-color:var(--border)" onclick="moveCard(-1)"><i class="fas fa-arrow-left"></i></button>
+                <div class="status-pill">Tap to flip</div>
+                <button class="btn btn-outline" style="color:var(--text); border-color:var(--border)" onclick="moveCard(1)"><i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>`;
+    updateFlashcardContent(document.getElementById('card-obj'), activeStudySet[currentIdx]);
+}
+function shuffleAndRestartStudy() {
+    activeStudySet = shuffleArray([...activeStudySet]);
+    currentIdx = 0;
+    document.getElementById('card-counter').innerText = `Card 1 of ${activeStudySet.length}`;
+    updateFlashcardContent(document.getElementById('card-obj'), activeStudySet[currentIdx]);
+}
+function updateFlashcardContent(cardEl, data) {
+    updateActionState();
+    cardEl.innerHTML = `<div class="card-face"><div style="font-size: 2.5rem; font-weight: 800; color: var(--primary);">${data.term}</div><div style="margin-top: 3rem; font-size: 0.9rem; font-weight:700; opacity: 0.4; color: var(--text-light); letter-spacing:2px">TAP TO FLIP</div></div><div class="card-face card-back"><div style="font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 2rem; opacity:0.7">DEFINITION</div><div style="font-size: 1.8rem; font-weight: 600; line-height: 1.6; color: var(--text); padding: 0 1rem;">${data.def}</div></div>`;
+}
+function moveCard(step) {
+    if(isAnimating) return; let nextIdx = currentIdx + step; if(nextIdx < 0 || nextIdx >= activeStudySet.length) return; isAnimating = true;
+    const oldCard = document.getElementById('card-obj'), stage = document.getElementById('stage'), newCard = document.createElement('div');
+    newCard.className = `flashcard ${step > 0 ? 'slide-in-right' : 'slide-in-left'}`; newCard.onclick = function() { this.classList.toggle('flipped'); };
+    currentIdx = nextIdx; updateFlashcardContent(newCard, activeStudySet[currentIdx]); stage.appendChild(newCard);
+    oldCard.classList.add(step > 0 ? 'slide-out-left' : 'slide-out-right'); oldCard.id = "";
+    document.getElementById('card-counter').innerText = `Card ${currentIdx + 1} of ${activeStudySet.length}`;
+    setTimeout(() => { oldCard.remove(); newCard.classList.remove('slide-in-right', 'slide-in-left'); newCard.id = 'card-obj'; isAnimating = false; }, 600);
+}
+function openQuiz(unitId, event) { event.stopPropagation(); currentUnit = units.find(u => u.id === unitId); activeStudySet = shuffleArray([...currentUnit.data]); userAnswers = new Array(activeStudySet.length).fill(null); markedQuestions = new Array(activeStudySet.length).fill(false); currentIdx = 0; isQuizMode = true; document.getElementById('botContainer').classList.add('hidden-during-test'); document.getElementById('app-overlay').style.display = 'flex'; renderQuizStart(); }
+function renderQuizStart() {
+    document.getElementById('overlay-title').innerText = `${currentUnit.title} | Test`; document.getElementById('action-btn-container').style.visibility = 'hidden';
+    document.getElementById('overlay-content').innerHTML = `<div class="q-box" style="text-align:center; padding: 4rem 2rem;"><div style="font-size: 4rem; margin-bottom: 1.5rem;">📝</div><h1 style="font-family:Poppins; color:var(--text)">Ready for the test?</h1><p style="color:var(--text-light); font-weight:600; margin-bottom: 2rem;">Flag questions you're unsure about to review them before submitting.</p><button class="btn btn-primary" style="width:100%; padding: 1.2rem;" onclick="startQuiz()">Begin Assessment</button></div>`;
+}
+function startQuiz() { document.getElementById('action-btn-container').style.visibility = 'visible'; renderQuestion(); }
+function renderQuestion() {
+    const item = activeStudySet[currentIdx], progress = ((currentIdx + 1) / activeStudySet.length) * 100; updateActionState();
+    let optionsHtml = item.a.map((opt, i) => `<button class="option-btn ${userAnswers[currentIdx] === i ? 'selected' : ''}" onclick="selectOption(${i})">${opt}</button>`).join(''), dotsHtml = activeStudySet.map((_, i) => `<div class="dot ${i === currentIdx ? 'current' : ''} ${userAnswers[i] !== null ? 'answered' : ''} ${markedQuestions[i] ? 'marked' : ''}" onclick="jumpTo(${i})">${markedQuestions[i] ? '<i class="fas fa-bookmark" style="font-size:0.6rem; position:absolute; top:2px; right:2px; color:var(--accent)"></i>' : ''}${i+1}</div>`).join('');
+    document.getElementById('overlay-content').innerHTML = `<div class="q-box"><span class="status-pill">Question ${currentIdx + 1} of ${activeStudySet.length}</span><div class="progress-container"><div class="progress-bar" style="width:${progress}%"></div></div><h2 style="margin: 1.5rem 0; font-size: 1.4rem; color:var(--text); line-height:1.4">${item.q}</h2><div class="options-list">${optionsHtml}</div><div class="review-grid">${dotsHtml}</div><div style="display:flex; justify-content:space-between; margin-top:2rem;"><button class="btn btn-outline" style="color:var(--text); border-color:var(--border)" onclick="prevQ()">Back</button><button class="btn btn-primary" onclick="confirmOrNext()">${currentIdx === activeStudySet.length - 1 ? 'Finish' : 'Next'}</button></div></div>`;
+}
+function selectOption(idx) { userAnswers[currentIdx] = idx; renderQuestion(); }
+function confirmOrNext() { if(currentIdx < activeStudySet.length - 1) { currentIdx++; renderQuestion(); } else { renderSubmitConfirmation(); } }
+function renderSubmitConfirmation() {
+    document.getElementById('action-btn-container').style.visibility = 'hidden';
+    document.getElementById('overlay-content').innerHTML = `<div class="q-box" style="text-align:center; padding: 4rem 2rem;"><h2 style="font-family:Poppins; color:var(--text)">Ready to submit?</h2><p style="color:var(--text-light); margin-bottom: 2rem;">Double-check flagged questions before finishing.</p><div style="display:flex; gap:1rem; flex-direction:column; width: 100%; max-width: 300px; margin: 0 auto;"><button class="btn btn-primary" style="width:100%; padding: 1.1rem;" onclick="finishQuiz()">Yes, Submit Now</button><button class="btn btn-outline" style="width:100%; color:var(--text); border-color:var(--border);" onclick="renderQuestion()">No, Go Back</button></div></div>`;
+}
+function prevQ() { if(currentIdx > 0) { currentIdx--; renderQuestion(); } }
+function jumpTo(idx) { currentIdx = idx; renderQuestion(); }
+function handleAction() {
+    if(isQuizMode) { markedQuestions[currentIdx] = !markedQuestions[currentIdx]; renderQuestion(); }
+    else { const term = activeStudySet[currentIdx].term; if (starredTerms.includes(term)) { starredTerms = starredTerms.filter(t => t !== term); } else { starredTerms.push(term); } localStorage.setItem('mm_starred', JSON.stringify(starredTerms)); updateActionState(); }
+}
+function updateActionState() {
+    const btn = document.getElementById('global-action-btn'); if(!btn || !activeStudySet[currentIdx]) return;
+    if(isQuizMode) { btn.className = markedQuestions[currentIdx] ? "fas fa-bookmark action-trigger active" : "fas fa-bookmark action-trigger"; }
+    else { const term = activeStudySet[currentIdx].term; btn.className = starredTerms.includes(term) ? "fas fa-star action-trigger active" : "fas fa-star action-trigger"; }
+}
+function finishQuiz() {
+    let correct = activeStudySet.reduce((acc, item, i) => userAnswers[i] === item.c ? acc + 1 : acc, 0); const score = Math.round((correct / activeStudySet.length) * 100);
+    if(!scores[currentUnit.id] || score > scores[currentUnit.id]) { scores[currentUnit.id] = score; localStorage.setItem('mm_scores', JSON.stringify(scores)); }
+    renderResults(score, correct);
+}
+function renderResults(score, correct) {
+    document.getElementById('action-btn-container').style.visibility = 'hidden';
+    document.getElementById('overlay-content').innerHTML = `<div class="q-box" style="text-align:center;"><div style="font-size: 4rem; margin-bottom: 1rem;">${score >= 90 ? '🏆' : '🥈'}</div><h1 style="margin:0; color:var(--text); font-family:Poppins">${score}%</h1><p style="color:var(--text-light); font-weight:700; margin-bottom: 2rem;">${correct} of ${activeStudySet.length} correct</p><button class="btn btn-primary" style="width:100%; margin-top:2rem; padding:1rem" onclick="closeOverlay()">Close</button></div>`;
+    renderDashboard();
+}
+function closeOverlay() { document.getElementById('app-overlay').style.display = 'none'; isQuizMode = false; document.getElementById('botContainer').classList.remove('hidden-during-test'); renderDashboard(); }
+// --- MONEY BOT LOGIC ---
+let badgeRemoved = localStorage.getItem('mm_badge_removed') === 'true';
+function toggleChat() {
+    const chatWin = document.getElementById('chatWindow'); chatWin.classList.toggle('active');
+    if (!badgeRemoved) { badgeRemoved = true; localStorage.setItem('mm_badge_removed', 'true'); const style = document.createElement('style'); style.innerHTML = '.chat-bubble::after { display: none !important; }'; document.head.appendChild(style); }
+    if (chatWin.classList.contains('active') && document.getElementById('chatMessages').children.length === 0) { appendMessage("👋 I'm Money Bot! I know over 200 concepts like 'Inflation' and 'Stocks'. Ask me anything!", 'bot'); }
+}
+async function sendMessage() {
+    const input = document.getElementById('chatInput'), msg = input.value.trim(); if (!msg) return; appendMessage(msg, 'user'); input.value = '';
+    const lowMsg = msg.toLowerCase();
+    if (lowMsg === "how" || lowMsg === "help" || lowMsg.includes("how do i use")) { appendMessage(HELP_GUIDE, 'bot', true); return; }
+    let queryTerm = lowMsg.replace(/what is a |what is an |what is |whats a |whats an |whats |can you define |define /g, "").replace(/[?!.]/g, "").trim();
+    if (financeDictionary[queryTerm]) { appendMessage(`${financeDictionary[queryTerm]}`, 'bot'); return; }
+    const key = getCleanKey(); if (!key) { appendMessage("I couldn't find that specifically! Try asking for a term like 'Stock'.", 'bot'); return; }
+    const indicator = document.getElementById('typingIndicator'); indicator.style.display = 'block';
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${key}`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: msg }] }], systemInstruction: { parts: [{ text: "You are 'Money Bot', a friendly financial literacy tutor for kids. Keep responses simple and short." }] } })
+        });
+        const data = await response.json(); indicator.style.display = 'none'; appendMessage(data.candidates?.[0]?.content?.parts?.[0]?.text || "Try asking another way!", 'bot');
+    } catch { indicator.style.display = 'none'; appendMessage("Error connecting to cloud.", 'bot'); }
+}
+function appendMessage(text, role, isHtml = false) { const chatMessages = document.getElementById('chatMessages'), div = document.createElement('div'); div.className = `message ${role}-msg`; if(isHtml) div.innerHTML = text; else div.innerText = text; chatMessages.appendChild(div); chatMessages.scrollTop = chatMessages.scrollHeight; }
+function openSettings() { document.getElementById('settings-modal').classList.add('active'); hideResetConfirm(); }
+function closeSettings() { document.getElementById('settings-modal').classList.remove('active'); }
+function toggleTheme() { const isDark = document.documentElement.getAttribute('data-theme') === 'dark', newTheme = isDark ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', newTheme); localStorage.setItem('mm_theme', newTheme); updateThemeUI(); }
+function updateThemeUI() { const isDark = document.documentElement.getAttribute('data-theme') === 'dark', iconModal = document.getElementById('theme-icon-modal'), textModal = document.getElementById('theme-text-modal'); if (iconModal) iconModal.className = isDark ? "fas fa-sun" : "fas fa-moon"; if (textModal) textModal.innerText = isDark ? "Light Mode" : "Dark Mode"; }
+function hexToRgba(hex, alpha) {
+    let r = 0, g = 0, b = 0;
+    if (hex.length == 4) { r = "0x" + hex[1] + hex[1]; g = "0x" + hex[2] + hex[2]; b = "0x" + hex[3] + hex[3]; }
+    else if (hex.length == 7) { r = "0x" + hex[1] + hex[2]; g = "0x" + hex[3] + hex[4]; b = "0x" + hex[5] + hex[6]; }
+    return `rgba(${+r}, ${+g}, ${+b}, ${alpha})`;
+}
+function setPrimaryColor(main, hover, el) {
+    document.documentElement.style.setProperty('--primary', main);
+    document.documentElement.style.setProperty('--primary-hover', hover);
+    const dotColor = hexToRgba(main, 0.35);
+    document.documentElement.style.setProperty('--dot-color', dotColor);
+    localStorage.setItem('mm_primary_color', main);
+    localStorage.setItem('mm_primary_hover', hover);
+    updateBackgroundColors(main);
+    document.querySelectorAll('.theme-swatch').forEach(s => s.classList.remove('active'));
+    if (el) el.classList.add('active');
+}
+function showResetConfirm() { document.getElementById('main-settings-view').style.display = 'none'; document.getElementById('reset-confirm-view').style.display = 'block'; }
+function hideResetConfirm() { document.getElementById('main-settings-view').style.display = 'block'; document.getElementById('reset-confirm-view').style.display = 'none'; }
+function resetProgress() { localStorage.clear(); location.reload(); }
+function handleOutsideClick(event) { if (event.target.classList.contains('modal-overlay')) { closeSettings(); } }
+// --- Streak Counter Logic ---
+function updateStreakDisplay() {
+    const streakEl = document.getElementById('streak-days');
+    if (!streakEl) return;
+    let streak = parseInt(localStorage.getItem('mm_streak_count') || '0');
+    let lastDateStr = localStorage.getItem('mm_last_active_date');
+    const today = new Date().toDateString();
+    if (lastDateStr === today) {
+        // Already visited today → keep current streak
+    } else {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = yesterday.toDateString();
+        if (lastDateStr === yesterdayStr) {
+            streak++; // Consecutive day
+        } else if (lastDateStr) {
+            streak = 1; // Streak broken or new start
+        } else {
+            streak = 1; // First visit ever
+        }
+        localStorage.setItem('mm_last_active_date', today);
+        localStorage.setItem('mm_streak_count', streak);
     }
-
-    // Budget Splitter Calculation Logic
-    function updateBudgetCalc() {
-      const netIncome = Math.max(0, parseFloat(document.getElementById('netIncomeInput').value) || 0);
-      
-      const needs = netIncome * 0.50;
-      const wants = netIncome * 0.30;
-      const savings = netIncome * 0.20;
-
-      document.getElementById('needsAmount').textContent = `$${Math.round(needs).toLocaleString()}`;
-      document.getElementById('wantsAmount').textContent = `$${Math.round(wants).toLocaleString()}`;
-      document.getElementById('savingsAmount').textContent = `$${Math.round(savings).toLocaleString()}`;
+    const unitText = (streak === 1) ? 'day' : 'days';
+    streakEl.textContent = `${streak} ${unitText}`;
+    const streakPill = document.getElementById('streak-counter');
+    if (streak >= 7) {
+        streakPill.style.background = 'rgba(250, 204, 21, 0.3)';
+        streakPill.style.borderColor = 'rgba(250, 204, 21, 0.6)';
+    } else if (streak >= 3) {
+        streakPill.style.background = 'rgba(255,255,255,0.2)';
+        streakPill.style.borderColor = 'rgba(255,255,255,0.4)';
+    } else {
+        streakPill.style.background = 'rgba(255,255,255,0.12)';
+        streakPill.style.borderColor = 'rgba(255,255,255,0.25)';
     }
-
-    // Micro-Quiz Checking Logic
-    function checkQuiz(selectedIndex) {
-      const feedback = document.getElementById('quizFeedback');
-      feedback.classList.remove('hidden', 'bg-emerald-500/20', 'text-emerald-400', 'bg-rose-500/20', 'text-rose-400', 'border-emerald-500/40', 'border-rose-500/40');
-      feedback.classList.add('border');
-
-      if (selectedIndex === 1) {
-        feedback.classList.add('bg-emerald-500/20', 'text-emerald-400', 'border-emerald-500/40');
-        feedback.innerHTML = '🎉 <strong>Correct!</strong> An emergency fund should ideally cover 3–6 months of non-negotiable living expenses kept in an accessible, liquid savings account.';
-      } else {
-        feedback.classList.add('bg-rose-500/20', 'text-rose-400', 'border-rose-500/40');
-        feedback.innerHTML = '❌ <strong>Not quite!</strong> Financial experts recommend saving 3 to 6 months of essential living expenses in liquid savings to shield against unexpected income disruption.';
-      }
+}
+// --- TUTORIAL SYSTEM ---
+const tutorialSteps = [
+    { target: null, title: "Welcome to Money Mentor!", text: "This is your personal finance student dashboard. Let's take a quick tour to help you master your money skills!" },
+    { target: "#settings-trigger", title: "Site Settings", text: "Change your theme, reset progress, or replay this tutorial anytime right here." },
+    { target: "#counter-highlight-target", title: "Mastery Tracker", text: "Watch your progress grow! This shows how many units you have fully completed." },
+    { target: "#handle-unit1", title: "Drag and Drop", text: "You can click and hold these handles on the side to drag the cards around and reorder your dashboard." },
+    { target: "#card-unit1", title: "Study Units", text: "Click on a card to reveal study options for that topic.", action: () => toggleUnit('unit1') },
+    { target: "#study-btn-unit1", title: "Study Flashcards", text: "Review terms and definitions. Tap a card to flip it over and test your memory." },
+    { target: "#starred-btn-unit1", title: "Starred Terms", text: "While studying, you can 'star' difficult words to save them here for focused review." },
+    { target: "#videos-btn-unit1", title: "Video Lessons", text: "Watch these hand-picked videos specifically chosen to help you master this unit and dive deeper into each financial concept." },
+    { target: "#test-btn-unit1", title: "The Final Test", text: "Ready to prove yourself? Score 90% or higher to earn a Golden Ribbon and master the unit!" },
+    { target: "#chatBubble", title: "Money Bot AI", text: "Ask it specifically for definitions like 'What is a stock?' or type 'Help' and it will explain how to use different parts of the site.", action: () => { toggleUnit('unit1'); } },
+    { target: null, title: "Ready to Start?", text: "You're all set! Good luck on your journey to financial mastery." }
+];
+let currentTutStep = 0;
+function startTutorial() { currentTutStep = 0; document.getElementById('tutorial-overlay').classList.add('active'); showStep(); }
+function nextTutorialStep() { currentTutStep++; if (currentTutStep >= tutorialSteps.length) { endTutorial(); } else { showStep(); } }
+function showStep() {
+    const step = tutorialSteps[currentTutStep], box = document.getElementById('tut-box'), dimmer = document.getElementById('tut-dimmer'), title = document.getElementById('tut-title'), text = document.getElementById('tut-text'), counter = document.getElementById('tut-step-count'), nextBtn = document.getElementById('tut-next-btn');
+    title.innerText = step.title; text.innerText = step.text; counter.innerText = `${currentTutStep + 1} / ${tutorialSteps.length}`; nextBtn.innerText = currentTutStep === tutorialSteps.length - 1 ? "Finish" : "Next";
+    if (step.action) step.action();
+    if (step.target) {
+        const el = document.querySelector(step.target);
+        if (el) {
+            const rect = el.getBoundingClientRect(), padding = 10;
+            dimmer.style.clipPath = `polygon(0% 0%, 0% 100%, ${rect.left - padding}px 100%, ${rect.left - padding}px ${rect.top - padding}px, ${rect.right + padding}px ${rect.top - padding}px, ${rect.right + padding}px ${rect.bottom + padding}px, ${rect.left - padding}px ${rect.bottom + padding}px, ${rect.left - padding}px 100%, 100% 100%, 100% 0%)`;
+            const boxRect = box.getBoundingClientRect();
+            let top = rect.bottom + 20, left = rect.left + (rect.width / 2) - (boxRect.width / 2);
+            if (top + boxRect.height > window.innerHeight) top = rect.top - boxRect.height - 20;
+            if (left < 10) left = 10; if (left + boxRect.width > window.innerWidth - 10) left = window.innerWidth - boxRect.width - 10;
+            box.style.top = top + "px"; box.style.left = left + "px"; box.style.transform = "none";
+        }
+    } else { dimmer.style.clipPath = `polygon(0% 0%, 0% 100%, 100% 100%, 100% 0%)`; box.style.top = "50%"; box.style.left = "50%"; box.style.transform = "translate(-50%, -50%)"; }
+}
+function endTutorial() { document.getElementById('tutorial-overlay').classList.remove('active'); localStorage.setItem('mm_tut_complete', 'true'); const drops = document.querySelectorAll('.unit-dropdown'); drops.forEach(d => d.classList.remove('active')); }
+function resetTutorial() { localStorage.removeItem('mm_tut_complete'); startTutorial(); }
+window.onload = () => {
+    initBackground();
+    const savedTheme = localStorage.getItem('mm_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    const savedMain = localStorage.getItem('mm_primary_color');
+    const savedHover = localStorage.getItem('mm_primary_hover');
+    if (savedMain && savedHover) {
+        setPrimaryColor(savedMain, savedHover);
+        document.querySelectorAll('.theme-swatch').forEach(s => {
+            if (s.style.backgroundColor === savedMain || s.getAttribute('style').includes(savedMain)) { s.classList.add('active'); }
+        });
     }
-
-    // FAQ Accordion Toggle Logic
-    function toggleAccordion(element) {
-      const isActive = element.classList.contains('active');
-      document.querySelectorAll('.accordion-item').forEach(item => item.classList.remove('active'));
-      if (!isActive) {
-        element.classList.add('active');
-      }
+    updateThemeUI();
+    renderDashboard();
+    if (badgeRemoved) {
+        const style = document.createElement('style');
+        style.innerHTML = '.chat-bubble::after { display: none !important; }';
+        document.head.appendChild(style);
     }
-
-    // Initialize Calculator Defaults
-    updateCompoundCalc();
-    updateBudgetCalc();
-  </script>
+    updateStreakDisplay();
+    if (!localStorage.getItem('mm_tut_complete')) { setTimeout(startTutorial, 1000); }
+};
+</script>
 </body>
 </html>

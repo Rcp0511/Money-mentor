@@ -109,6 +109,10 @@ header {
     font-weight: 800;
     font-size: clamp(1.1rem, 5vw, 1.25rem);
     letter-spacing: -0.5px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
 }
 .header-tools {
     display: flex;
@@ -400,8 +404,7 @@ header {
 </div>
 <header>
     <div class="header-tools">
-        <a href="https://sites.google.com/view/money--mentor/home" class="btn btn-ghost" style="color:white"><i class="fas fa-chevron-left"></i> Home</a>
-        <a href="https://sites.google.com/view/money--mentor/meetings?authuser=0" target="_blank" class="btn btn-ghost" style="color:white"><i class="fas fa-video"></i> Online Meetings</a>
+        <a href="index.html" class="btn btn-ghost" style="color:white"><i class="fas fa-chevron-left"></i> Home</a>
         <div class="status-pill" id="streak-counter" style="margin-left: 1rem; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: white;">
             Streak: <span id="streak-days">0 day</span> <i class="fas fa-fire" style="color:#fcd34d;"></i>
         </div>

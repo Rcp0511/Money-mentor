@@ -1,1 +1,668 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="description" content="Build real-world money skills with Money Mentor. Learn, practice, interactive calculators, and track your financial knowledge." />
+  <title>Money Mentor | Master Your Money Skills</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      darkMode: ['class', '[data-theme="dark"]'],
+      theme: {
+        extend: {
+          colors: {
+            emerald: {
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              900: '#064e3b',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['Poppins', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
 
+  <style>
+    :root {
+      --bg: #0b1329;
+      --bg-gradient: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.15), transparent 70%),
+                      radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.08), transparent 50%);
+      --surface: rgba(30, 41, 59, 0.75);
+      --surface-solid: #1e293b;
+      --surface-hover: rgba(51, 65, 85, 0.85);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: rgba(148, 163, 184, 0.18);
+      --accent-glow: rgba(16, 185, 129, 0.35);
+      --shadow-lg: 0 25px 60px -15px rgba(0, 0, 0, 0.5);
+      --card-gradient: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+    }
+
+    [data-theme="light"] {
+      --bg: #f0fdf4;
+      --bg-gradient: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.2), transparent 70%),
+                      radial-gradient(circle at 15% 40%, rgba(59, 130, 246, 0.1), transparent 50%);
+      --surface: rgba(255, 255, 255, 0.85);
+      --surface-solid: #ffffff;
+      --surface-hover: rgba(241, 245, 249, 0.95);
+      --text: #064e3b;
+      --muted: #475569;
+      --border: rgba(5, 150, 105, 0.2);
+      --accent-glow: rgba(16, 185, 129, 0.25);
+      --shadow-lg: 0 25px 60px -15px rgba(6, 78, 59, 0.12);
+      --card-gradient: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(240, 253, 244, 0.7));
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg);
+      background-image: var(--bg-gradient);
+      background-attachment: fixed;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    .glass-card {
+      background: var(--surface);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+    }
+
+    .glass-card-solid {
+      background: var(--card-gradient);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+    }
+
+    .glow-effect {
+      position: relative;
+    }
+    .glow-effect::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(135deg, rgba(52, 211, 153, 0.4), transparent 60%, rgba(16, 185, 129, 0.3));
+      border-radius: inherit;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .glow-effect:hover::before {
+      opacity: 1;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
+    }
+    .accordion-item.active .accordion-content {
+      max-height: 500px;
+      transition: max-height 0.4s ease-in-out;
+    }
+    .accordion-item.active .accordion-icon {
+      transform: rotate(180deg);
+    }
+
+    /* Custom range input styling */
+    input[type=range] {
+      accent-color: #10b981;
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Navigation Bar -->
+    <header class="py-6 flex items-center justify-between gap-4 border-b border-emerald-500/10">
+      <a href="index.html" class="inline-flex items-center gap-3 group text-decoration-none">
+        <span class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/25 group-hover:scale-105 transition-transform duration-300">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 17l6-6 4 4 8-9"/><path d="M15 6h6v6"/>
+          </svg>
+        </span>
+        <span class="font-display font-extrabold text-xl tracking-tight">Money Mentor</span>
+      </a>
+
+      <div class="flex items-center gap-3 sm:gap-6">
+        <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-400">
+          <a href="#interactive-demo" class="hover:text-emerald-400 transition-colors">Interactive Demo</a>
+          <a href="#topics" class="hover:text-emerald-400 transition-colors">Learning Topics</a>
+          <a href="#features" class="hover:text-emerald-400 transition-colors">Features</a>
+          <a href="#faq" class="hover:text-emerald-400 transition-colors">FAQ</a>
+        </nav>
+
+        <a href="Money_Mentor_Updated.html" class="hidden sm:inline-flex items-center text-sm font-semibold px-4 py-2 rounded-lg border border-slate-700/60 hover:border-emerald-500/50 hover:text-emerald-400 transition-all">
+          Open App
+        </a>
+
+        <button id="themeToggle" type="button" class="glass-card px-3.5 py-2 rounded-full text-xs font-semibold flex items-center gap-2 hover:bg-slate-800/50 transition-colors" aria-label="Toggle Theme">
+          <span id="themeIcon">☀</span> <span id="themeText" class="hidden sm:inline">Light Mode</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="py-12 md:py-20 text-center relative">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs font-bold tracking-widest uppercase mb-6 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-sm shadow-emerald-400"></span>
+        Your Financial Freedom Starts Here
+      </div>
+
+      <h1 class="font-display text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.08] max-w-4xl mx-auto mb-6">
+        Make smarter money moves. <br class="hidden sm:block"/>
+        <span class="bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500 bg-clip-text text-transparent">Build your future.</span>
+      </h1>
+
+      <p class="text-base sm:text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed mb-10">
+        Learn practical finance fundamentals, simulate real-world decisions with interactive tools, test your knowledge with micro-quizzes, and track your journey to money mastery.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14">
+        <a href="Money_Mentor_Updated.html" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white font-bold text-base shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/40 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 group">
+          Enter Money Mentor App 
+          <span class="group-hover:translate-x-1 transition-transform">→</span>
+        </a>
+        <a href="#interactive-demo" class="w-full sm:w-auto px-7 py-4 rounded-xl glass-card hover:bg-slate-800/80 font-bold text-base hover:border-emerald-500/40 transition-all flex items-center justify-center gap-2">
+          Try Quick Calculators ⚡
+        </a>
+      </div>
+
+      <!-- Trust Badges -->
+      <div class="flex flex-wrap justify-center items-center gap-6 sm:gap-12 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-12">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
+          Zero Complex Jargon
+        </div>
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
+          Interactive Tools
+        </div>
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
+          100% Free & Private
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Workspace Preview Section -->
+    <section id="interactive-demo" class="py-8 mb-20">
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <h2 class="font-display text-2xl sm:text-4xl font-extrabold mb-3">Try It Right Here</h2>
+        <p class="text-slate-400 text-sm sm:text-base">Sample the interactive tools built directly into Money Mentor before jumping in.</p>
+      </div>
+
+      <div class="glass-card-solid rounded-3xl p-4 sm:p-8 shadow-2xl glow-effect">
+        
+        <!-- Interactive Widget Tabs Navigation -->
+        <div class="flex flex-wrap items-center justify-center gap-2 mb-8 border-b border-slate-700/50 pb-4">
+          <button id="tabCalc" onclick="switchWidget('calc')" class="tab-btn active px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2">
+            📈 Compound Calculator
+          </button>
+          <button id="tabBudget" onclick="switchWidget('budget')" class="tab-btn glass-card px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2">
+            📊 50/30/20 Budget Splitter
+          </button>
+          <button id="tabQuiz" onclick="switchWidget('quiz')" class="tab-btn glass-card px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2">
+            🧠 Quick Knowledge Check
+          </button>
+        </div>
+
+        <!-- WIDGET 1: Compound Interest Calculator -->
+        <div id="widgetCalc" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-7 space-y-5">
+            <div>
+              <div class="flex justify-between text-sm font-bold mb-1">
+                <span>Monthly Savings / Investment</span>
+                <span class="text-emerald-400 font-extrabold" id="monthlyVal">$250/mo</span>
+              </div>
+              <input type="range" id="monthlyInput" min="50" max="2000" step="50" value="250" class="w-full h-2 rounded-lg bg-slate-700 cursor-pointer" oninput="updateCompoundCalc()">
+            </div>
+
+            <div>
+              <div class="flex justify-between text-sm font-bold mb-1">
+                <span>Time Horizon (Years)</span>
+                <span class="text-emerald-400 font-extrabold" id="yearsVal">15 Years</span>
+              </div>
+              <input type="range" id="yearsInput" min="3" max="40" step="1" value="15" class="w-full h-2 rounded-lg bg-slate-700 cursor-pointer" oninput="updateCompoundCalc()">
+            </div>
+
+            <div>
+              <div class="flex justify-between text-sm font-bold mb-1">
+                <span>Estimated Annual Return</span>
+                <span class="text-emerald-400 font-extrabold" id="returnVal">8.0%</span>
+              </div>
+              <input type="range" id="returnInput" min="3" max="12" step="0.5" value="8" class="w-full h-2 rounded-lg bg-slate-700 cursor-pointer" oninput="updateCompoundCalc()">
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-xs text-slate-400 flex items-center gap-3">
+              <span class="text-xl">💡</span>
+              <span><strong>Mentor Tip:</strong> Compound interest is time in the market! Notice how interest earned eclipses your actual contributions over time.</span>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 glass-card rounded-2xl p-6 text-center flex flex-col justify-between border border-emerald-500/20">
+            <span class="text-xs font-extrabold uppercase tracking-widest text-slate-400">Projected Portfolio Value</span>
+            <div class="my-4">
+              <div id="totalPortfolio" class="text-3xl sm:text-5xl font-extrabold text-emerald-400 font-display tracking-tight">$86,520</div>
+              <div class="text-xs text-slate-400 mt-2 flex justify-center gap-4">
+                <span>Contributed: <strong id="totalDeposits" class="text-slate-200">$45,000</strong></span>
+                <span>Growth: <strong id="totalInterest" class="text-emerald-400">$41,520</strong></span>
+              </div>
+            </div>
+            
+            <!-- Simple Progress Visualizer -->
+            <div class="w-full bg-slate-700/50 rounded-full h-3 overflow-hidden flex">
+              <div id="depositBar" class="bg-slate-400 h-full" style="width: 52%"></div>
+              <div id="interestBar" class="bg-emerald-400 h-full" style="width: 48%"></div>
+            </div>
+            <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-semibold">
+              <span>■ Your Deposits</span>
+              <span>■ Compound Growth</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- WIDGET 2: 50/30/20 Budget Calculator -->
+        <div id="widgetBudget" class="hidden grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+          <div class="md:col-span-6 space-y-6">
+            <div>
+              <label class="block text-sm font-bold mb-2">Monthly Net Income (After Taxes)</label>
+              <div class="relative">
+                <span class="absolute left-4 top-3 text-slate-400 font-bold">$</span>
+                <input type="number" id="netIncomeInput" value="4000" step="100" class="w-full bg-slate-900/60 border border-slate-700 rounded-xl py-3 pl-8 pr-4 text-emerald-400 font-extrabold text-lg focus:outline-none focus:border-emerald-500 transition-colors" oninput="updateBudgetCalc()">
+              </div>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              The <strong>50/30/20 rule</strong> is an intuitive budgeting framework: 50% for essentials (Needs), 30% for personal choices (Wants), and 20% for future goals (Savings & Debt).
+            </p>
+          </div>
+
+          <div class="md:col-span-6 grid grid-cols-1 gap-3">
+            <div class="p-4 rounded-xl bg-slate-800/60 border border-emerald-500/30 flex items-center justify-between">
+              <div>
+                <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">50% Needs</span>
+                <div class="text-xs text-slate-400">Rent, utilities, groceries, insurance</div>
+              </div>
+              <div id="needsAmount" class="text-xl font-bold font-display text-emerald-400">$2,000</div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-800/60 border border-blue-500/30 flex items-center justify-between">
+              <div>
+                <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">30% Wants</span>
+                <div class="text-xs text-slate-400">Dining out, entertainment, hobbies</div>
+              </div>
+              <div id="wantsAmount" class="text-xl font-bold font-display text-blue-400">$1,200</div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-800/60 border border-purple-500/30 flex items-center justify-between">
+              <div>
+                <span class="text-xs font-bold text-purple-400 uppercase tracking-wider">20% Savings / Investing</span>
+                <div class="text-xs text-slate-400">Emergency fund, Roth IRA, extra debt paydown</div>
+              </div>
+              <div id="savingsAmount" class="text-xl font-bold font-display text-purple-400">$800</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- WIDGET 3: Micro-Quiz Interactive -->
+        <div id="widgetQuiz" class="hidden max-w-2xl mx-auto py-2">
+          <div class="text-center mb-6">
+            <span class="text-xs font-extrabold uppercase tracking-widest text-emerald-400">Financial IQ Micro-Check</span>
+            <h3 class="text-xl font-bold mt-1" id="quizQuestion">What is an Emergency Fund primary rule of thumb?</h3>
+          </div>
+
+          <div id="quizOptions" class="space-y-3">
+            <button onclick="checkQuiz(0)" class="w-full text-left p-4 rounded-xl border border-slate-700/80 bg-slate-800/40 hover:bg-slate-700/60 font-semibold text-sm transition-all flex justify-between items-center group">
+              <span>A) 1 to 2 weeks of discretionary spending</span>
+              <span class="opacity-0 group-hover:opacity-100 transition-opacity text-emerald-400">Select →</span>
+            </button>
+            <button onclick="checkQuiz(1)" class="w-full text-left p-4 rounded-xl border border-slate-700/80 bg-slate-800/40 hover:bg-slate-700/60 font-semibold text-sm transition-all flex justify-between items-center group">
+              <span>B) 3 to 6 months of essential living expenses in a liquid savings account</span>
+              <span class="opacity-0 group-hover:opacity-100 transition-opacity text-emerald-400">Select →</span>
+            </button>
+            <button onclick="checkQuiz(2)" class="w-full text-left p-4 rounded-xl border border-slate-700/80 bg-slate-800/40 hover:bg-slate-700/60 font-semibold text-sm transition-all flex justify-between items-center group">
+              <span>C) Invested entirely in volatile individual stocks</span>
+              <span class="opacity-0 group-hover:opacity-100 transition-opacity text-emerald-400">Select →</span>
+            </button>
+          </div>
+
+          <div id="quizFeedback" class="hidden mt-6 p-4 rounded-xl text-center font-bold text-sm"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Interactive Topic Explorer -->
+    <section id="topics" class="py-12 border-t border-emerald-500/10">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <h2 class="font-display text-3xl sm:text-4xl font-extrabold mb-3">Master Key Financial Modules</h2>
+        <p class="text-slate-400 text-sm sm:text-base">Explore the comprehensive topics covered inside the Money Mentor app.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="glass-card p-6 rounded-2xl hover:-translate-y-1 transition-all duration-300 glow-effect">
+          <div class="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-2xl mb-4 font-bold">💳</div>
+          <h3 class="font-bold text-lg mb-2">Credit Score & Debt</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-4">Learn how credit utilization, payment history, and debt payoff strategies (Snowball vs. Avalanche) shape your financial freedom.</p>
+          <span class="text-xs font-extrabold text-emerald-400 tracking-wider uppercase">Interactive Modules Included</span>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl hover:-translate-y-1 transition-all duration-300 glow-effect">
+          <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-2xl mb-4 font-bold">📊</div>
+          <h3 class="font-bold text-lg mb-2">Investing Fundamentals</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-4">Demystify index funds, ETF diversification, compound interest, stock market basics, and 401(k) / Roth IRA retirement accounts.</p>
+          <span class="text-xs font-extrabold text-blue-400 tracking-wider uppercase">Growth Visualizers Included</span>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl hover:-translate-y-1 transition-all duration-300 glow-effect">
+          <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-2xl mb-4 font-bold">💰</div>
+          <h3 class="font-bold text-lg mb-2">Budgeting & Cash Flow</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-4">Master cash-flow tracking, zero-based budgeting, cutting hidden expenses, and establishing automated saving systems.</p>
+          <span class="text-xs font-extrabold text-purple-400 tracking-wider uppercase">Budget Builder Tool</span>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl hover:-translate-y-1 transition-all duration-300 glow-effect">
+          <div class="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-2xl mb-4 font-bold">🛡️</div>
+          <h3 class="font-bold text-lg mb-2">Emergency Safety Nets</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-4">Build an airtight liquidity cushion in high-yield savings accounts (HYSA) to weather unexpected job changes or emergencies.</p>
+          <span class="text-xs font-extrabold text-amber-400 tracking-wider uppercase">Risk Assessment Check</span>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl hover:-translate-y-1 transition-all duration-300 glow-effect">
+          <div class="w-12 h-12 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center text-2xl mb-4 font-bold">📑</div>
+          <h3 class="font-bold text-lg mb-2">Tax Basics & Deductions</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-4">Understand tax brackets, W-2 vs 1099, tax-advantaged accounts (HSA, IRA), and strategies to retain more of what you earn.</p>
+          <span class="text-xs font-extrabold text-rose-400 tracking-wider uppercase">Tax Bracket Demystified</span>
+        </div>
+
+        <div class="glass-card p-6 rounded-2xl hover:-translate-y-1 transition-all duration-300 glow-effect">
+          <div class="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-2xl mb-4 font-bold">🎯</div>
+          <h3 class="font-bold text-lg mb-2">Goal Setting & Milestones</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-4">Set SMART financial goals for homeownership, travel, or retirement, and track your progress step by step.</p>
+          <span class="text-xs font-extrabold text-cyan-400 tracking-wider uppercase">Milestone Trackers</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Platform Features -->
+    <section id="features" class="py-16">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <h2 class="font-display text-3xl sm:text-4xl font-extrabold mb-3">Designed for Actionable Learning</h2>
+        <p class="text-slate-400 text-sm sm:text-base">Everything you need to turn financial theory into confident everyday actions.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="text-center p-6">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-3xl mx-auto mb-5 shadow-inner">
+            📚
+          </div>
+          <h3 class="font-bold text-xl mb-2">Bite-Sized Lessons</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">No overwhelming textbooks. Digest concise lessons engineered for quick daily learning routines.</p>
+        </div>
+
+        <div class="text-center p-6">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-3xl mx-auto mb-5 shadow-inner">
+            ⚡
+          </div>
+          <h3 class="font-bold text-xl mb-2">Interactive Simulations</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Test financial choices in a risk-free environment. See how compound interest and interest rates compound over decades.</p>
+        </div>
+
+        <div class="text-center p-6">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-3xl mx-auto mb-5 shadow-inner">
+            📈
+          </div>
+          <h3 class="font-bold text-xl mb-2">Progress & Knowledge Tracking</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Watch your mastery score rise as you complete quizzes, practice flashcards, and complete finance challenges.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Accordion Section -->
+    <section id="faq" class="py-16 border-t border-emerald-500/10">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <h2 class="font-display text-3xl sm:text-4xl font-extrabold mb-3">Frequently Asked Questions</h2>
+        <p class="text-slate-400 text-sm sm:text-base">Have questions about Money Mentor? We've got answers.</p>
+      </div>
+
+      <div class="max-w-3xl mx-auto space-y-4">
+        <div class="accordion-item glass-card rounded-2xl p-5 cursor-pointer" onclick="toggleAccordion(this)">
+          <div class="flex justify-between items-center font-bold text-base sm:text-lg">
+            <span>Is Money Mentor free to use?</span>
+            <span class="accordion-icon transition-transform duration-300 text-emerald-400">▼</span>
+          </div>
+          <div class="accordion-content">
+            <p class="pt-4 text-slate-400 text-sm leading-relaxed border-t border-slate-700/40 mt-3">
+              Yes! Money Mentor is completely free to use. All core learning materials, quizzes, interactive calculators, and progress trackers are accessible without any hidden fees.
+            </p>
+          </div>
+        </div>
+
+        <div class="accordion-item glass-card rounded-2xl p-5 cursor-pointer" onclick="toggleAccordion(this)">
+          <div class="flex justify-between items-center font-bold text-base sm:text-lg">
+            <span>Do I need prior financial knowledge to start?</span>
+            <span class="accordion-icon transition-transform duration-300 text-emerald-400">▼</span>
+          </div>
+          <div class="accordion-content">
+            <p class="pt-4 text-slate-400 text-sm leading-relaxed border-t border-slate-700/40 mt-3">
+              Not at all! Money Mentor is designed for all skill levels—from absolute beginners learning budgeting basics to intermediate learners mastering compound growth and credit score optimization.
+            </p>
+          </div>
+        </div>
+
+        <div class="accordion-item glass-card rounded-2xl p-5 cursor-pointer" onclick="toggleAccordion(this)">
+          <div class="flex justify-between items-center font-bold text-base sm:text-lg">
+            <span>Is my personal data saved or shared?</span>
+            <span class="accordion-icon transition-transform duration-300 text-emerald-400">▼</span>
+          </div>
+          <div class="accordion-content">
+            <p class="pt-4 text-slate-400 text-sm leading-relaxed border-t border-slate-700/40 mt-3">
+              Your privacy is paramount. Money Mentor operates entirely in your browser using local storage for theme choices and quick calculators. No personal banking details are ever requested or stored.
+            </p>
+          </div>
+        </div>
+
+        <div class="accordion-item glass-card rounded-2xl p-5 cursor-pointer" onclick="toggleAccordion(this)">
+          <div class="flex justify-between items-center font-bold text-base sm:text-lg">
+            <span>How do I open the main learning app?</span>
+            <span class="accordion-icon transition-transform duration-300 text-emerald-400">▼</span>
+          </div>
+          <div class="accordion-content">
+            <p class="pt-4 text-slate-400 text-sm leading-relaxed border-t border-slate-700/40 mt-3">
+              Simply click the <strong>"Enter Money Mentor App"</strong> button anywhere on this page or navigate to <code class="text-emerald-400 bg-slate-900/60 px-2 py-0.5 rounded">Money_Mentor_Updated.html</code> to launch your complete learning dashboard.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bottom CTA Card -->
+    <section class="py-12 mb-16">
+      <div class="glass-card-solid rounded-3xl p-8 sm:p-14 text-center relative overflow-hidden border border-emerald-500/30">
+        <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-10 -top-10 w-48 h-48 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <h2 class="font-display text-3xl sm:text-5xl font-extrabold mb-4">Ready to Master Your Money?</h2>
+        <p class="text-slate-400 text-base sm:text-lg max-w-xl mx-auto mb-8">
+          Join thousands of learners taking control of their financial destiny today.
+        </p>
+
+        <a href="Money_Mentor_Updated.html" class="inline-flex items-center gap-2 px-9 py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white font-extrabold text-base shadow-xl shadow-emerald-500/30 hover:scale-105 transition-all">
+          Go to Main Application <span>→</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-slate-700/40 text-slate-400 text-xs sm:text-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-slate-300">Money Mentor</span>
+        <span>© <span id="year"></span>. All rights reserved.</span>
+      </div>
+
+      <div>Learn today. Make informed financial decisions tomorrow.</div>
+
+      <div>
+        <a href="Money_Mentor_Updated.html" class="text-emerald-400 hover:underline font-bold">Open Application →</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    // Theme Management
+    const root = document.documentElement;
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeText = document.getElementById('themeText');
+
+    const savedTheme = localStorage.getItem('moneyMentorLandingTheme') || 'dark';
+    setTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = root.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      setTheme(newTheme);
+    });
+
+    function setTheme(theme) {
+      root.setAttribute('data-theme', theme);
+      if (theme === 'dark') {
+        root.classList.add('dark');
+        themeIcon.textContent = '☀';
+        themeText.textContent = 'Light Mode';
+      } else {
+        root.classList.remove('dark');
+        themeIcon.textContent = '☾';
+        themeText.textContent = 'Dark Mode';
+      }
+      localStorage.setItem('moneyMentorLandingTheme', theme);
+    }
+
+    // Dynamic Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Interactive Widget Switcher
+    function switchWidget(widgetType) {
+      document.getElementById('widgetCalc').classList.add('hidden');
+      document.getElementById('widgetBudget').classList.add('hidden');
+      document.getElementById('widgetQuiz').classList.add('hidden');
+
+      document.getElementById('tabCalc').classList.remove('active');
+      document.getElementById('tabBudget').classList.remove('active');
+      document.getElementById('tabQuiz').classList.remove('active');
+
+      if (widgetType === 'calc') {
+        document.getElementById('widgetCalc').classList.remove('hidden');
+        document.getElementById('tabCalc').classList.add('active');
+      } else if (widgetType === 'budget') {
+        document.getElementById('widgetBudget').classList.remove('hidden');
+        document.getElementById('tabBudget').classList.add('active');
+      } else if (widgetType === 'quiz') {
+        document.getElementById('widgetQuiz').classList.remove('hidden');
+        document.getElementById('tabQuiz').classList.add('active');
+      }
+    }
+
+    // Compound Interest Calculation Logic
+    function updateCompoundCalc() {
+      const monthly = parseFloat(document.getElementById('monthlyInput').value);
+      const years = parseInt(document.getElementById('yearsInput').value);
+      const rate = parseFloat(document.getElementById('returnInput').value) / 100;
+
+      document.getElementById('monthlyVal').textContent = `$${monthly.toLocaleString()}/mo`;
+      document.getElementById('yearsVal').textContent = `${years} Years`;
+      document.getElementById('returnVal').textContent = `${(rate * 100).toFixed(1)}%`;
+
+      const months = years * 12;
+      const rMonthly = rate / 12;
+
+      // Compound interest formula for periodic contributions
+      let total = 0;
+      for (let i = 0; i < months; i++) {
+        total = (total + monthly) * (1 + rMonthly);
+      }
+
+      const totalDeposits = monthly * months;
+      const totalInterest = Math.max(0, total - totalDeposits);
+
+      document.getElementById('totalPortfolio').textContent = `$${Math.round(total).toLocaleString()}`;
+      document.getElementById('totalDeposits').textContent = `$${Math.round(totalDeposits).toLocaleString()}`;
+      document.getElementById('totalInterest').textContent = `$${Math.round(totalInterest).toLocaleString()}`;
+
+      const depositPct = Math.round((totalDeposits / total) * 100);
+      const interestPct = 100 - depositPct;
+
+      document.getElementById('depositBar').style.width = `${depositPct}%`;
+      document.getElementById('interestBar').style.width = `${interestPct}%`;
+    }
+
+    // Budget Splitter Calculation Logic
+    function updateBudgetCalc() {
+      const netIncome = Math.max(0, parseFloat(document.getElementById('netIncomeInput').value) || 0);
+      
+      const needs = netIncome * 0.50;
+      const wants = netIncome * 0.30;
+      const savings = netIncome * 0.20;
+
+      document.getElementById('needsAmount').textContent = `$${Math.round(needs).toLocaleString()}`;
+      document.getElementById('wantsAmount').textContent = `$${Math.round(wants).toLocaleString()}`;
+      document.getElementById('savingsAmount').textContent = `$${Math.round(savings).toLocaleString()}`;
+    }
+
+    // Micro-Quiz Checking Logic
+    function checkQuiz(selectedIndex) {
+      const feedback = document.getElementById('quizFeedback');
+      feedback.classList.remove('hidden', 'bg-emerald-500/20', 'text-emerald-400', 'bg-rose-500/20', 'text-rose-400', 'border-emerald-500/40', 'border-rose-500/40');
+      feedback.classList.add('border');
+
+      if (selectedIndex === 1) {
+        feedback.classList.add('bg-emerald-500/20', 'text-emerald-400', 'border-emerald-500/40');
+        feedback.innerHTML = '🎉 <strong>Correct!</strong> An emergency fund should ideally cover 3–6 months of non-negotiable living expenses kept in an accessible, liquid savings account.';
+      } else {
+        feedback.classList.add('bg-rose-500/20', 'text-rose-400', 'border-rose-500/40');
+        feedback.innerHTML = '❌ <strong>Not quite!</strong> Financial experts recommend saving 3 to 6 months of essential living expenses in liquid savings to shield against unexpected income disruption.';
+      }
+    }
+
+    // FAQ Accordion Toggle Logic
+    function toggleAccordion(element) {
+      const isActive = element.classList.contains('active');
+      document.querySelectorAll('.accordion-item').forEach(item => item.classList.remove('active'));
+      if (!isActive) {
+        element.classList.add('active');
+      }
+    }
+
+    // Initialize Calculator Defaults
+    updateCompoundCalc();
+    updateBudgetCalc();
+  </script>
+</body>
+</html>
